@@ -1,0 +1,41 @@
+div#navigationbox	{
+    background-color: #FFFFEE;
+    float:right;
+    width:240px;
+    border-bottom: 2px solid gray;
+    border-left: 2px solid gray;
+    font-size: 10pt;
+    margin: 0 10px 10px 16px;
+}
+div#navigationbox li{
+    font-size: 12pt;
+}
+div#navigationbox ul{
+    padding-left: 12px;
+}
+span.datestring {
+    border-bottom: 1px dotted black;
+    color: #4444BB;
+}
+table#topmessage {
+    margin: 6px 40px 6px 40px;
+}
+table#topmessage td {
+    border-bottom: 2px solid white;
+    margin: 0;
+}
+div#infosign    {
+    float:left;
+    margin:6px 4px 0px 40px;
+    padding:8px 8px 8px 8px;
+    background-color:black;
+    color:#CCCCCC;
+    font-size: 16pt;
+    font-weight: 900;
+    border-radius: 8px;
+}
+
+div#embed_player    {
+    margin: 8px 0 8px 40px;
+
+}

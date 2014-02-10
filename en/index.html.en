@@ -1,0 +1,99 @@
+<!--
+/*
+ * INTER-Mediator Ver.@@@@2@@@@ Released @@@@1@@@@
+ *
+ *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2011 Masayuki Nii, All rights reserved.
+ *
+ *   This project started at the end of 2009.
+ *   INTER-Mediator is supplied under MIT License.
+ */
+-->
+<HTML>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <link href="http://msyk.net/msyk_style.css" rel="stylesheet" media="all"/>
+    <link href="pagestyle.css" rel="stylesheet" media="all"/>
+    <link rel="shortcut icon" href="im-icon.png" type="image/png" />
+    <link rel="icon" href="im-icon.png" type="image/png" />
+    <title>INTER-Mediator</title>
+    <script type="text/javascript" src="include.php"></script>
+    <script type="text/javascript" src="website.js"></script>
+</head>
+<body>
+<div id="nonsupportmessage" style="background-color:#333333">
+    <div style="text-align:center;color:yellow">If you see this, you must use any unsupported web browser. Or constructing the page.</div>
+    <div style="text-align:center;color:yellow">この表示が見えている場合、非対応ブラウザで参照されています。もしくは描画処理中です。</div>
+</div>
+<div id="entire_page" style="margin:0;padding:0;">
+    <p class="sitenavi">
+        [<a href="http://coolnotify.com">←CoolNotify</a>]|
+        <a href="http://msyk.net/fmp/">←FileMaker情報</a> |
+        <a href="http://msyk.net/macos/index.html">←Browsing Mac OS X</a>
+    </p>
+
+        <div id="navigationbox" class="graybox">
+
+<div style="width:150px; height:66px; margin:0; padding:0;"><a href="http://www.cloudcore.jp/vps/?utm_source=ad&utm_medium=ad&utm_content=dev&utm_campaign=vps" target="_blank" rel="nofollow"><img src="http://www.cloudcore.jp/vps/develop/links/images/150x66_green.gif" alt="CloudCore" style="border:0; margin-bottom:4px;" /></a></div>
+
+
+       <h3 style="margin:0">Contents</h3>
+        <ul style="margin:0">
+            <li><a href="." class="IM[Titles@Title@innerHTML|Titles@LinkAddress@href]"></a></li>
+        </ul>
+        <h3 style="margin:0">Community</h3>
+        <ul style="margin:0">
+            <li><a href="http://edu.msyk.net/" target="_blank">Courseware (Japanese)</a></li>
+            <li><a href="http://lab.inter-mediator.org" target="_blank">Laboratory</a> </li>
+            <li>Facebook INTER-Mediator Group:
+                <a href="http://www.facebook.com/groups/233378356708157/" target="_blank">Japanese</a>|
+                <a href="http://www.facebook.com/groups/254446237922985/" target="_blank">English</a></li>
+            <li><a href="http://github.com/msyk/INTER-Mediator" target="_blank">GitHub</a>
+                Repository of source codes
+                <a href="https://github.com/msyk/INTER-Mediator/blob/master/dist-docs/change_log.txt">
+                    Update Log and Feature Plans</a> /
+                    <a href="http://msyk-edu.net/wordpress/?cat=17" target="_blank">Blog by Developer(Japanese)</a> /
+                    <a href="http://homeserver.msyk.net/wiki/find?keyword=INTER-Mediator" target="_blank">Old Blog</a>
+            </li>
+            <li><a href="http://www.cafepress.com/intermediator" target="_blank">Shop</a> </li>
+            <li><a href="http://groups.google.co.jp/group/inter-mediator" target="_blank">Google Group</a>
+                : Mailing List (not active).</li>
+        </ul>
+        <h3 style="margin:0">News and Updates</h3>
+        <!-- INTER-Mediator works here -->
+        <ul style="margin:0">
+            <li>
+                <span class="datestring IM[News@creditDate@innerHTML]"></span>
+                <span class="IM[News@Body@innerHTML]"></span>
+            </li>
+        </ul>
+        <!-- ^ -->
+
+    </div>
+
+        <a href="./"><img src="im-icon.png" align="left" style="margin-left: 40px; margin-top: 16px;" /></a>
+        <h1>INTER-Mediator</h1>
+        <div align="right">
+            <p>
+                Updated at
+                <span class="_im_enclosure"><span class="_im_repeater IM[PageInfo@Modified]"></span></span>
+                <br>新居雅行 Masayuki Nii／msyk@msyk.net
+            </p>
+        </div>
+
+            <div id="infosign">INFO</div>
+            <table id="topmessage">
+            <tr><td><span class="IM[TopMessage@Body@innerHTML]"></span><td></tr>
+            </table>
+
+
+    <!-- INTER-Mediator works here -->
+    <div id="Contents" class="_im_enclosure">
+        <div class="_im_repeater">
+            <h2 class="IM[EachScript@Title@innerHTML]"></h2>
+            <div class="IM[EachScript@Body@innerHTML]"></div>
+        </div>
+    </div>
+    <!-- ^ -->
+</div>
+</body>
+</HTML>
