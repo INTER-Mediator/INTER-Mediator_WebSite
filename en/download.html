@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!--
+/*
+ * INTER-Mediator Ver.@@@@2@@@@ Released @@@@1@@@@
+ *
+ *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2014 Masayuki Nii, All rights reserved.
+ *
+ *   This project started at the end of 2009.
+ *   INTER-Mediator is supplied under MIT License.
+ */
+-->
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link href="../pagestyle.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator</title>
+    <script type="text/javascript" language="JavaScript">
+        var htmlDocumentModDate = document.lastModified;
+    </script>
+    <script type="text/javascript" language="JavaScript" src="../pagebuilder.js"></script>
+    <script type="text/javascript" language="JavaScript" src="../files/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<div id="page_header"></div>
+<div id="navigation"></div>
+<div id="page_contents">
+    <h2>Download and Install</h2>
+    <ul>
+        <li>You need any server that PHP is working. INTER-Mediator supports FileMaker Server and PDO supported database
+            (such as MySQL) so far. You need to prepare for any database.
+        </li>
+        <li>Download file from <a href="files/INTER-Mediator-4_1.zip">here</a>. Of course, you should extract it.</li>
+        <li>Copy the "INTER-Mediator_XXXX" folder into the document folder of your web server. You can change the name
+            of "INTER-Mediator_XXXX" folder. This folder is refered as "INTER-Mediator" folder after here.
+        </li>
+        <li>INTER-Mediator requires the mbstring library on PHP. Usually the Windows's PHP commented out the directive
+            for mbstring loading.
+        </li>
+    </ul>
+    <h3>Contents of files you downloaded</h3>
+    <ul>
+        <li>The "INTER-Mediator" folder contains the framework and samples. The "INTER-Mediator/Sample" folder contains
+            the samples of the applications with using INTER-Mediator.
+        </li>
+        <li>You could place the "INTER-Mediator" folder to any folders could be included by PHP. You might think the
+            file named "INTER-Mediator.js" should be published on web server, even though you don't need as far as you
+            are using server based databases.
+        </li>
+        <li>The easiest way is just copy the whole "INTER-Mediator" folder just as you downloaded into the web document
+            folder.
+        </li>
+    </ul>
+    <h3>Preparation of FileMaker Server to use samples</h3>
+    <ul>
+        <li>INTER-Mediator needs <a href="http://www.iviking.org/FX.php/" target="_blank">FX.php</a>(This site is
+            neither affiliated with nor endorsed by Chris Hansen) for using FileMaker Server. The "FX.php" is including
+            INTER-Mediator dictribution in the "INTER-Mediator/lib/FX" folder.
+        </li>
+        <li>The database file of the FileMaker is the file "TestDB.fp7" on the root folder of you downloaded. You need
+            to install the database in FileMaker Server. The admin user of it is "admin" and password is "1234".
+        </li>
+        <li>FIleMaker Server should support XML sharing. This is the requirement for FX.php.</li>
+    </ul>
+    <h3>Preparation of MySQL to use samples</h3>
+    <ul>
+        <li>The file "INTER-Mediator/dist_docs/sample_schema_mysql.txt" is the schema definition file for MySQL. You
+            could use it with mysql command and the usage of the file is described at the start of it.
+        </li>
+        <li>Check the file "INTER-Mediator/params.php", and justify the value of $dbDSN variable.</li>
+    </ul>
+    <h3>Preparation of PostgreSQL to use samples</h3>
+    <ul>
+        <li>The file "INTER-Mediator/dist_docs/sample_schema_pgsql.txt" is the schema definition file for PostgreSQL.
+            You could use it with pgsql command and the usage of the file is described at the start of it.
+        </li>
+        <li>Check the file "INTER-Mediator/params.php", and justify the value of $dbDSN variable.</li>
+    </ul>
+    <h3>Preparation of SQLite to use samples</h3>
+    <ul>
+        <li>The file "INTER-Mediator/dist_docs/sample_schema_sqlite.txt" is the schema definition file for SQLite. You
+            could use it with sqlite command and the usage of the file is described at the start of it.
+        </li>
+        <li>Check the file "INTER-Mediator/params.php", and justify the value of $dbDSN variable.</li>
+    </ul>
+    <h3>Check the samples as like</h3>
+    <ul>
+        <li>You access the "INTER-Mediator/Samples" folder from your web browser. If you copied the "INTER-Mediator"
+            folder, you can access the samples index page by "http://host-name/INTER-Mediator/Samples/index.html".
+        </li>
+        <li>The list of samples is shown. You should choose valid database that you've finished to install.</li>
+        <li>"Sample Portal Page" shows table-styled page. If you could see anything in any textfield, you are succeed to
+            install. You can see the data in the database on the textfields. Compare with the contents of database and
+            the page, you must aware that the data in database is shown on the page. If you are using FileMaker Server,
+            you could check with FileMaker Pro. MySQL users should use mysql command or kind of database browsers.
+        </li>
+        <li>The sample is aiming to record contacts for each person. The design is not nifty because INTER-Mediator is
+            not the tool to create good-looking site. After you've checked the textfield is holding the data from the
+            database, you edit it and push tab key. After that you will aware that the edited data is stored on the
+            database. The textfield on the page with INTER-Mediator can write back the modified data.
+        </li>
+        <li>Checkbox and Radio Button are working. INTER-Medator support them and read/store on database with the
+            status. If you check the data on database after changing the status of them, you can see synchronize with
+            database and each controls.
+        </li>
+        <li>One person has several contact records. INTER-Mediator can handle the one-to-many relations on the web
+            page.
+        </li>
+        <li>Popup menus for Way and Kind is related. You can see to change the items of Kind regarding to Way. Way and
+            Kind are many-to-many relationship and there must have a intermediate table on the schema.
+        </li>
+        <li>You can see the Delete and Insert button. You might have you've expected. Some of them will work on
+            one-to-many relationship, for example, the Insert button will create one record and set the appropriate
+            value to the foreign-field.
+        </li>
+        <li>You don't need to do kind of "Save" or "Update".</li>
+        <li>"Sample Search Page" is a sample of searching Japanese postal codes. The criteria are already set to the
+            textfield, and it's easy way to try with the default criteria. Of course, you can set another criteria.
+            INTER-Mediator can show multiple records with each defined records, i.e pagination feature. This sample
+            shows the way to build the page after clicking the Search button.
+        </li>
+        <li>"Sample for HTML5 local database" doesn't work as for Ver.0.7.1. I'm intend to support the HTML5's local
+            database and check with the sample. This is the developer's "Should To Do" item.
+        </li>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>INTER-Mediator</title>
+</head>
+<body>
+    detect:
+    <script type="application/javascript">
+        document.write(window.navigator.language);
+        lang = window.navigator.language.toLowerCase();
+        if (lang == 'ja' || lang == 'ja-jp')    {
+            location.href="ja/"
+        } else {
+            location.href="en/"
+        }
+    </script>
+</body>
+</html>

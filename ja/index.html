@@ -13,13 +13,15 @@
 <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <link href="http://msyk.net/msyk_style.css" rel="stylesheet" media="screen"/>
     <link href="../pagestyle.css" rel="stylesheet" media="screen"/>
     <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
     <link rel="icon" href="../im-icon.png" type="image/png"/>
     <title>INTER-Mediator</title>
-    <script type="text/javascript" language="JavaScript" src="../pagebuilder.js"></script>
+    <script type="text/javascript" language="JavaScript">
+        var htmlDocumentModDate = document.lastModified;
+    </script>
     <script type="text/javascript" language="JavaScript" src="../files/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" language="JavaScript" src="../pagebuilder.js"></script>
 </head>
 <body>
 <div id="page_header"></div>
@@ -29,7 +31,8 @@
     <div id="infosign">INFO</div>
     <table id="topmessage">
         <tr>
-            <td>INTER-Mediatorについて、じっくり学習したい方向けに、<strong>e-Learningコース</strong>をご用意しました。<br/>有償（20,000円税込）ですが、基礎から応用までがビデオによる解説と演習でマスターできます。<a href="http://edu.msyk.net">こちら</a>よりお申し込みください。
+            <td>INTER-Mediatorについて、じっくり学習したい方向けに、<strong>e-Learningコース</strong>をご用意しました。<br/>有償（20,000円税込）ですが、基礎から応用までがビデオによる解説と演習でマスターできます。<a
+                    href="http://edu.msyk.net">こちら</a>よりお申し込みください。
             <td>
         </tr>
     </table>
@@ -39,11 +42,17 @@
             <h2>INTER-Mediatorについて</h2>
 
             <div>
-                <table style="margin-left: 96px; margin-top: 30px"><tr><td style="font-size:18pt;border:3px dotted #BBBBBB; padding: 8px;">
-                INTER-Mediatorは<br><span style="color: #DD3333">少ない開発作業でやりたいことを実現</span><br>できるWebアプリケーションフレームワークです。
-            </td></tr></table>
+                <table style="margin-left: 96px; margin-top: 30px">
+                    <tr>
+                        <td style="font-size:18pt;border:3px dotted #BBBBBB; padding: 8px;">
+                            INTER-Mediatorは<br><span style="color: #DD3333">少ない開発作業でやりたいことを実現</span><br>
+                            できるWebアプリケーションフレームワークです。
+                        </td>
+                    </tr>
+                </table>
 
                 <br clear="left"/>
+
                 <h3 style="color: #494685;">データベースとのやりとりは、手続き的なプログラミングをせずに、宣言的な記述だけで実現します</h3>
                 <img style="float:right; padding: 0 0 8px 8px" src="../files/toppic1.png"/>
                 <ul>
@@ -56,6 +65,7 @@
                     <li>認証や認可の指定もプログラミングの必要はなく指定を記述することで実現できます。</li>
                 </ul>
                 <br clear="left"/>
+
                 <h3 style="color: #494685;">複雑な処理やユーザの応答に細かく応える仕組みをプログラミングで組み込めます</h3>
                 <img style="float:right; padding: 0 0 8px 8px" src="../files/toppic2.png"/>
                 <ul>
@@ -65,14 +75,22 @@
                     <li>ブラウザを認識して非対応ブラウザにメッセージを表示する事や、対応範囲を定義することもできます。</li>
                 </ul>
                 <br clear="left"/>
+
                 <h3>INTER-Mediatorのデモ</h3>
+
                 <p>デモビデオを別のウインドウで表示します。<a href="javascript:showDemoVideo()">ここをクリックしてください。</a></p>
+
                 <h3>稼働環境</h3>
+
                 <p>サーバサイドではPHPを使います。クライアントサイドではJavaScriptを利用します。HTML5対応となっているブラウザであれば基本的には利用できるはずです。</p>
                 <ul>
                     <li>Web Server: Apache2 with PHP 5.2, IIS with PHP 5.2</li>
-                    <li>Database: FileMaker Server 10 or later, MySQL(PDO Support version), PostgreSQL(PDO Support Version), SQLite3(PDO Support Version)</li>
-                    <li>Support Browser: Chrome, Safari, Firefox, Opera (Most of versions), Internet Explorer Ver.8 or later (Ver.7 is limited, and Ver.6 is NOT)</li>
+                    <li>Database: FileMaker Server 10 or later, MySQL(PDO Support version), PostgreSQL(PDO Support
+                        Version), SQLite3(PDO Support Version)
+                    </li>
+                    <li>Support Browser: Chrome, Safari, Firefox, Opera (Most of versions), Internet Explorer Ver.8 or
+                        later (Ver.7 is limited, and Ver.6 is NOT)
+                    </li>
                 </ul>
             </div>
         </div>

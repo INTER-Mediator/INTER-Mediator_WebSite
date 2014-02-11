@@ -18,6 +18,7 @@ window.onload = function()  {
         success: function (data, status) {
             if (status != 'success')return;
             $('#page_header').html(data);
+            document.getElementById("updatedate").innerHTML = new Date(Date.parse(htmlDocumentModDate));
         }
     });
 }
