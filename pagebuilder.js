@@ -12,6 +12,15 @@ window.onload = function()  {
         }
     });
     $.ajax({
+        url: "news.html",
+        type: 'get',
+        dataType: 'html',
+        success: function (data, status) {
+            if (status != 'success')return;
+            $('#latestnews').html(data);
+        }
+    });
+    $.ajax({
         url: "page_header.html",
         type: 'get',
         dataType: 'html',
@@ -21,6 +30,9 @@ window.onload = function()  {
             document.getElementById("updatedate").innerHTML = new Date(Date.parse(htmlDocumentModDate));
         }
     });
+    if(typeof pageSideOnload === 'function')  {
+        pageSideOnload();
+    }
 }
 
 function showDemoVideo() {
