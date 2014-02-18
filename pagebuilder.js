@@ -3,7 +3,7 @@
  */
 window.onload = function()  {
     $.ajax({
-        url: "page_navi.html",
+        url: (typeof relativePath != 'undefined' ? relativePath : "") + "page_navi.html",
         type: 'get',
         dataType: 'html',
         success: function (data, status) {
@@ -12,7 +12,7 @@ window.onload = function()  {
         }
     });
     $.ajax({
-        url: "news.html",
+        url: (typeof relativePath != 'undefined' ? relativePath : "") + "news.html",
         type: 'get',
         dataType: 'html',
         success: function (data, status) {
@@ -21,7 +21,7 @@ window.onload = function()  {
         }
     });
     $.ajax({
-        url: "page_header.html",
+        url: (typeof relativePath != 'undefined' ? relativePath : "") + "page_header.html",
         type: 'get',
         dataType: 'html',
         success: function (data, status) {
