@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link href="/pagestyle.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="/im-icon.png" type="image/png"/>
+    <link rel="icon" href="/im-icon.png" type="image/png"/>
+    <title>INTER-Mediator</title>
+    <script type="text/javascript" language="JavaScript">
+        var htmlDocumentModDate = document.lastModified;
+    </script>
+    <script type="text/javascript" language="JavaScript" src="/pagebuilder.js"></script>
+    <script type="text/javascript" language="JavaScript" src="/files/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<div id="navigationbox" class="graybox">
+    <div id="navigation"></div>
+    <div id="latestnews"></div>
+</div>
+<div id="page_header"></div>
+<div id="page_contents">
+<h2>計算式</h2>
+
+    <h3>項</h3>
+    <div class="table">
+        <div class="caption"></div>
+        <table>
+            <tr><th>種類</th><th>例</th><th>説明</th></tr>
+            <tr><td>数値リテラル</td><td>10.3</td><td></td></tr>
+            <tr><td>文字列リテラル</td><td>'abc'</td><td>シングルクォートでの囲みのみ。シングルクォートは\で要エスケープ</td></tr>
+            <tr><td>定数</td><td>PI</td><td>EとPIが定義されている</td></tr>
+            <tr><td>ターゲット指定</td><td>person@住所</td><td>展開されている対応するノードを参照</td></tr>
+        </table>
+    </div>
+
+    <h3>定数</h3>
+    <div class="table">
+        <div class="caption"></div>
+        <table>
+            <tr><th>定数</th><th>対応するJavaScript</th><th>解説</th></tr>
+            <tr><td>E</td><td>Math.E</td><td>エクスポーネンシャル</td></tr>
+            <tr><td>PI</td><td>Math.PI</td><td>円周率</td></tr>
+        </table>
+    </div>
+
+    <h3>演算子</h3>
+    <div class="table">
+        <div class="caption"></div>
+        <table>
+            <tr><th>対象データ</th><th>演算子</th><th>記述例</th><th>解説</th></tr>
+            <tr><td>数値</td><td>^</td><td>2^3 → 8</td><td>べき乗</td></tr>
+            <tr><td></td><td>+</td><td>2+3 → 5</td><td>加算</td></tr>
+            <tr><td></td><td>-</td><td>3-2 → 1</td><td>減算（あるいは負の数）</td></tr>
+            <tr><td></td><td>*</td><td>3*2 → 6</td><td>乗算</td></tr>
+            <tr><td></td><td>/</td><td>3/2 → 1.5</td><td>除算</td></tr>
+            <tr><td></td><td>%</td><td>3%2 → 1</td><td>剰余</td></tr>
+            <tr><td>文字</td><td>+</td><td>'a'+'b' → 'ab'</td><td>結合</td></tr>
+            <tr><td></td><td>-</td><td>'abc'-'c' → 'ab'</td><td>除去</td></tr>
+            <tr><td></td><td>∩</td><td>'abcdef' ∩ 'bdfx' → 'bdf'</td><td>共通の文字</td></tr>
+            <tr><td></td><td>∪</td><td>'abcdef' ∪ 'bdfx' → 'abcdefx'</td><td>両方の文字</td></tr>
+            <tr><td></td><td>⊁</td><td>'abcdef' ⊁ 'bdfx' → 'ace'</td><td>文字の除去</td></tr>
+            <tr><td>論理演算</td><td>=</td><td>10=9 → false</td><td>等号</td></tr>
+            <tr><td></td><td>==</td><td>10==9 → false</td><td>等号</td></tr>
+            <tr><td></td><td>!=</td><td>10!=9 → true</td><td>不等号</td></tr>
+            <tr><td></td><td><></td><td>10<>9 → true</td><td>不等号</td></tr>
+            <tr><td></td><td>></td><td>10>9 → true</td><td>より大</td></tr>
+            <tr><td></td><td><</td><td>10<9 → false</td><td>より小</td></tr>
+            <tr><td></td><td>>=</td><td>10>=9 → true</td><td>以上</td></tr>
+            <tr><td></td><td><=</td><td>10<=9 → false</td><td>以下</td></tr>
+            <tr><td></td><td>==</td><td>10==9 → false</td><td>等号</td></tr>
+            <tr><td></td><td>==</td><td>10==9 → false</td><td>等号</td></tr>
+            <tr><td></td><td>&&</td><td>true && false → false</td><td>論理積</td></tr>
+            <tr><td></td><td>||</td><td>true || false → true</td><td>論理和</td></tr>
+            <tr><td>文字リスト</td><td>⋀</td><td>'abc¶dff¶ghi' ⋀ 'dff¶stu¶' → 'dff¶'</td><td>共通項</td></tr>
+            <tr><td></td><td>⋁</td><td>'abc¶dff¶ghi' ⋁ 'xyz¶stu¶' → 'abc¶dff¶ghi¶xyz¶stu¶'</td><td>合同</td></tr>
+            <tr><td></td><td>⊬</td><td>'abc¶dff¶ghi' ⊬ 'ghi¶dkg¶' → 'abc¶dff¶'</td><td>差演算</td></tr>
+        </table>
+    </div>
+<h4>加算と減算について</h4>
+    <ul>
+        <li>2つの項がいずれも数値に変換できるなら、数値として計算します。</li>
+        <li>2つの項がいずれかでも数値に変換できないなら、文字列として計算します。</li>
+    </ul>
+    <h4>文字リストの改行の扱いについて</h4>
+    <ul>
+        <li>引数の最後に改行があってもなくてもかまいません。</li>
+        <li>結果の最後には改行が付きます。</li>
+        <li>最後の改行の扱いも含めて、長さが0の項目は項目として扱わず無視します。</li>
+        <li>3種類ある改行のどれも同じように扱いますが、結果の改行は最初の引数の最初に出てくる改行になります。</li>
+    </ul>
+
+    <div class="table">
+        <div class="caption">関数</div>
+        <table>
+            <tr><th>種類</th><th>関数</th><th>例（数値は丸めています）</th><th>説明</th></tr>
+            <tr><td>数値</td><td>abs(x)</td><td>abs(-3.1) → 3.1</td><td>絶対値</td></tr>
+            <tr><td></td><td>ceil(x)</td><td>ceil(-3.1) → -3</td><td>引数よりも大きな整数のうちの最小値</td></tr>
+            <tr><td></td><td>floor(x)</td><td>floor(-3.1) → -4</td><td>引数よりも小さな整数のうちの最大値</td></tr>
+            <tr><td></td><td>round(x,y)</td><td>round(3.1415, 2) → 3.14</td><td>1つ目の引数を四捨五入、2つ目の引数は少数以下の桁数で、正の数なら10の位から上位に上がる</td></tr>
+            <tr><td></td><td>format(x,y)</td><td>format(x,y)</td><td>format(12345, 0) → 12,345</td></tr>
+            <tr><td></td><td>sqrt(x)</td><td>sqrt(3) → 1.73</td><td>平方根</td></tr>
+            <tr><td></td><td>exp(x)</td><td>exp(0.5) → 1.65</td><td>ネイピア数eのx乗</td></tr>
+            <tr><td></td><td>log(x)</td><td>log(0.5) → -0.69</td><td>ネイピア数を底とする自然対数</td></tr>
+            <tr><td></td><td>random()</td><td>random() → 0.254</td><td>0〜1の範囲の乱数</td></tr>
+            <tr><td></td><td>pow(x, y)</td><td>pow(2,3) → 8</td><td>べき乗、xのy乗</td></tr>
+            <tr><td></td><td>fac(x)</td><td>fac(5) → 120</td><td>累乗、x!の値</td></tr>
+            <tr><td></td><td>pyt(x)</td><td>pyt(3,4) → 5</td><td>x^2+y^2の平方根</td></tr>
+            <tr><td>集計</td><td>sum(x,...)</td><td>sum(1,2,3,4,5) → 15</td><td>合計。引数は可変</td></tr>
+            <tr><td></td><td>min(x,...)</td><td>min(3,1,2,1,5,1) → 1</td><td>引数の最小値。引数は可変</td></tr>
+            <tr><td></td><td>max(x,...)</td><td>max(3,1,2,1,5,1) → 5</td><td>引数の最大値。引数は可変</td></tr>
+            <tr><td>判断</td><td>if(x,y,z)</td><td>if(10 >= 1,'b','c') → 'b</td><td>最初の引数の結果がtrueなら2番目、falseなr3番目を返す</td></tr>
+            <tr><td>文字列</td><td>substr(x,y,z)</td><td>substr('abcdefg', 3, 2) → 'de'</td><td>xの文字列に対して、x番目からy文字分のみを取り出す。最初の文字は0</td></tr>
+            <tr><td></td><td>substring(x,y,z)</td><td>substring('abcdefg', 3, 5) → 'de'</td><td>xの文字列に対して、x番目からy文字目までを取り出す</td></tr>
+            <tr><td></td><td>indexof(x,y)</td><td>indexof('abcdefg','cd') → 2</td><td>xの文字列の最初からyの文字列を探し、最初に見つかった場所を返す</td></tr>
+            <tr><td></td><td>replace(x,y,z,w)</td><td>replace('abcdefgabc', 5, 8, 'yz') → 'abcdeyzbc'</td><td>xの文字列のy番目からz文字分を、文字列wに置き換える</td></tr>
+            <tr><td></td><td>substitute(x,y,z)</td><td>substitute('abcdefgabc', 'bc', 'yz') → 'ayzdefgayz'</td><td>xの文字列内にあるすべての文字列yを文字列zに置き換える</td></tr>
+            <tr><td>文字リスト</td><td>items(x,y,z)</td><td>items(x,0,1) →'abc¶'</td><td>文字列リストxに対して、y番目からz項目分を文字列リストとして取り出す</td></tr>
+            <tr><td>三角関数</td><td>sin(x)</td><td>sin(PI/4) → 0.71</td><td></td></tr>
+            <tr><td></td><td>cos(x)</td><td>cos(PI/4) → 0.71</td><td></td></tr>
+            <tr><td></td><td>tan(x)</td><td>tan(PI/4) → 1</td><td></td></tr>
+            <tr><td></td><td>tan2(x,y)</td><td>atan2(0.5, 0.5) → PI/4</td><td></td></tr>
+            <tr><td></td><td>asin(x)</td><td>asin(0.71) → PI/4</td><td></td></tr>
+            <tr><td></td><td>acos(x)</td><td>acos(0.71) → PI/4</td><td></td></tr>
+            <tr><td></td><td>atan(x)</td><td>atan(1) → PI/4</td><td></td></tr>
+        </table>
+    </div>
+<h4>文字のカウントについて</h4>
+    <ul>
+        <li>最初の文字、最初の項目は0です。</li>
+    </ul>
+</div>
+</body>
+</html>
