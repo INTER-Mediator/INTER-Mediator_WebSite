@@ -46,7 +46,8 @@
 </p>
 
 <div class="code"><pre><code>&lt;?php require_once ( 'INTER-Mediator/INTER-Mediator.php');
-    IM_Entry( $tableDefs, $optionDefs, $dbDefs, true ); ?&gt;</code></pre>
+    IM_Entry( $tableDefs, $optionDefs, $dbDefs, true );
+    ?&gt;</code></pre>
 </div>
 <p>
     サンプルで言えば、sample_form_FMS_include.phpや、sample_form_MySQL_include.phpのファイルが、定義ファイルに相当します。
@@ -64,10 +65,10 @@
     &lt;/head&gt;
     &lt;body onload="INTERMediator.construct(true)"&gt;
     :
-    &lt;td&gt;&lt;input type="text" class="IM[contact@datetime]"/&gt;&lt;/td&gt;</code></pre>
+    &lt;td&gt;&lt;input type="text" data-im="contact@datetime"/&gt;&lt;/td&gt;</code></pre>
 </div>
 <p>
-    以上の準備をすれば、ページファイル内のタグのtitle属性やclass属性に記述を加えることで、そのタグの値や他の属性に対してデータベースから取り出したデータが設定されることになります。title属性の場合は「contact@datetime」、class属性の場合はIMと大カッコでかこって「IM[contact@datetime]」といった記述を行います。この記述を「ターゲット指定」と呼ぶ事にします。また、ターゲット指定のあるタグのことを「リンクノード」と呼びます。ターゲット指定の詳細は、後で説明をします。
+    以上の準備をすれば、ページファイル内のタグのdata-im属性に記述を加えることで、そのタグの値や他の属性に対してデータベースから取り出したデータが設定されることになります。属性の値は「contact@datetime」といった記述を行います。この記述を「ターゲット指定」と呼ぶ事にします。また、ターゲット指定のあるタグのことを「リンクノード」と呼びます。ターゲット指定の詳細は、後で説明をします。
 </p>
 
 <p>
@@ -93,7 +94,7 @@
 <div class="table">
 <table>
 <tr>
-    <th colspan="4">
+    <th colspan="3">
         配列指定
     </th>
     <th rowspan="2">
@@ -101,23 +102,17 @@
     </th>
 </tr>
 <tr>
-    <th width="60">
-        第1次元
-    </th>
-    <th width="160">
-        第2次元
-    </th>
     <th width="90">
-        第3次元
+        キー
     </th>
     <th width="120">
-        第4次元
+        インデックス
+    </th>
+    <th width="120">
+        下位のキー
     </th>
 </tr>
 <tr>
-    <td rowspan="62">
-        (なし)
-    </td>
     <td>
         'name'
     </td>
@@ -400,10 +395,10 @@
 </td>
 </tr>
 <tr>
-    <td rowspan="3">
+    <td rowspan="4">
         'validation'
     </td>
-    <td rowspan="3">
+    <td rowspan="4">
         (なし)
     </td>
     <td>
@@ -427,6 +422,14 @@
     </td>
     <td>
         正しくない場合に表示するメッセージ（ruleがfalseのときに表示される）
+    </td>
+</tr>
+<tr>
+    <td>
+        'notify'
+    </td>
+    <td>
+        'inline'なら直後、'end-of-sibling'なら兄弟ノードの最後にメッセージのテキストを追加する。このとき、ノードのクラス名は'_im_alertmessage'となる。これ以外の表記あるいは、notifyを省略すると、ダイアログボックスで表示される。
     </td>
 </tr>
 <tr>
@@ -1181,15 +1184,13 @@
 <h3>リンクノードでのターゲット指定</h3>
 <ul>
     <li>任意の要素をリンクノードにすることができます。</li>
-    <li>class属性に「IM[table@field@target]」の記述で記載されいているものをリンクノードとみなします。</li>
-    <li>title属性に「table@field@target」の記述で記載されいているものをリンクノードとみなします。</li>
-    <li>
-        複数の設定があってもかまいません。class属性の場合は、「IM[table@field@target|table@field@target|...]」と記述します。title属性の場合は「table@field@target|table@field@target|...」と記述します。
-    </li>
-    <li>
-        title属性、class属性、いずれもリンクノードの指定にできなくすることができます。INTER-Mediatorのconstructメソッドの最初にあるtitleAsLinLinfo、classAsLinkInfo変数にfalseを入れれば、それぞれの属性に記述されたリンク指定は無視します。
-    </li>
+    <li>data-im属性に「table@field@target」の記述で記載されいているものをリンクノードとみなします。現在はこの記述方法が推奨されます。</li>
+    <li>複数の設定を行う場合、値には「table@field@target table@field@target...」のように空白で区切って記述します。</li>
 </ul>
+
+<p>
+    class属性に「IM[table@field@target]」の記述で記載される場合、title属性に「table@field@target」で記載されるものも、過去との互換性のためにリンクノードとみなします。複数の設定があってもかまいません。class属性の場合は、「IM[table@field@target|table@field@target|...]」と記述します。title属性の場合は「table@field@target|table@field@target|...」と記述します。title属性、class属性はいずれもリンクノードの指定にできなくすることができます。INTER-Mediatorのconstructメソッドの最初にあるtitleAsLinLinfo、classAsLinkInfo変数にfalseを入れれば、それぞれの属性に記述されたリンク指定は無視します。</p>
+
 <h3>ターゲット指定について</h3>
 
 <p>
@@ -1257,10 +1258,10 @@
                 汎用
             </td>
             <td>
-                DIV._im_enclosure
+                DIV data-im-control="enclosure"
             </td>
             <td>
-                DIV._im_repeater
+                DIV data-im-control="repeater"
             </td>
             <td>
                 any elements
@@ -1271,10 +1272,38 @@
                 汎用
             </td>
             <td>
-                SPAN._im_enclosure
+                DIV class="_im_enclosure"
             </td>
             <td>
-                SPAN._im_repeater
+                DIV class="_im_repeater"
+            </td>
+            <td>
+                any elements
+            </td>
+        </tr>
+        <tr>
+            <td>
+                汎用
+            </td>
+            <td>
+                SPAN data-im-control="enclosure"
+            </td>
+            <td>
+                SPAN data-im-control="repeater"
+            </td>
+            <td>
+                any elements
+            </td>
+        </tr>
+        <tr>
+            <td>
+                汎用
+            </td>
+            <td>
+                SPAN class="_im_enclosure"
+            </td>
+            <td>
+                SPAN class="_im_repeater"
             </td>
             <td>
                 any elements
@@ -1325,56 +1354,56 @@
         </tbody>
     </table>
 </div>
-<p>
-    テーブルの場合で説明します。たとえば、テーブルのあるセル、つまりTDタグで囲まれた中に、DIVタグ等で記述されたリンクノードがあったとします。そのリンクノードから上位のノードにたどって、TRをリピータとします。TRの1つ上位のノードはTBODYに必ずなります。そのTBODYがエンクロージャとなります。リンクノードに記述された情報からテーブルがわかり、そのテーブルへアクセスします。そして、レコードの値をリンクノードの定義に従って、ノードに反映されます。もし、レコードが複数あれば、リピータを複製して、その複製した一連のノードに対してリンクノードの処理を行います。ページファイルを作るときは、通常、TRタグによる要素が1つのテーブルを作りますが、レコードの数だけ行数が増えるということになります。なお、リピータとなるTRタグの要素は複数個あってもかまいません。レコードの数だけ複数のTRのセットが複製されて、データの反映が行われます。</p>
+<p>テーブルの場合で説明します。たとえば、テーブルのあるセル、つまりTDタグで囲まれた中に、DIVタグ等で記述されたリンクノードがあったとします。そのリンクノードから上位のノードにたどって、TRをリピータとします。TRの1つ上位のノードはTBODYに必ずなります。そのTBODYがエンクロージャとなります。リンクノードに記述された情報からテーブルがわかり、そのテーブルへアクセスします。そして、レコードの値をリンクノードの定義に従って、ノードに反映されます。もし、レコードが複数あれば、リピータを複製して、その複製した一連のノードに対してリンクノードの処理を行います。ページファイルを作るときは、通常、TRタグによる要素が1つのテーブルを作りますが、レコードの数だけ行数が増えるということになります。なお、リピータとなるTRタグの要素は複数個あってもかまいません。レコードの数だけ複数のTRのセットが複製されて、データの反映が行われます。</p>
 
 <h3>レコードがない場合の表示</h3>
 
-<p>
-    レコードがあれば、リピーターを複製していくつかのオブジェクトがページに見えますが、そのままだと、レコードがない場合、リピーターが全くない状態になってしまいます。そこで、リピーターの1つのclass属性を「_im_for_noresult_」とします。すると、classが「_im_for_noresult_」のリピータはレコードが存在すれば単に消しさられますが、レコードがないときにはこのリピータが1つだけエンクロージャーの中に配置されます。「レコードがありません」などの記述をこの方法で組み込めます。</p>
+<p>レコードがあれば、リピーターを複製していくつかのオブジェクトがページに見えますが、そのままだと、レコードがない場合、リピーターが全くない状態になってしまいます。そこで、リピーターの1つのdata-im-control属性を「noresult」にするか、あるいはclass属性を「_im_for_noresult_」とします。すると、このリピータはレコードが存在すれば単に消しさられますが、レコードがないときにはこのリピータが1つだけエンクロージャーの中に配置されます。「レコードがありません」などの記述をこの方法で組み込めます。</p>
+
+<h3>エンクロージャやリピーターの動作をキャンセルする</h3>
+
+<p>リンクノードを含むテーブルは、自動的に展開してしまいます。その展開をさせないようにするには、data-im-control属性の値を「ignore_enc_rep」とします。たとえば、1つのテーブルの中に複数のコンテキストからのフィールドを展開したい場合は、次のように記述して、TRをリピータとして認識しないようにします。</p>
+
+<div class="code">
+<pre><code>&lt;table&gt;
+    &lt;tr data-im-control=&quot;ignore_enc_rep&quot;&gt;
+        &lt;td&gt;
+            &lt;span data-im-control=&quot;enclosure&quot;&gt;
+            &lt;span data-im-control=&quot;repeater&quot;&gt;
+                &lt;input data-im=&quot;context1@field1&quot; /&gt;
+            &lt;/span&gt;
+            &lt;/span&gt;
+        &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr data-im-control=&quot;ignore_enc_rep&quot;&gt;
+        &lt;td&gt;
+            &lt;span data-im-control=&quot;enclosure&quot;&gt;
+            &lt;span data-im-control=&quot;repeater&quot;&gt;
+                &lt;input data-im=&quot;context2@field2&quot; /&gt;
+            &lt;/span&gt;
+            &lt;/span&gt;
+        &lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</code></pre></div>
 
 
 <h2>検索や並べ替えの動作と指定</h2>
 
 <p>INTER-Mediatorは、検索に関して以下の3つの設定個所があります。あるいは、以下のような検索条件が付与されて、データベースの読み出しが行われます。</p>
 
-
 <ol>
-
-
     <li>定義ファイルのコンテキストの中のqueryの設定</li>
-
-
     <li>INTERMediatorオブジェクトのadditionalConditionプロパティ（JavaScript）</li>
-
-
     <li>リレーションによって決まる外部キーと対応キーとの対応（定義ファイルのコンテキストの中のrelationの設定）</li>
-
-
 </ol>
 
-
-<p>
-    定義ファイルのqueryでの設定は、「常に適用されたい検索条件」を与えるのに便利です。たとえば、あるフィールドの値が「3」のものだけをいつも選択するとか、消し込みのフィールドがあって消し込まれていないレコードだけをとってくるというような場合です。</p>
-
-
-<p>
-    一方、ユーザが入力した検索条件のようなデータは、INTERMediatorオブジェクトのadditionalConditionプロパティを使って指定ができます。テキストフィールドに入力したテキストやあるいは計算結果などを検索条件に与えたい場合は、この方法で指定をします。</p>
-
-
-<p>
-    そして、リレーションは、エンクロージャーとリピーターによる展開中に、さらに内包するエンクロージャーとリピーターが見つかったとき、内側のコンテキストのrelation設定を参照して、外側のレコードに対応した、つまり関連のあるレコードを取り出すための条件を与えます。</p>
-
-
+<p>定義ファイルのqueryでの設定は、「常に適用されたい検索条件」を与えるのに便利です。たとえば、あるフィールドの値が「3」のものだけをいつも選択するとか、消し込みのフィールドがあって消し込まれていないレコードだけをとってくるというような場合です。</p>
+<p>一方、ユーザが入力した検索条件のようなデータは、INTERMediatorオブジェクトのadditionalConditionプロパティを使って指定ができます。テキストフィールドに入力したテキストやあるいは計算結果などを検索条件に与えたい場合は、この方法で指定をします。</p>
+<p>そして、リレーションは、エンクロージャーとリピーターによる展開中に、さらに内包するエンクロージャーとリピーターが見つかったとき、内側のコンテキストのrelation設定を参照して、外側のレコードに対応した、つまり関連のあるレコードを取り出すための条件を与えます。</p>
 <p>これら3つの条件は、無条件にANDで合成されます。</p>
 
-
 <h3>コンテキストのqueryの指定方法</h3>
-
-
 <p>定義ファイルのコンテキストのqueryは、キーとして、field、operator、valueを持つ配列を指定します。その指定を複数できるので、結果として、queryキーに対する値は配列の配列となります。</p>
-
-
 <p>PDO対応のデータベースアクセスクラスを利用すると、単に「field operator 'value'」という形式での式が構築されます。値についてはquoteメソッドで処理をしてあります。従って、array( 'field'=&gt;'age',
     'operator'=&gt;'&gt;', 'value'=&gt;'19'
     )のような指定が一例です。文字列のワイルドカードを使う場合には、データベースエンジンに従った記述が必要です。たとえば、MySQLで前方一致させるには、array( 'field'=&gt;'name', 'operator'=&gt;'LIKE',
@@ -1672,7 +1701,7 @@
 
 <p>
     SELECTタグの要素自体が値を持つコンポーネントです。SELECTタグ要素のターゲット指定の3つ目の項目を省略すると、SELECT要素の選択値として指定されます。また、OPTIONタグは決められたものでもかまいませんが、データベースからも値を設定できます。このとき、自動的に、SELECT/OPTIONタグがエンクロージャー／リピータとなります。OPTIONタグはSELECTタグ要素の選択値に対応するvalue属性と、実際にメニュー項目として見えるOPTIONタグ要素のテキストの2つの設定が必要になるでしょう。従って、「&lt;option
-    class="IM[contact_way@id@value|contact_way@name]"&gt;&lt;/option&gt;」のようなターゲット指定が2つありょうなタグ要素をSELECTの中に1つだけ作っておき、ターゲット指定の1つ目の名前のコンテキスト定義を定義ファイルに記述しておきます。</p>
+    data-im="contact_way@id@value contact_way@name"&gt;&lt;/option&gt;」のようなターゲット指定が2つありょうなタグ要素をSELECTの中に1つだけ作っておき、ターゲット指定の1つ目の名前のコンテキスト定義を定義ファイルに記述しておきます。</p>
 
 <h3>チェックボックス</h3>
 
@@ -1695,151 +1724,116 @@
 <ul>
     <li>HTMLでフォームを作るが、FORMタグは不要。必要なテキストフィールドと、登録ボタンを作成する。ただし、テキストフィールドなどは、1つのエンクロージャにまとめておく。</li>
     <li>定義ファイルに、レコードの作成が可能なコンテキストを定義する。</li>
-    <li>入力フォームにしたいエンクロージャのclass属性を「_im_post」とする。</li>
-    <li>HTMLのフォームの入力要素をリンクノードにします。つまり、前のコンテキストの名前（context）と対応するテーブルのフィールド名（field）に対して、class="IM[context@field]"
+    <li>入力フォームにしたいエンクロージャのdata-im-control属性を「post」とする。</li>
+    <li>HTMLのフォームの入力要素をリンクノードにします。つまり、コンテキストの名前（context）と対応するテーブルのフィールド名（field）に対して、data-im="context@field"
         をタグの中に記述する。
     </li>
-    <li>「登録」ボタンはBUTTONタグで作成し、class属性に「_im_post」を含める。</li>
+    <li>「登録」ボタンはBUTTONタグで作成し、data-im-control属性に「post」を指定する。ボタン名は任意。</li>
 </ul>
-<p>
-    登録ボタンを押した後の動作については、コンテキストの定義の表（ページの前の方）の「post-」で始まる3つの項目が用意されています。ボタンを何度も押す事を避けるために、ボタンをメッセージで置き換えたり、別のページに移動したり、ページの再描画ができます。</p>
+<p>登録ボタンを押した後の動作については、コンテキストに定義できる「post-」で始まる3つの項目が用意されています。ボタンを何度も押す事を避けるために、ボタンをメッセージで置き換えたり、別のページに移動したり、ページの再描画ができます。</p>
 
-<p>
-    この機能を使う場合、「_im_post」を指定したエンクロージャーの外部にあるエンクロージャーに対しては、普通にページ合成ができるので、データベースアクセスの結果と、入力フォームを混在させることもできます。なお、入力フォームの内部のエンクロージャーの展開は行いません。</p>
+<p>コンテキストに指定したバリデーションの設定についても設定されますが、編集時と異なり、登録ボタンを押したときに、入力項目に対してまとめて判定が行われて、ページ内にエラーを表示したり、ダイアログボックスを表示したりができます。</p>
 
-<p>登録ボタンをクリックした後に独自のプログラムを追加したい場合は、以下のような記述の関数を定義します。メッセージ表示、ページ再合成、ページ移動が定義されていた場合、それらよりも前に、以下に定義した関数を実行します。</p>
+<p>この機能を使う場合、data-im-control属性に「post」を指定したエンクロージャーの外部にあるエンクロージャーに対しては、普通にページ合成ができるので、データベースアクセスの結果と、入力フォームを混在させることもできます。また、入力フォームの内部のエンクロージャーも同様に通常通り処理されるので、マスターの内容からポップアップを構築する事ができます。</p>
 
-<div class="code"><pre><code>INTERMediatorOnPage.processingAfterPostOnlyContext = function(node){
+<p>登録ボタンをクリックした後に独自のプログラムを追加したい場合は、以下のような記述の関数を定義します。メッセージ表示、ページ再合成、ページ移動が定義されていた場合、それらよりも前に、以下に定義した関数を実行します。processingBeforePostOnlyContextは、データベースへの書き込み前に実施され、返り値がfalseだとデータベース処理を行わず、ページ移動なども行いません。processingAfterPostOnlyContextはデータベース処理後に実行され、返り値は指定しません。</p>
+
+<div class="code"><pre><code>INTERMediatorOnPage.processingBeforePostOnlyContext = function(node){
     // any program here.
-    };</code></pre>
+};
+INTERMediatorOnPage.processingAfterPostOnlyContext = function(node){
+    // any program here.
+};</code></pre>
 </div>
+
 <h2>ブラウザのバージョンを調べる仕組み</h2>
-
 <p>ブラウザのバージョンを調べて、一定のもの以外は表示できないようにしたいと思うこともあります。この機能を、必要に応じて利用できるようにしました。</p>
-
-
-<p>
-    まず、INTER-Mediator.phpと同じディレクトリにある$paramsファイルに、変数名$browserCompatibilityという変数を定義し、配列記述します。配列の記述方法は表に示します。作成例も紹介します。。</p>
-
+<p>まず、INTER-Mediator.phpと同じディレクトリにある$paramsファイルに、変数名$browserCompatibilityという変数を定義し、配列記述します。配列の記述方法は表に示します。作成例も紹介します。。</p>
 
 <div class="table">
-
-
     <table>
-
-
         <tr>
             <th>次元</th>
             <th>指定内容</th>
             <th>指定する値の例</th>
         </tr>
-
-
         <tr>
             <td>第1次元</td>
             <td>ブラウザの種類</td>
             <td>msie, firefox, safari, chrome, opera</td>
         </tr>
-
-
         <tr>
             <td>第2次元</td>
             <td>配列（OSを示すキー）</td>
             <td>mac, win</td>
         </tr>
-
-
         <tr>
             <td></td>
             <td>バージョン記述文字列</td>
             <td>3+, 4-</td>
         </tr>
-
-
         <tr>
             <td>第3次元</td>
             <td>バージョン記述文字列（第2次元が配列のとき）</td>
             <td>3+, 4-</td>
         </tr>
-
-
     </table>
-
-
 </div>
 
+<div class="code"><pre><code>$browserCompatibility = array(
+    'msie' => '7+',
+    'firefox' => '2+',
+    'safari' => array( 'win' => '4+', 'mac' => '3+' ),
+    'chrome' => '1+',
+    'opera' => '1+',
+);</code></pre></div>
 
-<div class="code">
-
-
-   <pre><code>$browserCompatibility = array(
-
-       'msie' => '7+',
-       'firefox' => '2+',
-
-       'safari' => array( 'win' => '4+', 'mac' => '3+' ),
-
-       'chrome' => '1+',
-
-       'opera' => '1+',
-       );</code></pre>
-
-
-</div>
-
-
-<p>
-    「バージョン記述文字列」は、数字とプラスないしはマイナスで指定します。「3+」は3以上、「3-」は3以下のバージョンで利用できることを示します。プラスあるいはマイナスを付けないと、その数値のバージョンのみです。ブラウザ名やOSは、大文字小文字は関係ありません。</p>
-
-
+<p>「バージョン記述文字列」は、数字とプラスないしはマイナスで指定します。「3+」は3以上、「3-」は3以下のバージョンで利用できることを示します。プラスあるいはマイナスを付けないと、その数値のバージョンのみです。ブラウザ名やOSは、大文字小文字は関係ありません。</p>
 <p>前の例だと、Safariのみ、OSごとに分岐しています。WindowsならVer.4以上、MacならVer.3以上は利用可能であることを示しています。</p>
 
-
 <h3>ブラウザの互換性をメッセージとして表示する</h3>
-
-
-<p>
-    JavaScriptベースで動くINTER-Mediatorにとって、これがいちばん難しい仕事かもしれません。ブラウザによっては、JavaScriptが動かないこともあるかもしれないのです。したがって、ベストプラクティスはまだ発見できていません。しかしながら、なんとか、なるかなというところまで来ました。</p>
-
-
+<p>JavaScriptベースで動くINTER-Mediatorにとって、これがいちばん難しい仕事かもしれません。ブラウザによっては、JavaScriptが動かないこともあるかもしれないのです。こうした状況をうまく処理するために、以下のような点を考慮します。</p>
 <ol>
-
-
-    <li>
-        ページファイルの中の、bodyタグ要素の直下あたりに、INTER-Mediatorが一切しない場合のメッセージを付けておく。たとえば、サンプルファイルの「WebSite」のindex.htmlにあるid=nonsupportedmessageのdivタグ要素。INTER-Mediatorの動作が成功すれば、このノードを削除するか表示しないようにする。これにより、JavaScriptが一切動かない状態でも、何らかのメッセージが見えるようになる。
-    </li>
-
-
-    <li>
-        ページファイルの構築を以下のようなプログラムにする。INTERMediatorCheckBrowser関数で前に説明した$paramsファイルの変数の定義に従って、ブラウザの互換性をチェックする。もし、対応でないならfalseを返すので、ページ構築はしない。また、その場合は、body要素の中身をいちど全部クリアして、メッセージだけを表示する。もし、対応しているならnodeで示したノードを削除する。nodeはnullあるいは未指定でも構わない。
-    </li>
-
-
+    <li>ページファイルの中の、bodyタグ要素の直下あたりに、INTER-Mediatorが一切しない場合のメッセージを付けておく。たとえば、サンプルファイルの「WebSite」のindex.htmlにあるid=nonsupportedmessageのdivタグ要素。INTER-Mediatorの動作が成功すれば、このノードを削除するか表示しないようにする。これにより、JavaScriptが一切動かない状態でも、何らかのメッセージが見えるようになる。</li>
+    <li>ページファイルの構築を以下のようなプログラムにする。INTERMediatorCheckBrowser関数で前に説明した$paramsファイルの変数の定義に従って、ブラウザの互換性をチェックする。もし、対応でないならfalseを返すので、ページ構築はしない。また、その場合は、body要素の中身をいちど全部クリアして、メッセージだけを表示する。もし、対応しているならnodeで示したノードを削除する。nodeはnullあるいは未指定でも構わない。</li>
 </ol>
-
-
-<div class="code">
-
-
-   <pre><code>if (INTERMediatorCheckBrowser( node )) {
-
-       INTERMediator.construct(true);
-
-       }</code></pre>
-
-
-</div>
-
-
 <p>上記の2つのうち、一方だけでもかまいませんし、両方をやってもかまいません。また、チェックは不要ということなら、単にINTERMediator.construct(true);を呼び出すだけでもいいでしょう。</p>
 
+<div class="code"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html;charset=UTF-8&quot;/&gt;
+    &lt;title&gt;Page Title&lt;/title&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;context.php&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        window.onload = function () {
+            var nonSupportNode = document.getElementById('nonsupportmessage');
+            if (INTERMediatorOnPage.INTERMediatorCheckBrowser(nonSupportNode)) {
+                INTERMediator.construct(true);
+            }
+        }
+        INTERMediatorOnPage.doAfterConstruct = function () {
+            var contentNode = document.getElementById('container');
+            contentNode.style.display = &quot;block&quot;
+        }
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id=&quot;nonsupportmessage&quot; style=&quot;background-color:#333333&quot;&gt;
+        &lt;div style=&quot;text-align:center;color:yellow&quot;&gt;If you see this, you must use any unsupported web browser. Or constructing the page.
+        &lt;/div&gt;
+        &lt;div style=&quot;text-align:center;color:yellow&quot;&gt;この表示が見えている場合、描画処理中です。しばらくお待ちください。長時間見えている場合は、非対応ブラウザで参照しています。&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div id=&quot;container&quot; style=&quot;display: none&quot;&gt;
+        // ページコンテンツ
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+
 <h2>クライアント側でのJavaScriptの処理</h2>
+<p>INTER-Mediatorによって生成されたノード、あるいは生成するかもしれないノードについての処理をサポートしています。sample_invoiceというサンプルを参照するのがいいかと思います。この機能は、まだまだ未完成だと思っていますので、ご要望をお寄せください。</p>
 
-<p>
-    INTER-Mediatorによって生成されたノード、あるいは生成するかもしれないノードについての処理をサポートしています。sample_invoiceというサンプルを参照するのがいいかと思います。この機能は、まだまだ未完成だと思っていますので、ご要望をお寄せください。</p>
-
-<p>
-    まず、ノードへの到達の最低限のこととして、同一のエンクロージャ内にあるノードへの参照がしたいと考えると思います。そのために、INTERMediatorOnPage.getNodeIdFromIMDefinition関数を用意しました。引数が2つありますが、最初の引数はターゲット指定、2つ目の引数は基準となるノードを指定します。基準ノードからエンクロージャを探し、その内部にある第1引数のターゲットを持つノードのid属性値を戻します。このid属性値は当然ながら重複がないように設定されているので、該当するノードを参照できるはずです。この仕組みがあれば、単価と個数をかけて金額にすることは、JavaScriptのプログラムで作成できるはずです。</p>
+<p>まず、ノードへの到達の最低限のこととして、同一のエンクロージャ内にあるノードへの参照がしたいと考えると思います。そのために、INTERMediatorOnPage.getNodeIdFromIMDefinition関数を用意しました。引数が2つありますが、最初の引数はターゲット指定、2つ目の引数は基準となるノードを指定します。基準ノードからエンクロージャを探し、その内部にある第1引数のターゲットを持つノードのid属性値を戻します。このid属性値は当然ながら重複がないように設定されているので、該当するノードを参照できるはずです。この仕組みがあれば、単価と個数をかけて金額にすることは、JavaScriptのプログラムで作成できるはずです。</p>
 
 <p>また、INTERMediatorOnPageによって参照されるオブジェクトにexpandingEnclosureFinish(n,
     t)という関数を定義します。すると、この関数はページ内のエンクロージャの展開が終わる度に呼び出されます。変数nにはそのエンクロージャに関連している定義ファイルの第1引数に指定する配列のname属性の値が渡されます。2つ目の引数には、展開したノードのエンクロージャが指定されますが、INTERMediatorOnPage.getNodeIdFromIMDefinition関数の2つ目の引数に指定できる値になります。</p>
@@ -1886,19 +1880,26 @@
 
 </p>
 
-<h3>INTERMediatorOnPage.getNodeIdFromIMDefinition( linkdef, target, seeking);
-    <br>
-    INTERMediatorOnPage.getNodeIdsFromIMDefinition( linkdef, target, seeking );
-</h3>
-
+<h3>INTERMediatorOnPage.getNodeIdsHavingTargetFromNode(fromNode, imDefinition)</h3>
 <ul>
-
-    <li>引数：linkdef：リンク設定を記述する。例えば、「&lt;input type="text" class="IM[item@unitprice]" /&gt;」については、引数に "item@unitprice"
-        を指定する
-    </li>
-    <li>引数：target：基準となるノード</li>
-    <li>引数：seeking：trueならtargetのノードそのものの子ノードを探す。そうでなければ、targetより上位のリピータを探してそのリピーターの子ノードを探す</li>
-    <li>返り値：ノードのid属性を示す文字列、あるいはその配列。該当するノードが1つの場合は前者、複数の場合は後者の関数を利用する。</li>
+    <li>引数：fromNode：基準となるノードで、このノードより下位のノードを検索する</li>
+    <li>引数：imDefinition：ターゲット指定。例えば、「&lt;input type="text" class="IM[item@unitprice]" /&gt;」については、引数に "item@unitprice"
+        を指定する</li>
+    <li>返り値：ノードのid属性を示す文字列の配列</li>
+</ul>
+<h3>INTERMediatorOnPage.getNodeIdsHavingTargetFromRepeater(fromNode, imDefinition)</h3>
+<ul>
+    <li>引数：fromNode：基準となるノードで、このノードより上位のノードを検索し最初に見つかったリピータよりも下位のノードを検索する</li>
+    <li>引数：imDefinition：ターゲット指定。例えば、「&lt;input type="text" class="IM[item@unitprice]" /&gt;」については、引数に "item@unitprice"
+        を指定する</li>
+    <li>返り値：ノードのid属性を示す文字列の配列</li>
+</ul>
+<h3>INTERMediatorOnPage.getNodeIdsHavingTargetFromEnclosure(fromNode, imDefinition)</h3>
+<ul>
+    <li>引数：fromNode：基準となるノードで、このノードより上位のノードを検索し最初に見つかったエンクロージャよりも下位のノードを検索する</li>
+    <li>引数：imDefinition：ターゲット指定。例えば、「&lt;input type="text" class="IM[item@unitprice]" /&gt;」については、引数に "item@unitprice"
+        を指定する</li>
+    <li>返り値：ノードのid属性を示す文字列の配列</li>
 </ul>
 
 <h3>INTERMediatorOnPage.doAfterConstruct</h3>
@@ -2166,7 +2167,9 @@
         </tr>
         <tr>
             <td>DataConverter_HTMLString.php</td>
-            <td>改行をBRタグ要素、そして&lt;や&gt;や&amp;を参照形式に変換する。parameterをtrueと指定するとURLにAタグ要素を付加してリンクに変換する。データベースへの書き込み時はそのままの文字列</td>
+            <td>
+                改行をBRタグ要素、そして&lt;や&gt;や&amp;を参照形式に変換する。parameterをtrueと指定するとURLにAタグ要素を付加してリンクに変換する。データベースへの書き込み時はそのままの文字列
+            </td>
         </tr>
         <tr>
             <td>DataConverter_MySQLDateTime.php</td>
@@ -2179,6 +2182,10 @@
         <tr>
             <td>DataConverter_NumberBase.php</td>
             <td>NumberやCurrencyの基底クラス</td>
+        </tr>
+        <tr>
+            <td>DataConverter_NullZeroString.php</td>
+            <td>書き込み時にデータが''ならNULLとする、読み込み時は逆変換</td>
         </tr>
         <tr>
             <td>DataConverter_template.php</td>
