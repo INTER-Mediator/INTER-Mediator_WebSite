@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!--
+/*
+ * INTER-Mediator Ver.@@@@2@@@@ Released @@@@1@@@@
+ *
+ *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2010-2014 Masayuki Nii, All rights reserved.
+ *
+ *   This project started at the end of 2009.
+ *   INTER-Mediator is supplied under MIT License.
+ */
+-->
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="/pagestyle.css" rel="stylesheet" media="screen">
+    <link rel="shortcut icon" href="/im-icon.png" type="image/png">
+    <link rel="icon" href="/im-icon.png" type="image/png">
+    <title>INTER-Mediator</title>
+    <script type="text/javascript" language="JavaScript">
+        var htmlDocumentModDate = document.lastModified;
+    </script>
+    <script type="text/javascript" language="JavaScript" src="/pagebuilder.js"></script>
+    <script type="text/javascript" language="JavaScript" src="/files/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<div id="navigationbox" class="graybox">
+    <div id="navigation"></div>
+    <div id="latestnews"></div>
+</div>
+<div id="page_header"></div>
+<div id="page_contents">
+    <h2>プラクティス：検索をしてその結果を一覧表示する</h2>
+    <p></p>
+    <h3>前提知識</h3>
+    <p>INTER-Mediatorに関して、以下の内容をすでに知っている事を前提とします。</p>
+    <ul>
+        <li>data-im属性への記述によりフィールドの内容が表示されること</li>
+        <li>TABLEタグを使った表の中で、複数のレコードが繰り返し表示されるようになっていること</li>
+        <li>一定数ごとのレコードを表示する仕組みと、表示範囲を切り替えるページネーションの仕組みがあること</li>
+        <li>定義ファイルのコンテキストには、検索条件が指定できること</li>
+    </ul>
+    <h3>作成例について</h3>
+    <p>利用するデータベースは、郵便番号と地名が含まれているもので、サンプルのデータベースにあるpostalcodeという名称のものです（執筆時点では、MySQL向けのファイルのみ用意しています）。レポジトリ内では、Samples/Practices/search_page.htmlを開く事で、実際に稼働させることができます。Samples/index.htmlにあるサンプルの一覧では「Practices」にある「search」のリンクをクリックして表示できます。</p>
+    <p>まず、どのような動作になるのかを見て行くことにしましょう。最初にページを開くと、郵便番号と地名がともかく一覧されています。サンプルのデータベースには、ある時期の東京都のデータのみを収録しています。検索条件は何もなく、おそらく全てのデータがリストされていると想定されます。ここで、ページネーション（ページ移動）の「&gt;」ボタンをクリックすると、次々と10件ずつレコードが表示されます。また、何件目のデータを現在表示しているのかという情報も見えています。</p>
+
+    <div class="picture"><img class="picture-small" src="../files/pr1-1.png" /></div>
+
+    <p>ここで、「検索条件」に適当な地名（ここでは「池袋」）を入力して「Search」ボタンをクリックします。すると、一覧表には、池袋を含む地名やビル名のものだけに絞り込まれました。全部で68件の地名があることが分かります。「&gt;」ボタンでページ移動ができますが、ページ移動後にも、検索条件はそのまま見えていることにも注意を払いましょう。また、地名には「池袋」を含むものが検索されています。</p>
+
+    <div class="picture"><img class="picture-small" src="../files/pr1-2.png" /></div>
+
+    <p>検索条件に、ここでは「171」と入力しました。すると、郵便番号が171で始まる地名だけが絞り込まれています。また、ここで、「郵便番号」と書かれた右側の▼をクリックすると、郵便番号の逆順で表示されるようになりました。つまり、一覧表示が「郵便番号」の逆順にソートされて表示されるようになっています。</p>
+
+    <div class="picture"><img class="picture-small" src="../files/pr1-4.png" /></div>
+
+    <p>検索条件に、東京都に明らかになさそうな「大阪」という文字列を指定して検索してみます。もちろん、大阪を含む地名は存在しませんが、検索結果が0件のときに表示する行が見えています。</p>
+
+    <div class="picture"><img class="picture-small" src="../files/pr1-3.png" /></div>
+
+    <p>「表示件数」については、ここでは省略します。</p>
+
+    <h4>定義ファイル</h4>
+    <p>定義ファイルのSamples/Practices/search_def.phpの内容は以下の通りです。コンテキストは、postalcodeという名前のものが1つだけあり、これはテーブル名と同様なので、tableやviewキーの値は指定していません。1ページあたりのレコード数は10で、後からの変更をしても30より多くの数を一度にページに出す事はできません。そして、pagingキーがtrueなので、ページネーションのコントロールがページ上に表示されます。</p>
+    <p>データベースはMySQLを使うのでdb-classは「PDO」を指定します。それ以外の接続情報、アカウント、パスワードは、INTER-Mediator/params.phpファイルにあるものをそのまま使います。INTER-Mediatorのサンプルファイルをそのまま参照できる状態であれば、特に変更する必要はありません。</p>
+    <div class="code">
+<pre><code>require_once(dirname(__FILE__) . '/../../INTER-Mediator.php');
+
+IM_Entry(
+array(
+    array(
+        'name' =&gt; 'postalcode',
+        'records' =&gt; 10,
+        'maxrecords' =&gt; 30,
+        'paging' =&gt; true,
+    ),
+),
+null,
+array('db-class' =&gt; 'PDO'),
+    false
+);</code></pre>
+    </div>
+
+    <h4>ページファイル</h4>
+    <p>ページファイルについては、ボディ部のみを示します。もちろん、ヘッダ部で、前述の定義ファイルSCRIPTタグで読み込んだ状態になっています。</p>
+
+    <div class="code">
+<pre><code>&lt;div&gt;
+    検索条件:
+    &lt;input type=&quot;text&quot; id=&quot;condition&quot; data-im=&quot;_@condition&quot;&gt;
+    表示件数：
+    &lt;input type=&quot;text&quot; id=&quot;number&quot; data-im=&quot;_@_im_pagedSize&quot; size=&quot;3&quot;&gt;
+    &lt;button id=&quot;search&quot;&gt;search&lt;/button&gt;
+&lt;/div&gt;
+&lt;div id=&quot;IM_NAVIGATOR&quot;&gt;Navigation Controls by INTER-Mediator&lt;/div&gt;
+&lt;table border=&quot;1&quot; id=&quot;resultTable&quot;&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;郵便番号
+                &lt;span id=&quot;sort1a&quot;&gt;▲&lt;/span&gt;
+                &lt;span id=&quot;sort1d&quot;&gt;▼&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th&gt;都道府県&lt;/th&gt;
+            &lt;th&gt;市区町村&lt;/th&gt;
+            &lt;th&gt;町域名
+                &lt;span id=&quot;sort2a&quot;&gt;▲&lt;/span&gt;
+                &lt;span id=&quot;sort2d&quot;&gt;▼&lt;/span&gt;
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;div data-im=&quot;postalcode@f3&quot;&gt;&lt;/div&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;div data-im=&quot;postalcode@f7&quot;&gt;&lt;/div&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;div data-im=&quot;postalcode@f8&quot;&gt;&lt;/div&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;div data-im=&quot;postalcode@f9&quot;&gt;&lt;/div&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr data-im-control=&quot;noresult&quot;&gt;
+            &lt;td colspan=&quot;4&quot;&gt;検索結果はありません。あるいは検索前です。&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+    </div>
+
+    <h3>それぞれの動作の実現</h3>
+    <h4>一覧表示の実現</h4>
+    <p>postalcodeテーブルでは、f3フィールドに郵便番号、f7〜f9フィールドに都道府県、市区町村、町域名が収められています。一覧表に表示をしつつ、そこでの変更の必要がない場合には、INPUTタグ要素でフィールドの内容を表示する必要はありません。ページファイル内のTBODYタグ要素の中には2つのTR要素がありますが、その最初の方の要素の子要素にTDがいくつかあり、さらに各TDはDIV要素があります。そこに、f3、f7〜f9のそれぞれのフィールドを示すターゲット指定がdata-im属性に設定されています。</p>
+    <p>postalcodeコンテキストに対して検索して得られた郵便番号と地名の情報に対して、TBODYの最初のTR要素がレコードの数だけ繰り返されて、そしてそれぞれDIVタグ要素のテキストとしてフィールドの値が設定されて表示されます。初期状態では、定義ファイルのコンテキストにあるrecordsキーの値に応じて最大10レコードまでとなります。この仕組みによって、一覧表が作成されています。</p>
+    <h4>検索結果が0のときの一覧表</h4>
+    <p>TBODYの内容を解析して、このTBODYがエンクロージャーとして機能します。そして、postalcodeコンテキストに対して検索処理を行います。このとき、検索結果が0件の場合、data-im-control属性が「noresult」のものを残して、エンクロージャー内の他のリピーターは削除され、その結果を表示します。また、一方で、検索結果が0件でない場合、data-im-control属性が「noresult」のものを削除して残った結果をリピーターとして識別して、そのリピーターをレコードの数だけ複製してページを表示します。</p>
+    <h4>ページネーションのコントロールの表示</h4>
+    <p>postalcodeコンテキストでは、pagingキーの値がtrueなのでページネーションコントロールによるページ切り替えが可能です。そして、ページネーションのコントロールを表示するためには、id属性が「IM_NAVIGATOR」の要素を配置しておく必要があります。TABLEタグのすぐ上にその要素が見えており、この場所にページネーションコントロールを自動的に構築します。</p>
+    <h4>ページの合成処理</h4>
+    <p>実際にページを表示する処理は、window.onloadへの関数の代入で実現しています。Samples/Practices/search.jsにプログラムが置いてあります。そこにある以下の部分が、実際にページを合成します。window.onloadに代入した関数は、ページの要素を読み込んだ後、つまりページが表示された直後に呼び出され、INTERMediator.construct(true);によって実際にページの生成を行います。この関数のそれまでの部分については、この後に説明をします。</p>
+    <div class="code">
+<pre><code>window.onload = function () {
+        :
+    INTERMediator.construct(true);
+};</code></pre>
+    </div>
+    <h4>検索のユーザインタフェース</h4>
+    <p>ページファイルの最初の方に、検索条件を指定するINPUTタグ要素があります。この要素はデータベースとは関係なく、ページ上で存在するものです。そのため、id属性（値はcondition）を設定していますが、加えて、data-im属性にローカルコンテキストを示す「_@condition」という記述があります。これにより、クライアント内部でのデータ記憶領域とバインドされます。アンダーラインはローカルコンテキストを示す記号で、「condition」がそのコンテキストでのキーとなります。このINPUT要素から値を取り出すのではなく、ローカルコンテキストより、このテキストフィールドに入力した値が取り出せるようになります。</p>
+    <h4>実際の検索処理</h4>
+    <p>検索処理は、Samples/Practices/search.jsにある以下の関数として、汎用的に記述しました。つまり、doSearch()の呼び出しで、検索条件を取り出してそれを設定した上で、ページの再合成を行うことで検索結果を反映させた一覧を取得します。INTERMediator.additionalConditionには、コンテキストとして定義ファイルに記述した検索条件に、さらに新たな検索条件を付加するプロパティです。</p>
+    <div class="code">
+<pre><code>function doSearch() {
+    INTERMediator.additionalCondition = {};
+    var c1 = IMLibLocalContext.getValue(&quot;condition&quot;);
+    if (c1 &amp;&amp; c1.length &gt; 0) {
+        INTERMediator.additionalCondition = {&quot;postalcode&quot;: [
+            {field: 'f3', operator: 'LIKE', value: c1 + '%'},
+            {field: 'f7', operator: 'LIKE', value: '%' + c1 + '%'},
+            {field: 'f8', operator: 'LIKE', value: '%' + c1 + '%'},
+            {field: 'f9', operator: 'LIKE', value: '%' + c1 + '%'},
+            {field: '__operation__', operator: 'ex'}
+        ]};
+    }
+    INTERMediator.startFrom = 0;
+    IMLibLocalContext.archive();
+    INTERMediator.construct(true);
+}</code></pre>
+    </div>
+    <p>最初に、付加条件をいったんクリアします。IMLibLocalContext.getValueメソッドにより、検索条件のテキストフィールドの値を取り出します。そのテキストフィールドは、直前に説明した通り、ローカルコンテキストのconditionキーの値とバインドしていて、テキストフィールドの値はキーの値を指定して取り出すことができます。つまり、変数c1には、テキストフィールドの値が取り出されます。</p>
+    <p>もし、検索条件が指定されていれば、INTERMediator.additionalConditionに付加検索条件を追加します。ここでは、f3が検索条件で始まり、f7〜g9については検索条件を含むという検索設定をMySQLの文法に従って記述しています。__operation__という記述により、それまでの並びをANDではなくOR条件で結びます。結果として、4つの条件がどれか1つでも満たすようなレコードが検索されて取り出されることになります。</p>
+    <p>INTERMediator.startFromは、検索結果の何番目から表示するかを示すプロパティで、ページネーションによりINTER-Mediatorによって自動的に更新されるものです。最初なので0にしておきます。IMLibLocalContext.archive()により、ローカルコンテキストを記憶しています。最後に、INTERMediator.construct(true);によってページの合成を行っています。</p>
+    <h4>Searchボタンをクリックして検索する</h4>
+    <p>ページファイルでは、BUTTONタグを使って「Search」ボタンを作成していますが、その要素の記述内では、特にプログラムの呼び出しなどを行っていません。onclick属性に記述する方法でももちろん動作しますが、別の方法も用意しています。INTERMediator.construct( ) でページ合成をする前に、IMLibMouseEventDispatch.setExecuteメソッドを利用して、イベントに対応する処理を記述できます。このメソッドの最初の引数は要素のid属性で、2番目にその要素をクリックしたときの処理を関数で記述します。Searchボタンのid属性値はsearchなので、以下のような記述を行えば、クリックしたときにdoSearch関数を実行します。なお、IMLibMouseEventDispatch.setExecuteは、実際にはdocumentオブジェクトでのclickコマンドを受け付けます。従って、オブジェクトに直接プログラムを記述するような場合や、オブジェクトにイベントリスナを設定する場合には、そのまま両方動くことになります。このサンプルプログラムでは、HTML側に一切の処理を書かないという方針でまとめています。</p>
+    <div class="code">
+<pre><code>window.onload = function () {
+        :
+    IMLibMouseEventDispatch.setExecute('search', function () {
+        doSearch();
+    });
+        :
+    INTERMediator.construct(true);
+};</code></pre>
+    </div>
+    <h4>Returnキーで検索をする</h4>
+    <p>INPUTタグ要素は、原則としてReturnキーあるいはEnterキーによるサブミット処理は、FORMタグを使っている場合にしか適用されません。INTER-MediatorではFORMを使っていないので、簡単に言えばテキストフィールドでReturnキーを押しても「何も起こらない」ということになります。</p>
+    <p>そこで、ページ合成前に、IMLibKeyEventDispatch.setExecuteメソッドを利用すれば、第1引数の値をid属性に持つ要素に対して、2番目の引数の文字コードが入力されれば、3つ目の引数の関数を実行します。つまり、以下の記述により、テキストフィールドに入力中にEnterキーを押すと、doSearch関数が実行されて検索が行われるということになります。IMLibLocalContext.updateメソッドは、引数にローカルコンテキストのキーを指定し、現在の要素の値をローカルコンテキストへ反映させます。通常はこの作業は自動的に行われるのですが、要素のchangeイベントをもとにしており、キータイプだけでは同期処理が実行されません。そこで、このような記述で明示的に要素の値をコンテキストに反映させています。</p>
+    <div class="code">
+<pre><code>window.onload = function () {
+    IMLibKeyEventDispatch.setExecute('condition', 13, function () {
+    IMLibLocalContext.update('condition');
+        doSearch();
+    });
+        :
+    INTERMediator.construct(true);
+};</code></pre>
+    </div>
+    <h4>フィールド名の横の▲▼をクリックして、そのフィールドで並べ替える</h4>
+    <p>例えば、郵便番号の▲ボタンは、spanタグ要素として記述して、id属性値は「sort1a」となっています。そして、window.onloadに代入している関数内で以下のようにIMLibMouseEventDispatch.setExecuteメソッドが記述されています。つまりは、▲ボタンをクリックすると、まず、INTERMediator.additionalSortKeyというプロパティに、追加のソート条件を設定します。右辺にあるように、postalcodeコンテキストに対してf3フィールドを昇順で並べ替えるという設定を追加します。このサンプルでは、フィールドに応じた並べ替えのクリックポイントが4カ所あるので、4つの要素に対してクリックイベントの実行時に処理を行うように記述をしています。</p>
+    <div class="code">
+<pre><code>window.onload = function () {
+        :
+    IMLibMouseEventDispatch.setExecute('sort1a', function () {
+        INTERMediator.additionalSortKey
+            = {&quot;postalcode&quot;: {field: 'f3', direction: 'ASC'}};
+        doSearch();
+    });
+    IMLibMouseEventDispatch.setExecute('sort1d', function () {
+        INTERMediator.additionalSortKey
+            = {&quot;postalcode&quot;: {field: 'f3', direction: 'DESC'}};
+        doSearch();
+    });
+    IMLibMouseEventDispatch.setExecute('sort2a', function () {
+    INTERMediator.additionalSortKey
+            = {&quot;postalcode&quot;: {field: 'f9', direction: 'ASC'}};
+        doSearch();
+    });
+    IMLibMouseEventDispatch.setExecute('sort2d', function () {
+        INTERMediator.additionalSortKey
+        = {&quot;postalcode&quot;: {field: 'f9', direction: 'DESC'}};
+        doSearch();
+    });
+    INTERMediator.construct(true);
+};</code></pre>
+    </div>
+
+</div>
+</body>
+</html>
