@@ -230,7 +230,8 @@ span.datestring {
     color: #4444BB;
 }
 table#topmessage {
-    margin: 6px 40px 6px 40px;
+    margin: 0px 40px 6px 0px;
+    padding: 0;
 }
 table#topmessage td {
     border-bottom: 2px solid white;
