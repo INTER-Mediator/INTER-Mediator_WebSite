@@ -155,7 +155,7 @@
 <img src="/files/fig1.png"/>
 </div>
 
-<h2>4. IMでのバインディングの概念</h2>
+<h2>4. INTER-Mediatorでのバインディングの概念</h2>
 
 <h3>定義ファイルのコンテキスト</h3>
 
@@ -211,25 +211,23 @@ key: id</code></pre>
 <p>ページファイル、つまり、HTMLファイル側で、addressテーブルのtelフィールドを表示し、かつ編集できるようにテキストフィールドを用意するとします。このとき、HTMLのタグを次のように記述します。</p>
 
 <div class="code">
-    <pre><code>&lt;input type="text" class="IM[jusho@tel]" /&gt;</code></pre>
+    <pre><code>&lt;input type="text" data-im="jusho@tel" /&gt;</code></pre>
 </div>
 
 <p>この記述を行い、この後に説明する「ページファイルに必要な記述
     」の記述を行うだけで、テキストフィールドに、addressテーブルのtelフィールドの値が表示されます。また、そこで電話番号を書き直して、tabキーを押したフォーカスを離すなどすると、書き直した電話番号が元のフィールドに書き戻されます。</p>
 
-<p>通常のHTMLでの違いは、class属性に IM[...]
-    という記述が加わっていることです。この記述を「ターゲット指定」と呼びます。class属性の内部で記述はとどまっているので、通常は「スタイルシートで定義していないクラス」と判断され、ターゲット指定があることでのレイアウトへの影響はほぼありません。ターゲット指定では、コンテキストのname属性、区切り記号の@、そしてフィールド名を指定します。</p>
+<p>通常のHTMLでの違いは、data-im属性が加わっていることです。この記述を「ターゲット指定」と呼びます。ターゲット指定では、コンテキストのname属性、区切り記号の@、そしてフィールド名を指定します。</p>
 
 <p>もし、電話番号だけをどこかに表示したいのなら、次のような記述をHTMLの中に含めれば良いでしょう。</p>
 
 <div class="code">
-    <pre><code>&lt;span class=&quot;IM[jusho@tel]&quot;&gt;&lt;/span&gt;</code></pre>
+    <pre><code>&lt;span data-im=&quot;jusho@tel&quot;&gt;&lt;/span&gt;</code></pre>
 </div>
 
-<p>たとえば、telフィールドの値が「0123-456-9876」ならば、「&lt;span class=&quot;IM[jusho@tel]&quot;&gt; 0123-456-9876 &lt;/span&gt;」というタグ要素があるとの同じ結果になります。つまりフィールドの値をそのタグの値として差し込みます。</p>
+<p>たとえば、telフィールドの値が「0123-456-9876」ならば、「&lt;span data-im=&quot;jusho@tel&quot;&gt; 0123-456-9876 &lt;/span&gt;」というタグ要素があるとの同じ結果になります。つまりフィールドの値をそのタグの値として差し込みます。</p>
 
-<p>
-    以上のように、inputなどのフォーム要素をページ内に使いますが、INTER-Mediatorではテキストフィールドに見えている文字列を修正すると、テキストフィールドから離れるときに自動的にデータをデータベースに書き戻します。そのこともあり、FORMタグによる囲みやサブミット後の処理の記述などは一切必要はありません。FORMタグを記述してもかまいませんが、INTER-MediatorはFORMタグ要素に対して何の処理も行いません。</p>
+<p>以上のように、inputなどのフォーム要素をページ内に使いますが、INTER-Mediatorではテキストフィールドに見えている文字列を修正すると、テキストフィールドから離れるときに自動的にデータをデータベースに書き戻します。そのこともあり、FORMタグによる囲みやサブミット後の処理の記述などは一切必要はありません。FORMタグを記述してもかまいませんが、INTER-MediatorはFORMタグ要素に対して何の処理も行いません。</p>
 
 <h3>ページファイルに必要な記述</h3>
 
@@ -276,8 +274,8 @@ key: id</code></pre>
     &lt;/thead&gt;
     &lt;tbody&gt;
         &lt;tr&gt;
-            &lt;td class=&quot;IM[address@pname]&quot;&gt;&lt;/td&gt;
-            &lt;td class=&quot;IM[address@tel]&quot;&gt;&lt;/td&gt;
+            &lt;td data-im=&quot;address@pname&quot;&gt;&lt;/td&gt;
+            &lt;td data-im=&quot;address@tel&quot;&gt;&lt;/td&gt;
         &lt;/tr&gt;
     &lt;/tbody&gt;
 &lt;/table&gt;</code></pre>
@@ -514,11 +512,11 @@ view: connection</code></pre>
     &lt;/thead&gt;
     &lt;tbody&gt;
         &lt;tr&gt;
-            &lt;td class=&quot;IM[address@pname]&quot;&gt;&lt;/td&gt;
-            &lt;td class=&quot;IM[address@tel]&quot;&gt;&lt;/td&gt;
+            &lt;td data-im=&quot;address@pname&quot;&gt;&lt;/td&gt;
+            &lt;td data-im=&quot;address@tel&quot;&gt;&lt;/td&gt;
             &lt;td&gt;
-                &lt;select class=&quot;IM[address@con_id]&quot;&gt;
-                    &lt;option class=&quot;IM[con@id@value|con@cname]&quot;&gt;&lt;/option&gt;
+                &lt;select data-im=&quot;address@con_id&quot;&gt;
+                    &lt;option data-im=&quot;con@id@value con@cname&quot;&gt;&lt;/option&gt;
                 &lt;/select&gt;
             &lt;/td&gt;
         &lt;/tr&gt;
@@ -533,16 +531,16 @@ view: connection</code></pre>
     ページファイルのターゲット指定をあらためて解説をします。まず、addressコンテキストの展開中に、conという別のコンテキストが登場しています。ここでは、まず、TBODY/TRによるエンクロージャー/リピーターが識別されますが、そのとき、さらに内部にSELCT/OPTIONによるエンクロージャー/リピーターが存在しています。リピーター内部のエンクロージャー以下の要素は、データベースの結果を合成するときには特に何もしません。その代わり、データベースから得られたデータを合成した後、さらに内部のエンクロージャー/リピーターの展開に入ります。ここでは、名前と電話番号をTD要素の値に組み込んだ後、conというnameを持つコンテキストを見て、connectionテーブルへアクセスをしてレコードを受け取り、レコードの数だけOPTIONタグを複製して、OPTIONタグ要素内部にconnectionテーブルから得られた結果を合成します。</p>
 
 <p>
-    OPTIONタグ要素では、2つの新しい内容が含まれています。まず、ターゲット指定は、半角の|によって区切る事で1つの要素に複数の指定を入れる事ができ、それぞれの合成が行われます。ターゲット指定では@で区切られた3つ目の項目があります。3つ目の項目は、データベースのデータを設定する先を指定します。</p>
+    OPTIONタグ要素では、2つの新しい内容が含まれています。まず、ターゲット指定は、半角スペースによって区切る事で1つの要素に複数の指定を入れる事ができ、それぞれの合成が行われます。ターゲット指定では@で区切られた3つ目の項目があります。3つ目の項目は、データベースのデータを設定する先を指定します。</p>
 
 <p>
     この場合だと、「con@id@value」という指定により、conコンテキスト（connectionテーブル）のidフィールドの値を、OPTIONタグ要素のvalue属性の値にします。続いて「con@cname」により、conコンテキストのcnameフィールドの値がOPTIONタグの値として設定され、その文字列が選択肢として見るようになります。結果として、ポップアップメニュー部分はデータベースから得れた結果を合成すると、次のようなHTMLと同じ結果になります。</p>
 
 <div class="code">
-<pre><code>&lt;select class=&quot;IM[address@conn_id]&quot;&gt;
-    &lt;option class=&quot;IM[con@id@value|con@cname]&quot; value=&quot;1&quot;&gt;親類&lt;/option&gt;
-    &lt;option class=&quot;IM[con@id@value|con@cname]&quot; value=&quot;2&quot; &gt;友人&lt;/option&gt;
-    &lt;option class=&quot;IM[con@id@value|con@cname]&quot; value=&quot;3&quot; &gt;会社関係&lt;/option&gt;
+<pre><code>&lt;select data-im=&quot;address@conn_id&quot;&gt;
+    &lt;option data-im=&quot;con@id@value con@cname&quot; value=&quot;1&quot;&gt;親類&lt;/option&gt;
+    &lt;option data-im=&quot;con@id@value con@cname&quot; value=&quot;2&quot; &gt;友人&lt;/option&gt;
+    &lt;option data-im=&quot;con@id@value con@cname&quot; value=&quot;3&quot; &gt;会社関係&lt;/option&gt;
 &lt;/select&gt;</code></pre>
 </div>
 
@@ -659,8 +657,8 @@ relation: [foreign-key: address_id, join-field: id, operator: =]</code></pre>
     &lt;/thead&gt;
     &lt;tbody&gt;
         &lt;tr&gt;
-            &lt;td class=&quot;IM[address@pname]&quot;&gt;&lt;/td&gt;
-            &lt;td class=&quot;IM[address@tel]&quot;&gt;&lt;/td&gt;
+            &lt;td data-im=&quot;address@pname&quot;&gt;&lt;/td&gt;
+            &lt;td data-im=&quot;address@tel&quot;&gt;&lt;/td&gt;
             &lt;td&gt;
                 &lt;table&gt;
                     &lt;thead&gt;
@@ -668,8 +666,8 @@ relation: [foreign-key: address_id, join-field: id, operator: =]</code></pre>
                     &lt;/thead&gt;
                     &lt;tbody&gt;
                         &lt;tr&gt;
-                            &lt;td class=&quot;IM[contact@dt]&quot;&gt;&lt;/td&gt;
-                            &lt;td class=&quot;IM[contact@memo]&quot;&gt;&lt;/td&gt;
+                            &lt;td data-im=&quot;contact@dt&quot;&gt;&lt;/td&gt;
+                            &lt;td data-im=&quot;contact@memo&quot;&gt;&lt;/td&gt;
                         &lt;/tr&gt;
                     &lt;/tbody&gt;
                 &lt;/table&gt;
@@ -1148,7 +1146,7 @@ relation: [foreign-key: address_id, join-field: id, operator: =]</code></pre>
 
 <div class="code">
 <pre><code>&lt;input type=&quot;checkbox&quot; value=&quot;1&quot;
-            class=&quot;IM[address@check]&quot;/&gt;</code></pre>
+    data-im=&quot;address@check&quot;/&gt;</code></pre>
 </div>
 
 <p>上記のタグ要素の場合、addressコンテキストのテーブルのcheckフィールドと連動します。チェックが入るとcheckフィールドの値はvalue属性の値の「1」になり、checkをはずすと &quot;&quot;（長さ0の文字列ないしはNULL）
@@ -1160,9 +1158,9 @@ relation: [foreign-key: address_id, join-field: id, operator: =]</code></pre>
     ラジオボタンもチェックボックスと同様に、inputタグ要素で記述します。本来はname属性が同一のものを1つのセットとして扱いますが、INTER-Mediatorでは、同一リピーター内の同一ターゲット指定の物を1つのセットにするので、name属性は不要です。展開時に自動的に属性は設定されます。</p>
 
 <div class="code">
-<pre><code>&lt;input type=&quot;radio&quot; value=&quot;1&quot; class=&quot;IM[address@kind]&quot;/&gt;
-&lt;input type=&quot;radio&quot; value=&quot;2&quot; class=&quot;IM[address@kind]&quot;/&gt;
-&lt;input type=&quot;radio&quot; value=&quot;3&quot; class=&quot;IM[address@kind]&quot;/&gt;</code></pre>
+<pre><code>&lt;input type=&quot;radio&quot; value=&quot;1&quot; data-im=&quot;address@kind&quot;/&gt;
+&lt;input type=&quot;radio&quot; value=&quot;2&quot; data-im=&quot;address@kind&quot;/&gt;
+&lt;input type=&quot;radio&quot; value=&quot;3&quot; data-im=&quot;address@kind&quot;/&gt;</code></pre>
 </div>
 
 <p>選択したボタンのvalue属性が記録され、また、ページ表示時にはフィールドの値に対応したラジオボタンが選択されています。</p>
@@ -1173,7 +1171,7 @@ relation: [foreign-key: address_id, join-field: id, operator: =]</code></pre>
     INTER-Mediatorでは画像を扱ういくつかの方法に対応していますが、代表的な手法は、Webサイト上で公開されている画像ファイルへのアクセスです。HTMLページと同一ディレクトリにある「img」ディレクトリに画像ファイルがあるとします。そして、あるテーブルで「picfile」フィールドがあり、画像ファイルのファイル名があるとします。このとき、以下のimgタグ要素はターゲット指定となって、picfileフィールドの値をsrc属性に合成します。</p>
 
 <div class="code">
-    <pre><code>&lt;img src=&quot;img/&quot; class=&quot;IM[product@picfile@#src]&quot; /&gt;</code></pre>
+    <pre><code>&lt;img src=&quot;img/&quot; data-im=&quot;product@picfile@#src&quot; /&gt;</code></pre>
 </div>
 
 <p>
