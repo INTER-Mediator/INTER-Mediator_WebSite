@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="/pagestyle.css" rel="stylesheet" media="screen">
+    <link rel="shortcut icon" href="/im-icon.png" type="image/png">
+    <link rel="icon" href="/im-icon.png" type="image/png">
+    <title>INTER-Mediator</title>
+    <script type="text/javascript" language="JavaScript">
+        var htmlDocumentModDate = document.lastModified;
+    </script>
+    <script type="text/javascript" language="JavaScript" src="/pagebuilder.js"></script>
+    <script type="text/javascript" language="JavaScript" src="/files/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<div id="navigationbox" class="graybox">
+    <div id="navigation"></div>
+    <div id="latestnews"></div>
+</div>
+<div id="page_header"></div>
+<div id="page_contents">
+
+<h2>ファイルのアップロードコンポーネント</h2>
+<p>以下のムービーのようなドラッグ&amp;ドロップによるファイルのアップロードができます。サンプルでは、Sample_webpageにあるfileupload_MySQL.htmlを中心に見てください。</p>
+<div class="picture">
+<video controls src="http://blog.msyk.net/wp-content/uploads/2013/06/dragdrop.mov">dragdrop</video>
+</div>
+
+<h3>単一のコンテキストとバインドしたファイルアップロード</h3>
+<p>ファイルのドラッグ&amp;ドロップによるアップロード機能は、JavaScriptのドラッグ&amp;ドロップの機能などを利用して実装しています。シンプルな利用方法は、ファイルのドラッグを受け付けたい箇所に、以下のように記述します。JavaScriptのプログラムはINTER-Mediatorに含まれているので、定義ファイルをscriptタブで読み込むだけで基本的には利用できます。</p>
+
+<span data-im="testtable@vc1" data-im-widget="fileupload"></span>
+
+<p>単にドラッグ&amp;ドロップしてファイルをサーバにアップロードするだけということは通常はなく、そのファイルをどこかに記録し、さらにパスなどを記録しておくことになるはずです。前述の例では、testtableというコンテキストのvc1フィールドに、ファイルのパスを記述します。実際にアップロードしたファイルが置かれるディレクトリは、IM_Entryの第2引数（オプション指定）で、'media-root-dir'キーでパスを指定します。</p>
+
+<h3>アップロード結果を関連レコードとして追加する</h3>
+<p>前述の方法は、アップロードを複数回行った場合、最後のアップロードしたファイルへのパスのみが残ります。これに対して、アップロード結果を別のコンテキストに新しいレコードを作成し、アップロードごとに新しいレコードを作成することもできます。別のコンテキストとの間にはリレーションシップの定義が必要です。以下の例は、testtableコンテキストのvc1フィールドに対してファイルアップロードのコンポーネントを使う場合です。まず、この場合も、testtable側にはパスを記録するフィールド（ここでのvc1）を一つ用意します。そして、アップロードがあれば、2つ目のコンテキストfileuploadに新たにレコードを作るとします。まず、2つのコンテキストは、fileupload側のreatlionキーの定義に従って1対多の関係にあります。加えて、testtable側にfile-uploadキーによる配列を定義します。この配列により、vc1フィールドでファイルのアップロードがあれば、fileupload側に新たなレコードを作るという動作をします。</p>
+
+<div class="code">
+<pre><code>IM_Entry(
+    array(
+        array(
+            'records' => 10000,
+            'name' => 'testtable',
+            'key' => 'id',
+            'file-upload' => array(
+                array('field'=>'vc1', 'context'=>'fileupload',)
+            ),
+        ),
+        array(
+            'name' => 'fileupload',
+            'key' => 'id',
+            'relation' => array(
+                array('foreign-key' => 'f_id', 'join-field' => 'id', 'operator' => '=')
+            ),
+        ),
+    ),
+    array(
+        'media-root-dir' => '/tmp',
+    ),
+    array('db-class' => 'PDO'),
+    false
+);</code></pre>
+</div>
+
+<p>そして、アップロードが行われた場合、fileuploadコンテキストに新しいレコードを作りますが、relationの指定に従って、fileupload側の外部キーのフィールドに、testtable側の主キーの値が自動的に設定されて、アップロードのレコードが関連付けられます。fileuploadコンテキスト側には、文字列型のpathフィールドを作成しておきます。このフィールドに、アップロードされたファイルのパスが設定されます。このフィールド名は決め打ちになります。fileuploadコンテキストのテーブルには他のフィールドも定義できます。</p>
+
+<h3>アップロードのプログレスバー</h3>
+<p>アップロードの経過を表示するプログレスバーを表示したい場合には、INTERMediator.construct(); の実行前に、以下のステートメントを実行させてください。</p>
+
+<div class="code">
+<pre><code>IMParts_Catalog.fileupload.progressSupported = true;</code></pre>
+</div>
+
+<p>加えて、Sample_webpageフォルダにあるupload_frame.phpファイルを、定義ファイルと同じフォルダにコピーしておいてください。</p>
+<p>なお、プログレス表示はPHPが<a href="http://php.net/manual/ja/book.apc.php">APC(Alternative PHP Cache)</a>に対応している必要があります。PHP v5.3で稼働させる方法は、<a href="http://blog.msyk.net/?p=105">こちら</a>を参考にしてください。</p>
+
+<h3>フォーム形式のアップロード</h3>
+<p>ドラッグ&amp;ドロップによるファイルのアップロードは、実はInternet Explorer 10では動きません。それに必要なクラスがブラウザに用意されていないからです。その場合、フォーム形式のアップロードコンポーネントが表示されます。これと同じように、常に、フォーム形式のアップロード機能を設定したい場合、INTERMediator.construct(); の実行前に、以下のステートメントを実行させてください。</p>
+
+<div class="code">
+<pre><code>IMParts_Catalog.fileupload.forceOldStyleForm = true;</code></pre>
+</div>
+
+
+<h2>JavaScriptコンポーネントのプラグイン</h2>
+<p>以前から、HTMLエディタのtinyMCE、コードエディタのCodeMirrorや独自作成したファイルアップロードコンポーネントを使えるようにしていたのですが、なんとか「プラグイン」的に使える状態になったので、一度ドキュメントを作成します。JavaScriptで作ったコンポーネントに、データベースにあるフィールドの値を表示し、修正するとそれが書き戻される仕組みを提供します。ただし、コンポーネントごとに、初期化の方法は違うので、その部分を吸収するプラグインを作らないといけません。</p>
+
+<h3>JavaScriptコンポーネントの使い方</h3>
+<p>まず、JavaScriptのコンポーネントを使いたい場合には、次のように、data-im-widget属性にキーワードを書きます。プラグインができていればこれだけです。</p>
+
+    <div class="code">
+        <pre><code>&lt;div data-im="testtable@text1" data-im-widget="tinymce"&gt;&lt;/div&gt;</code></pre></div>
+
+<p>ここで、tinyMCEを使うにはプラグインが必要ですが、これについては、すでにINTER-Mediatorの中にあります。Samples/Sample_webpage/tinymce_im.jsがそれなので、たとえば、ページファイルのヘッダ部に、次のような記述を行ってtinyMCE自身の読み込みと、プラグインの読み込みを行っておきます。もちろん、パスは適切なものを指定してください。</p>
+
+<div class="code">
+<pre><code>&lt;script type="text/javascript" src="tinymce/js/tinymce/tinymce.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="tinymce_im.js"&gt;&lt;/script&gt;</code></pre>
+</div>
+
+<p>Ver.4.4現在、tinyMCE、CodeMirror、それから独自に作ったファイルアップロードコンポーネント（Samples/Sample_webpage/fileupload_MySQL.htmlがサンプル）が利用可能です。</p>
+
+<h3>JavaScriptコンポーネントプラグインの作り方</h3>
+<p>プラグイン（前記のtinymce_im.jsに相当）は、JavaScriptで記述します。もちろん、tinymce_im.jsもサンプルとして参照する必要があるでしょう。</p>
+<p>プラグインのファイルでは、IMParts_Catalog変数のオブジェクトに、プラグインのオブジェクトを追加します。このときのキーが、data-im-widget属性に指定するキーワードとなります。以下はその基本構造です。</p>
+
+<div class="code">
+<pre><code>IMParts_Catalog["tinymce"] = {
+    instanciate: function (parentNode) { },
+    ids: [],
+    finish: function (update) { }
+}</code></pre>
+</div>
+
+<p>右辺のオブジェクトは、instanciateとfinishという2つのメソッドを持つ事が重要です。INTER-Mediatorは、ページ合成時に、im-data-widget属性があるノードを見つけると、そのノードを引数にとって、instanciateメソッドを呼び出します。</p>
+<p>一方、ページ合成の最終段階、つまり、DOMオブジェクトが確定してページ上に存在する状態になった後に、finishメソッドが呼び出されます。結果的に、im-data-widget属性が設定された要素×レコード数の回数instanciateメソッドが呼び出され、最後に1回finishが呼び出されます。</p>
+
+<h4>プラグインの作業として必要なこと</h4>
+<p>この2つのメソッドが行うことは、コンポーネントに対するゲッタおよびセッタメソッドをそれぞれ展開したコンポーネントに対して設定することです。また、対応コンポーネントのid属性値を得るメソッドも実装します。たとえば、instanciateメソッドに記述するとしたら、次のようになります。instanciateメソッドを呼び出されたときの引数parentNodeあるいはコンポーネントのルートの要素に対して、以下の決められた名称のメソッドを実装します。メソッドの中身はtinyMCEの場合の例です。</p>
+
+<div class="code">
+<pre><code>parentNode._im_getComponentId = function () { // data-im-widgetのある要素に設定
+    var theId = newId;
+    return theId;
+};
+parentNode._im_setValue = function (str) { // data-im-widgetのある要素に設定
+    var targetNode = newNode;
+    targetNode.innerHTML = str;
+};
+targetNode._im_getValue = (function () { // コンポーネントのルートの要素に設定
+    var thisId = targetId;
+    return function () {
+        return tinymce.EditorManager.get(thisId).getContent();
+    }
+})();</code></pre>
+</div>
+
+<h4>instanciateメソッドでの作業</h4>
+<p>通常、JavaScriptのコンポーネントは、特定の要素にidやclass値を適当に与えて、その要素の中に必要なオブジェクトを詰め込むといった動作をします。つまり、起点となる要素を用意しておき、そこに必要なオブジェクトを追加します。tinyMCEだと、手軽な作り方はTEXTAREAタグ要素を用意することですが、ページファイル上に記述した要素がどんな種類のタグ要素でもいいように、data-im-widget属性がある要素の子要素にTEXTAREAタグ要素を作り、その要素をtinyMCEで初期化するようにしています。</p>
+<p>そのTEXTAREA要素のid属性は、適当に付けます。targetNodeで参照されるリピーター内の要素は、すでにid属性が設定されているので、そのid値に適当な文字を追加すれば、一意なid属性になります。_im_getComponentIdメソッドは、ここでのTEXTAREA要素に付けたidを返します。</p>
+<p>なお、instanticateメソッド中は、まだ、リピーターはエンクロージャーに挿入されておらず、documentからたどれない状態になっています。その場合、初期化をしてもうまく動作しないと思われます。従って、instanciateメソッドでは、元になるTEXTAREA要素を作り、id番号を振り、そのid番号をidsプロパティの配列に追加して、必須のメソッドを定義するところまでしかできないのが一般的かと思います。idsプロパティはなくてもいいのですが、この後のfinalizeメソッドでそれぞれの要素を初期化するために、初期化すべき要素を後から特定できるようにするために、instanciateで作成した要素のidを残します。</p>
+<p>instanciateメソッドの段階で実際に利用されるのは、_im_getComponentIdメソッドと_im_setValueメソッドなので、_im_getValueメソッドは実際には設定する必要はありません。_im_setValueメソッドについては、JavaScriptコンポーネントが初期化前であることを考慮して、機能する前の状態での値設定が可能なプログラムを記述する必要があります。</p>
+<h4>finalizeメソッドでの作業</h4>
+<p>この段階では、全ての要素がdocument配下にいるので、JavaScriptコンポーネントの初期化を実際に行います。なお、初期化した結果、ゲッタやセッタの動作を変えたい場合は、設定をしなおします。JavaScriptのコンポーネント内で修正した結果をデータベースに書き戻すには、_im_getValueメソッドを、初期化が終わった後の状態でのゲッタとして動作するように設定をする必要があります。単にデータベースに書き戻すだけでいいのなら、ゲッタの設定のみでかまいません。以下は、tinyMCEの例で、idsプロパティにコンポーネントのid属性値が配列として残されています。1つ1つの要素に対して、_im_getValueメソッドを追加しています。</p>
+
+<div class="code">
+<pre><code>for (var i = 0; i &lt; this.ids.length; i++) {
+     var targetNode = document.getElementById(this.ids[i]);
+     var targetId = this.ids[i];
+     if (targetNode) {
+         targetNode._im_getValue = (function () {
+             var thisId = targetId;
+             return function () {
+                 return tinymce.EditorManager.get(thisId).getContent();
+             }
+         })();
+     }
+ }</code></pre>
+</div>
+
+<p>tinyMCEのプラグインは、ページ上にあるすべてTEXTAREAをHTMLエディタにしてしまう動作で初期化するので、tinyMCE.initメソッドを呼び出すだけです。コンポーネントによっては、個別にオブジェクトをidsプロパティから取得したid値で参照して、それぞれに何らかのメソッドを適用しないといけないかもしれません。</p>
+<p>結果的に、それぞれのJavaScriptコンポーネントごとにうまく初期化をしないといけませんが、場合によってはフレームワークの更新も必要になるかもしれません。</p>
+
+<h3>自分でJavaScriptコンポーネントを作る場合</h3>
+<p>自分で１からコンポーネントを作る場合は、以下のプラグインの骨格を作り、後は自由につくっていいでしょう。このクラスにメソッドを集めてもいいですし、他のファイルから参照してもかまいません。</p>
+
+<div class="code">
+<pre><code>IMParts_Catalog["myjscomponent"] = {
+    instanciate: function (parentNode) { },
+    ids: [],
+    finish: function (update) { }
+}</code></pre>
+</div>
+</div>
+</body>
+</html>

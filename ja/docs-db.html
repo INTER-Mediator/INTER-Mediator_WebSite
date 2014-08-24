@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="/pagestyle.css" rel="stylesheet" media="screen">
+    <link rel="shortcut icon" href="/im-icon.png" type="image/png">
+    <link rel="icon" href="/im-icon.png" type="image/png">
+    <title>INTER-Mediator</title>
+    <script type="text/javascript" language="JavaScript">
+        var htmlDocumentModDate = document.lastModified;
+    </script>
+    <script type="text/javascript" language="JavaScript" src="/pagebuilder.js"></script>
+    <script type="text/javascript" language="JavaScript" src="/files/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<div id="navigationbox" class="graybox">
+    <div id="navigation"></div>
+    <div id="latestnews"></div>
+</div>
+<div id="page_header"></div>
+<div id="page_contents">
+
+<h2>PostgreSQL</h2>
+
+<p>PostgreSQLのサンプルを動かすためのデータベースのスキーマファイルは、INTER-Mediatorのレポジトリでは、</p>
+<pre>dist-docs/sample_schema_pgsql.txt</pre>
+<p>というファイルにあります。冒頭にコマンド例がありますが、PostgreSQLがどのOSのどのディストリビューションで動いているかによって、いろいろ違いがあると思います。例えばOS X Serverの場合：PostgreSQLの稼働ユーザはpostgresではなく、_postgresです。-Uの引数を_postgresにします。</p>
+<p>INTER-Mediatorとの絡みについては、MySQLとほとんど同じなのですが、1点違いがあります。PostgreSQLでは、主キーフィールドにシリアル値を入力する方法として、SEQUENCEオブジェクトを利用する方法と、SERIAL型を利用する方法があります。どちらの方法も、原則として、定義ファイルのIM_Entry関数の第1引数にあるコンテキストに、'sequence' =&gt; 'xxxx' として、SEQUENCEオブジェクトを指定する必要があります。</p>
+
+<p>sequenceキーに対する値がない場合の問題は、ページネーションコントロールを表示して1レコードずつ表示しているとき、「レコード追加」ボタンをクリックしてレコードを作成した場合、新たに作られたレコードが現在のレコードになっておらず、レコードの移動をしないといけません。他は問題ないのですが、これだけの問題ではありますが、使い勝手が変わるので注意が必要です。なお、検索して参照するだけなら、sequenceキーの指定はなくてもいいのかもしれません。</p>
+
+<h3>SEQUENCEオブジェクトを使用する場合</h3>
+<p>SEQUENCEオブジェクトを使用する場合、スキーマは以下のようになると思います。SCHEMAはim_sample、アクセスユーザはwebを想定しています。テーブルとシーケンスの両方のオブジェクトにアクセス権を与えるのを忘れないようにしましょう。</p>
+
+<div class="code"><pre><code>CREATE SEQUENCE serial START 1000;
+CREATE TABLE person (
+    id INTEGER DEFAULT nextval('serial'),
+    :
+}
+GRANT ALL PRIVILEGES ON im_sample.serial TO web;
+GRANT ALL PRIVILEGES ON im_sample.person TO web;</code></pre>
+</div>
+
+    <p>そして、定義ファイルでは、次のように、sequeceキーで、シーケンスオブジェクトの名前を指定します。</p>
+
+    <div class="code">
+<pre><code>array(
+    'records' =&gt; 1,
+    'paging' =&gt; true,
+    'name' =&gt; 'person',
+    'view' =&gt; 'im_sample.person',
+    'table' =&gt; 'im_sample.person',
+    'key' =&gt; 'id',
+    'repeat-control' =&gt; 'insert delete',
+    'sequence' =&gt; 'im_sample.serial',
+),</code></pre>
+    </div>
+
+    <h3>SERIAL型を利用する場合</h3>
+    <p>SERIAL型を利用する場合、以下のように、主キーフィールドの型をSERIALにすると思われます。このとき、背後では、「テーブル名_フィールド名_seq」というシーケンスオブジェクトが自動的に作られて、初期値が1になっています。自動的に作られるオブジェクトとは言え、アクセス権の設定は記述する必要があるのが一般的でしょうから、im_sample.person_id_seqに対してwebアカウントのアクセス権も設定しなければなりません。</p>
+
+    <div class="code">
+<pre><code>CREATE TABLE person (
+    id SERIAL PRIMARY KEY,
+}
+GRANT ALL PRIVILEGES ON im_sample.serial TO web;
+GRANT ALL PRIVILEGES ON im_sample.person_id_seq TO web;</code></pre>
+</div>
+
+    <p>SERIAL型を使った場合、INSERTでレコードを新規に作るときに、ここでのidフィールドへの値を代入はしないようにします。もし、自分で値を設定したい場合は、シーケンスの値と当たらないようにしないといけませんが、そこまでの状況でSERIAL型を使う事はほぼないと思われます。</p>
+
+    <p>そして、定義ファイルでは、このときも、次のように、sequeceキーで、シーケンスオブジェクトの名前を指定します。これをしないと、1レコード表示時に新規レコードを作成しても、新規レコードが編集状態で開いてくれません。</p>
+
+    <div class="code">
+<pre><code>array(
+    'records' =&gt; 1,
+    'paging' =&gt; true,
+    'name' =&gt; 'person',
+    'view' =&gt; 'im_sample.person',
+    'table' =&gt; 'im_sample.person',
+    'key' =&gt; 'id',
+    'repeat-control' =&gt; 'insert delete',
+    'sequence' =&gt; 'im_sample.person_id_seq',
+),</code></pre>
+</div>
+
+
+</div>
+</body>
+</html>
