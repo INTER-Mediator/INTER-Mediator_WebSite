@@ -184,7 +184,7 @@ INTERMediator.additionalSortKey['tableName'] = [
 <h4>INTERMediatorOnPage.doAfterValidationFailure(target,linkInfo)</h4>
 <p>バリデーションの設定がされていて、ルールの結果がfalseとなった直後に呼び出される。引数targetは調べたノードへの参照、linkInfoは対照となったリンク定義の文字列が得られる。テキストフィールドの値をもとにして計算処理をしている場合、間違えた値で再計算をしてしまっているかもしれないが、この関数は、元の値に戻された後に呼び出されるので、さらに再計算などを組み込むことができる。</p>
 
-<h3>ローカルコンテキスト</h3>
+<h3>ローカルコンテキスト（バージョン4.3以降、セッションストレージの利用はバージョン4.4から）</h3>
 <h4>IMLibLocalContext.clearAll()</h4>
 <p>ローカルコンテキストのオブジェクトを初期化して、記録された内容をクリアする</p>
 <h4>IMLibLocalContext.setValue(key, value)</h4>
@@ -192,9 +192,9 @@ INTERMediator.additionalSortKey['tableName'] = [
 <h4>IMLibLocalContext.getValue(key)</h4>
 <p>指定したキーの値を取り出す</p>
 <h4>IMLibLocalContext.archive()</h4>
-<p>ローカルコンテキストの内容をクッキーに記録する</p>
+<p>ローカルコンテキストの内容をセッションストレージ（またはクッキー）に記録する</p>
 <h4>IMLibLocalContext.unarchive()</h4>
-<p>クッキーに記録したデータからローカルコンテキストを復元する</p>
+<p>セッションストレージ（またはクッキー）に記録したデータからローカルコンテキストを復元する</p>
 <h4>IMLibLocalContext.update(idValue)</h4>
 <p>引数に指定したid属性値のノードがローカルコンテキストにバインドされていれば、その要素の値をコンテキストに反映させる。通常はchangeイベントで自動的にコンテキストに値が設定されるが、changeイベント以外での動作時に利用する必要が出る</p>
 
