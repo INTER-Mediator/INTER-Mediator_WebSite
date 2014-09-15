@@ -239,7 +239,7 @@ table#topmessage td {
 }
 div#infosign    {
     float:left;
-    margin:6px 4px 0px 40px;
+    margin:24px 4px 0px 40px;
     padding:8px 8px 8px 8px;
     background-color:black;
     color:#CCCCCC;
@@ -250,7 +250,6 @@ div#infosign    {
 
 div#embed_player    {
     margin: 8px 0 8px 40px;
-
 }
 
 #latestnews div {
