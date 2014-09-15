@@ -51,13 +51,13 @@
     </th>
 </tr>
 <tr>
-    <th width="90">
+    <th width="91">
         キー
     </th>
-    <th width="120">
+    <th width="121">
         インデックス
     </th>
-    <th width="120">
+    <th width="121">
         下位のキー
     </th>
 </tr>
@@ -153,17 +153,16 @@
         trueを指定するとキャッシュが機能する（Ver.3.0より順次組み込みのため、機能制限に注意）
     </td>
 <tr>
-</tr>
-<td>
-    'sequence'
-</td>
-<td>
-</td>
-<td>
-</td>
-<td>
-    PostgreSQLにおいて、レコード追加を行うためには、シーケンスを利用してキーフィールドに連番を設定する必要がある。そのシーケンス名をここで指定をする。
-</td>
+    <td>
+        'sequence'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        PostgreSQLにおいて、レコード追加を行うためには、シーケンスを利用してキーフィールドに連番を設定する必要がある。そのシーケンス名をここで指定をする。
+    </td>
 </tr>
 <tr>
     <td rowspan="4">
@@ -309,37 +308,52 @@
     </td>
     <td>trueなら、入力型フォームにおいて、登録ボタンを押した後にページの再合成を行う。post-dismiss-messageが指定されていれば、4秒後待って再合成する。falseあるいは指定なしなら何もしない</td>
 </tr>
-<td>
-    'post-dismiss-message'
-</td>
-</td>
-<td>
-</td>
-<td>
-</td>
-<td>入力型フォームにおいて、登録ボタンを押した後に、ボタンを消してここに記述したメッセージの文字列を表示する。文字列はSPANタグでclass属性が「IM_POSTMESSAGE」となる。</td>
+<tr>
+    <td>
+        'post-dismiss-message'
+    </td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>入力型フォームにおいて、登録ボタンを押した後に、ボタンを消してここに記述したメッセージの文字列を表示する。文字列はSPANタグでclass属性が「IM_POSTMESSAGE」となる。</td>
 </tr>
-<td>
-    'post-move-url'
-</td>
-</td>
-<td>
-</td>
-<td>
-</td>
-<td>入力型フォームにおいて、登録ボタンを押した後に、ここで指定したURLにページを移動させる。指定しない場合にはページ移動はない。post-dismiss-messageが指定されていれば、4秒後に移動する</td>
+<tr>
+    <td>
+        'post-move-url'
+    </td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>入力型フォームにおいて、登録ボタンを押した後に、ここで指定したURLにページを移動させる。指定しない場合にはページ移動はない。post-dismiss-messageが指定されていれば、4秒後に移動する</td>
 </tr>
-<td>
-    'repeat-control'
-</td>
-</td>
-<td>
-</td>
-<td>
-</td>
-<td>
-    繰り返し表示する部分に、レコードの追加や削除の機能を追加する。値には文字列として「insert」「insert-top」「delete」「confirm-insert」「confirm-insert-top」「confirm-delete」の文字で。confirmがあれば確認ダイアログが表示される。複数を指定する場合はそれぞれの文字列を空白で区切って書き並べる
-</td>
+<tr>
+    <td>
+        'repeat-control'
+    </td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        繰り返し表示する部分に、レコードの追加や削除の機能を追加する。値には文字列として「insert」「insert-top」「delete」「confirm-insert」「confirm-insert-top」「confirm-delete」の文字で。confirmがあれば確認ダイアログが表示される。複数を指定する場合はそれぞれの文字列を空白で区切って書き並べる
+    </td>
+</tr>
+<tr>
+    <td>
+        'navi-control'
+    </td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>2つのコンテキストを利用して、マスター/ディテール形式のユーザインタフェースを構築する。2つのコンテキストは、原則として同一のテーブルを元にした異なるコンテキストである必要がある。マスター側のコンテキストに指定できるのは「master」ないしは「master-hide」で、通常、こちらのコンテキストは複数のレコードを表示する。マスター側には詳細を表示するボタンが追加される。ディテール側のコンテキストは「detail」を指定して、1レコードを表示する。「master」だと、2つのコンテキストによる展開結果は常に見えている。「master-hide」にするといずれか一方のみ表示し、masterに戻るボタンがディテール側に追加される。「detail-bottom」ないしは「detail-top」でボタンの位置を指定できるが、「detail」は「detail-top」と同等である
+    </td>
 </tr>
 <tr>
     <td rowspan="4">
