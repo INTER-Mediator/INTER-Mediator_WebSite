@@ -30,7 +30,7 @@
             <tr><td>数値リテラル</td><td>10.3</td><td></td></tr>
             <tr><td>文字列リテラル</td><td>'abc'</td><td>シングルクォートでの囲みのみ。シングルクォートは\で要エスケープ</td></tr>
             <tr><td>定数</td><td>PI</td><td>EとPIが定義されている</td></tr>
-            <tr><td>ターゲット指定</td><td>person@住所</td><td>展開されている対応するノードを参照</td></tr>
+            <tr><td>ターゲット指定</td><td>person@住所</td><td>展開されている対応するノードを参照。同一のコンテキスト内ならフィールド名のみ</td></tr>
         </table>
     </div>
 
@@ -110,7 +110,8 @@
             <tr><td></td><td>min(x,...)</td><td>min(3,1,2,1,5,1) → 1</td><td>引数の最小値。引数は可変</td></tr>
             <tr><td></td><td>max(x,...)</td><td>max(3,1,2,1,5,1) → 5</td><td>引数の最大値。引数は可変</td></tr>
             <tr><td>判断</td><td>if(x,y,z)</td><td>if(10 >= 1,'b','c') → 'b</td><td>最初の引数の結果がtrueなら2番目、falseなr3番目を返す</td></tr>
-            <tr><td>文字列</td><td>substr(x,y,z)</td><td>substr('abcdefg', 3, 2) → 'de'</td><td>xの文字列に対して、x番目からy文字分のみを取り出す。最初の文字は0</td></tr>
+            <tr><td>文字列</td><td>length()</td><td>length('test') → 4</td><td>引数の文字列の長さを求める。nullが引数なら0を返す</td></tr>
+            <tr><td></td><td>substr(x,y,z)</td><td>substr('abcdefg', 3, 2) → 'de'</td><td>xの文字列に対して、x番目からy文字分のみを取り出す。最初の文字は0</td></tr>
             <tr><td></td><td>substring(x,y,z)</td><td>substring('abcdefg', 3, 5) → 'de'</td><td>xの文字列に対して、x番目からy文字目までを取り出す</td></tr>
             <tr><td></td><td>indexof(x,y)</td><td>indexof('abcdefg','cd') → 2</td><td>xの文字列の最初からyの文字列を探し、最初に見つかった場所を返す</td></tr>
             <tr><td></td><td>replace(x,y,z,w)</td><td>replace('abcdefgabc', 5, 8, 'yz') → 'abcdeyzbc'</td><td>xの文字列のy番目からz文字分を、文字列wに置き換える</td></tr>
