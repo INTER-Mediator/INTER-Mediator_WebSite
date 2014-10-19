@@ -46,7 +46,6 @@
 
     <h3>演算子</h3>
     <div class="table">
-        <div class="caption"></div>
         <table>
             <tr><th>対象データ</th><th>演算子</th><th>記述例</th><th>解説</th></tr>
             <tr><td>数値</td><td>^</td><td>2^3 → 8</td><td>べき乗</td></tr>
@@ -77,7 +76,7 @@
             <tr><td></td><td>⊬</td><td>'abc¶dff¶ghi' ⊬ 'ghi¶dkg¶' → 'abc¶dff¶'</td><td>差演算</td></tr>
         </table>
     </div>
-<h4>加算と減算について</h4>
+    <h4>加算と減算について</h4>
     <ul>
         <li>2つの項がいずれも数値に変換できるなら、数値として計算します。</li>
         <li>2つの項がいずれかでも数値に変換できないなら、文字列として計算します。</li>
@@ -90,8 +89,9 @@
         <li>3種類ある改行のどれも同じように扱いますが、結果の改行は最初の引数の最初に出てくる改行になります。</li>
     </ul>
 
+    <h3>関数</h3>
+    <h4>数値、集計、判断、文字列</h4>
     <div class="table">
-        <div class="caption">関数</div>
         <table>
             <tr><th>種類</th><th>関数</th><th>例（数値は丸めています）</th><th>説明</th></tr>
             <tr><td>数値</td><td>abs(x)</td><td>abs(-3.1) → 3.1</td><td>絶対値</td></tr>
@@ -130,6 +130,59 @@
     <ul>
         <li>最初の文字、最初の項目は0です。</li>
     </ul>
+
+    <h4>日付時刻の関数</h4>
+    <p>日付時刻の関数は、Ver.4.6での対応を目指し、Ver.4.5以降で実装します。現在、実装中であり、一部の関数しか使えません。</p>
+    <div class="table">
+        <table>
+            <tr><th>関数</th><th>例</th><th>説明</th></tr>
+            <tr><td>date(str)</td><td>date('2014-02-18') → </td><td>引数に指定した文字列の日付に対応する整数を返す。数値は1970/1/1からの日数。引数をそのままJavaScriptのDateクラスで処理をする</td></tr>
+            <tr><td>datetimestr)</td><td>datetime('2014-02-17 09:00:01') → </td><td>引数に指定した文字列の日時に対応する整数を返す。数値は1970/1/1からの秒数。引数をそのままJavaScriptのDateクラスで処理をする</td></tr>
+            <tr><td>datecomponents(y,m,d)</td><td>datecomponents(2014,2,17) → </td><td>引数に、年月日を指定して、その日付に対応する整数を返す。数値は1970/1/1からの日数</td></tr>
+            <tr><td>datetimecomponents(y,m,d,h,i,s)</td><td>datetimecomponents(2014,2,17,9,0,0) → </td><td>引数に、年月日時分秒を指定して、その日時に対応する整数を返す。数値は1970/1/1からの秒数</td></tr>
+            <tr><td>today()</td><td>today() → </td><td>今現在の日付を指定する整数を返す。数値は1970/1/1からの日数</td></tr>
+            <tr><td>now()</td><td>now() → </td><td>今現在の日時を指定する整数を返す。数値は1970/1/1からの秒数</td></tr>
+            <tr><td>year(x)</td><td>year(datetime('2014-02-17')) → 2014</td><td>日付ないしは日時から年を求める</td></tr>
+            <tr><td>month(x)</td><td>month(datetime('2014-02-17')) → 2 2014</td><td>日付ないしは日時から月を求める</td></tr>
+            <tr><td>day(x)</td><td>day(datetime('2014-02-17')) → 17 2014</td><td>日付ないしは日時から日を求める</td></tr>
+            <tr><td>weekday(d)</td><td>weekdaydt(datetime('2014-02-17 09:23:49') → 17</td><td>日付ないしは日時からから曜日を求める</td></tr>
+            <tr><td>hour(x)</td><td>hour(datetime('2014-02-17 09:23:49') → 9 2014</td><td>日付ないしは日時から時を求める</td></tr>
+            <tr><td>minute(x)</td><td>minute(datetime('2014-02-17 09:23:49') → 23 2014</td><td>日付ないしは日時から分を求める</td></tr>
+            <tr><td>second(x)</td><td>second(datetime('2014-02-17 09:23:49') → 49 2014</td><td>日付ないしは日時から秒を求める</td></tr>
+            <tr><td>yeardt(d)</td><td>yeardt(datetime('2014-02-17')) → 2014 2014</td><td>日時から年を求める</td></tr>
+            <tr><td>monthdt(d)</td><td>monthdt(datetime('2014-02-17')) → 2</td><td>日時から月を求める</td></tr>
+            <tr><td>daydt(d)</td><td>daydt(datetime('2014-02-17')) → 17</td><td>日時から日を求める</td></tr>
+            <tr><td>weekdaydt(d)</td><td>weekdaydt(datetime('2014-02-17 09:23:49') → 17</td><td>日時から曜日を求める</td></tr>
+            <tr><td>hourdt(d)</td><td>hourdt(datetime('2014-02-17 09:23:49') → 9</td><td>日時から時を求める</td></tr>
+            <tr><td>minutedt(d)</td><td>minutedt(datetime('2014-02-17 09:23:49') → 23</td><td>日時から分を求める</td></tr>
+            <tr><td>seconddt(d)</td><td>seconddt(datetime('2014-02-17 09:23:49') → 49</td><td>日時から秒を求める</td></tr>
+            <tr><td>yeard(d)</td><td>yeard(date('2014-02-17')) → 2014</td><td>日付から年を求める</td></tr>
+            <tr><td>monthd(d)</td><td>monthd(date('2014-02-17') → 2</td><td>日付から月を求める</td></tr>
+            <tr><td>dayd(d)</td><td>dayd(date('2014-02-17') → 17</td><td>日付から日を求める</td></tr>
+            <tr><td>weekdayd(d)</td><td>weekdayd(date('2014-02-17') → 17</td><td>日付から曜日を求める</td></tr>
+            <tr><td>addyear(d, x)</td><td>addyear(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日付ないしは日時に指定した年を加える</td></tr>
+            <tr><td>addmonth(d, x)</td><td>addmonth(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日付ないしは日時に指定した月を加える</td></tr>
+            <tr><td>addday(d, x)</td><td>addday(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日付ないしは日時に指定した日を加える</td></tr>
+            <tr><td>addhour(d, x)</td><td>addhour(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日付ないしは日時に指定した時を加える</td></tr>
+            <tr><td>addminute(d, x)</td><td>addminute(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日付ないしは日時に指定した分を加える</td></tr>
+            <tr><td>addsecond(d, x)</td><td>addsecond(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日付ないしは日時に指定した秒を加える</td></tr>
+            <tr><td>endofmonth(d)</td><td>endofmonth(datetime('2014-02-17 09:23:49') → 49</td><td>日付ないしは日時の月の最終日を求める</td></tr>
+            <tr><td>startofmonth(d)</td><td>startofmonth(datetime('2014-02-17 09:23:49') → 49</td><td>日付ないしは日時の月の最初の日を求める</td></tr>
+            <tr><td>addyeardt(d, x)</td><td>addyeardt(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日時に指定した年を加える</td></tr>
+            <tr><td>addmonthdt(d, x)</td><td>addmonthdt(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日時に指定した月を加える</td></tr>
+            <tr><td>adddaydt(d, x)</td><td>adddaydt(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日時に指定した日を加える</td></tr>
+            <tr><td>addhourdt(d, x)</td><td>addhourdt(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日時に指定した時を加える</td></tr>
+            <tr><td>addminutedt(d, x)</td><td>addminutedt(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日時に指定した分を加える</td></tr>
+            <tr><td>addseconddt(d, x)</td><td>addseconddt(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日時に指定した秒を加える</td></tr>
+            <tr><td>endofmonthdt(d)</td><td>endofmonthdt(datetime('2014-02-17 09:23:49') → 49</td><td>日時の月の最終日を求める</td></tr>
+            <tr><td>startofmonthdt(d)</td><td>startofmonthdt(datetime('2014-02-17 09:23:49') → 49</td><td>日時の月の最初の日を求める</td></tr>
+            <tr><td>addyeard(d, x)</td><td>addyeard(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日付に指定した年を加える</td></tr>
+            <tr><td>addmonthd(d, x)</td><td>addmonthd(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日付に指定した月を加える</td></tr>
+            <tr><td>adddayd(d, x)</td><td>adddayd(datetime('2014-02-17 09:23:49'), 2) → 49</td><td>日付に指定した日を加える</td></tr>
+            <tr><td>endofmonthd(d)</td><td>endofmonthd(datetime('2014-02-17 09:23:49') → 49</td><td>日付の月の最終日を求める</td></tr>
+            <tr><td>startofmonthd(d)</td><td>startofmonthd(datetime('2014-02-17 09:23:49') → 49</td><td>日付の月の最初の日を求める</td></tr>
+        </table>
+    </div>
 </div>
 </body>
 </html>
