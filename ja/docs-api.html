@@ -133,9 +133,9 @@ INTERMediator.additionalSortKey['tableName'] = [
     <li>返り値：ノードのid属性を示す文字列の配列</li>
 </ul>
 
-<h3>バリデーション</h3>
-<h4>INTERMediatorOnPage.doAfterValidationFailure = function(node, info) {}</h4>
-<p>バリデーションのエラーが検知される度に呼び出される。引数nodeにはエラーのある要素への参照が設定される。引数infoはバリデーションエラーがあったターゲット指定が得られる。</p>
+<h3>URLからパラメータを取り出す</h3>
+<h4>INTERMediatorOnPage.getURLParametersAsArray()</h4>
+<p>URLの中のパラメータを取り出し、パラメータ名をキーとしたオブジェクトを返す。たとえば、「http://domain.name/page.html?a=1&b=2」というページなら、返り値は {a:1, b:2}となる。</p>
 
 <h3>Post Onlyモードでのメソッド</h3>
 <h4>INTERMediatorOnPage.processingBeforePostOnlyContext = function(targetNode) {}</h4>
@@ -158,7 +158,7 @@ INTERMediator.additionalSortKey['tableName'] = [
 <p>デバッグモード（展開の過程をページの最初に表示）での実行を行う。IM_Entryの4つ目の引数でコントロールするのが手軽</p>
 <h4>INTERMediator.separator = '@'</h4>
 <p>リンク定義の区切り文字で、既定値は@</p>
-<h4>INTERMediator.defDivider = :'|',</h4>
+<h4>INTERMediator.defDivider = '|',</h4>
 <p>複数のリンク定義がある場合の区切り文字で、既定値は |</p>
 <h4>INTERMediator.defaultTargetInnerHTML = true</h4>
 <p>リンク設定のターゲット指定がない場合、既定値はテキストノードを作成して下位のノードとする。ここにtrueを指定すると、ターゲット指定がない場合にはinnerHTMLに代入する</p>
