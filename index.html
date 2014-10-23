@@ -3,7 +3,14 @@
 <head>
     <title>INTER-Mediator</title>
     <script type="text/javascript">
-        var lang = window.navigator.language.toLowerCase();
+        var langu;
+        if (window.navigator.language)  {
+            lang = window.navigator.language.toLowerCase();
+        } else if (window.navigator.userLanguage)    {
+            lang = window.navigator.userLanguage.toLowerCase();
+        } else {
+            lang = "en";
+        }
         if (lang == 'ja' || lang == 'ja-jp')    {
             location.href="ja/"
         } else {
