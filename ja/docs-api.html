@@ -60,22 +60,30 @@
 <h3>検索条件やソート条件の追加</h3>
 
 <h4>INTERMediator.additionalCondition = ....</h4>
-<p>コンテキストに従ってデータベースのクエリを行うとき、ここで指定した検索条件が、他の条件に対してAND条件で追加される第1引数がコンテキストのname属性値、その後にオブジェクトないしはオブジェクトの配列を指定するが、オブジェクトはfield、operator、valueのプロパティを指定し、それぞれフィールド名、演算子、値を指定する</p>
-<div class="code"><pre><code>INTERMediator.additionalCondition['tableName'] = {field:xxx,operator:xxx,value:xxxx}
+<p>コンテキストに従ってデータベースのクエリを行うとき、ここで指定した検索条件が、他の条件に対してAND条件で追加される第1引数がコンテキストのname属性値、その後にオブジェクトないしはオブジェクトの配列を指定するが、オブジェクトはfield、operator、valueのプロパティを指定し、それぞれフィールド名、演算子、値を指定する。プロパティのセッタを稼働させるために、プロパティそのものへの代入を行う必要がある。</p>
+<div class="code"><pre><code>var conditions = INTERMediator.additionalCondition;
+conditions['tableName'] = {field:xxx,operator:xxx,value:xxxx};
+INTERMediator.additionalCondition = conditions;
 
-INTERMediator.additionalCondition['tableName']= [
+var conditions = INTERMediator.additionalCondition;
+conditions['tableName']= [
     {field:xxx,operator:xxx,value:xxxx},
     {field:xxx,operator:xxx,value:xxxx}
-];</code></pre></div>
+];
+INTERMediator.additionalCondition = conditions;</code></pre></div>
 
 <h4>INTERMediator.additionalCondition = ....</h4>
-<p>コンテキストに従ってデータベースのクエリを行うとき、ここで指定したソート条件が設定される。コンテキストのソート条件より高い優先順になっている。</p>
-<div class="code"><pre><code>INTERMediator.additionalSortKey['tableName'] = {field:xxx,direction:xxxx}
+<p>コンテキストに従ってデータベースのクエリを行うとき、ここで指定したソート条件が設定される。コンテキストのソート条件より高い優先順になっている。プロパティのセッタを稼働させるために、プロパティそのものへの代入を行う必要がある。</p>
+<div class="code"><pre><code>var sortKeys = INTERMediator.additionalSortKey;
+sortKeys['tableName'] = {field:xxx,direction:xxxx};
+INTERMediator.additionalSortKey = sortKeys;
 
+var sortKeys = INTERMediator.additionalSortKey;
 INTERMediator.additionalSortKey['tableName'] = [
     {field:xxx,direction:xxxx},
     {field:xxx,direction:xxxx}
-]</code></pre></div>
+];
+INTERMediator.additionalSortKey = sortKeys;</code></pre></div>
 
 <h3>ページ合成処理に割り込む処理の記述</h3>
 
