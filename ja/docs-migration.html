@@ -23,14 +23,34 @@
     <h2>INTER-Mediatorのバージョン移行ガイド</h2>
     <p>INTER-Mediatorもバージョンを重ねてきており、以前の引き継がなくなってしまった箇所が出てきています。Ver.3 (2012/12/10) 以降の大きな変更点、つまりアプリケーション側を書き換えないといけないような変更をここにまとめておきます。</p>
 
-    <h3>Ver.4.6 (in developement) での変更</h3>
-    <p>コンテキストを利用して読み出しを行うとき、JavaScriptで検索条件や並べ替え条件を付加できるプロパティadditionalConditionとadditionalSortKeyがあります。これらは、従来までは単純にオブジェクトを記録していただけですが、Ver.4.4あたりでローカルコンテキストに記録して、ページを改めて呼び出した時にローカルコンテキストを復活させることで元に戻すという仕様を組み込みました。しかしながら、その動作を見直している時にバグが見つかりましたが、結果的に、additionalConditionとadditionalSortKeyの参照は変更は必要ですが、追加や書き換えには以下のような変更が必要になります。これらの2つのプロパティにセッタとゲッタを設定しているため、セッタを稼働させるために、プロパティそのものへの代入が必要になります。</p>
+    <h3>Ver.4.6での変更</h3>
+    <h4>Internet Explorer Ver.8対応に関して</h4>
+    <p>これまでは、Internet Explorerの最低サポートバージョンをVer.8としてきましたが、Ver.4.6現在、いくつかの機能が動かない状態になっています。これらについては、今後サポートする予定はありません。しかしながら、主要な機能はVer.4.6でも動いているので、IE8のサポートバージョンとして、最後のものがVer.4.6とします。Ver.4.6でIE8で動作に問題があるものとして、以下のものがわかっています。</p>
+
+    <ul>
+        <li>フィールドの文字列中に改行がある場合、TEXTAREAに正しく表示されない。これは、改行をBRタグに変更してinnerHTMLに設定するという手段が、IE8ではエラーになってしまうためです。</li>
+        <li>Pusherをベースにしたクライアント間同期の仕組みのうち、レコード削除後の処理でエラーが出る。フィールドの更新や新規レコードは稼働します。</li>
+        <li>ローカルコンテキストを利用して、検索パラメータを指定する機能のうち、1ページの件数の制限と、並べ替えに使用するフィールドの指定が正しく動作しません。検索条件と、「検索」ボタンは動作します。</li>
+    </ul>
+
+    <p>なお、Ver.5以降は、IE8のためのコードを削除する可能性もあり、動かない機能がより増える可能性もあります。また、Ver.5以降は、Internet Explorerでの確認は、主として最新バージョンでのみ行うことにします。Firefox、Chrome、Safariと同様な扱いにします。なお、特定のバージョンでの不具合について、対応を希望する場合には、Facebookのグループ等でリクエストを出してください。</p>
+    <h4>setExeucteメソッド</h4>
+    <p>グローバル変数のIMLibChangeEventDispatch、IMLibKeyEventDispatch、IMLibMouseEventDispatchの初期化は、constructメソッドを呼び出す後になりました。これらのオブジェクトで利用できていた、setExeucteなどのメソッドは、constructを呼び出した後に設定してください。具体的には、INTERMediatorOnPage.doAfterConstruct = function() { } という関数の定義と代入を行い、関数内でMLibChangeEventDispatch、IMLibKeyEventDispatch、IMLibMouseEventDispatchを利用してください。</p>
+    <h4>INTERMediator.additionalCondition, additionalSortKeyプロパティ</h4>
+    <p>コンテキストを利用して読み出しを行うとき、JavaScriptで検索条件や並べ替え条件を付加できるプロパティadditionalConditionとadditionalSortKeyがあります。これらは、従来までは単純にオブジェクトを記録していただけですが、Ver.4.4あたりでローカルコンテキストに記録して、ページを改めて呼び出した時にローカルコンテキストを復活させることで元に戻すという仕様を組み込みました。しかしながら、その動作を見直している時にバグが見つかりましたが、結果的に、additionalConditionとadditionalSortKeyの参照は変更ありませんが、追加や書き換えには以下のような変更が必要になります。これらの2つのプロパティにセッタとゲッタを設定しているため、セッタを稼働させるために、プロパティそのものへの代入が必要になります。あるいは、新しいAPIのaddConditionやaddSortKeyメソッドを利用してください。追加した条件を消去するclearConditions、clearSortKeysメソッドも利用できます。</p>
 
     <div class="code">
 <pre><code>INTERMediator.additionalCondition["acontext"] = [];
 INTERMediator.additionalCondition["acontext"].push({field: "afield", operator: "=", value: "1001"});
 INTERMediator.additionalCondition["acontext"].push({field: "live", operator: "=", value: "1"});
+
     ↓
+
+（修正方法A）
+INTERMediator.addCondition("acontext", {field: "afield", operator: "=", value: "1001"});
+INTERMediator.addCondition("acontext", {field: "live", operator: "=", value: "1"});
+
+（修正方法B）
 var conditions = INTERMediator.additionalCondition;
 conditions["acontext"] = [];
 conditions["acontext"].push({field: "afield", operator: "=", value: "1001"});
@@ -42,7 +62,13 @@ INTERMediator.additionalCondition = conditions</code></pre>
 
     <div class="code">
 <pre><code>INTERMediator.additionalCondition["acontext"] = {field: "afield", operator: "=", value: "1001"};
+
     ↓
+
+（修正方法A）
+INTERMediator.addCondition("acontext", {field: "afield", operator: "=", value: "1001"});
+
+（修正方法B）
 var conditions = INTERMediator.additionalCondition;
 conditions["acontext"].push({field: "afield", operator: "=", value: "1001"});
 INTERMediator.additionalCondition = conditions</code></pre>
