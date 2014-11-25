@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 1</title>
+    <script type="text/javascript" src="contexts.php"></script>
+    <script type="text/javascript" src="survery.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById('startdt').value = dateTimeForSQL(new Date());
+            if (INTERMediatorOnPage.INTERMediatorCheckBrowser(document.getElementById('nonsupportmessage'))) {
+                INTERMediator.additionalCondition['question'] = {field: 'qnum', operator: '=', value: 5};
+                INTERMediator.construct(true);
+            }
+        }
+        INTERMediatorOnPage.doAfterConstruct = function () {
+            INTERMediatorOnPage.setCookieDomainWide('currentpage', '105');
+        }
+    </script>
+</head>
+<body>
+<div id="nonsupportmessage" style="background-color:#333333">
+    <div style="text-align:center;color:yellow">If you see this, you must use any unsupported web browser. Or
+        constructing the page.
+    </div>
+    <div style="text-align:center;color:yellow">この表示が見えている場合、描画処理中です。しばらくお待ちください。
+        長時間見えている場合は、非対応ブラウザで参照しています。
+    </div>
+</div>
+<div id="container">
+    <h1 onclick="location.href='/';">
+        <img class="logoInH1" src="../im-icon.png"/>
+        <img class="logo2InH1" src="../im-lab.png"/>
+        INTER-Mediator Lab. - Room 1
+    </h1>
+
+    <div class="box">
+        <h2>問題5：繰り返しの実装</h2>
+
+        <div class="insidebox">
+            <div class="_im_enclosure">
+                <div class="_im_repeater">
+                    <p>次のようなテーブル「tower」があるとします。主キーフィールドはidです。</p>
+
+                    <div class="table">
+                        <table>
+                            <tr>
+                                <th>id</th>
+                                <th>name</th>
+                            </tr>
+                            <tr>
+                                <td>101</td>
+                                <td>東京スカイツリー</td>
+                            </tr>
+                            <tr>
+                                <td>102</td>
+                                <td>東京タワー</td>
+                            </tr>
+                            <tr>
+                                <td>103</td>
+                                <td>通天閣</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p>このテーブルの内容を取り出すことが可能なコンテキストとして、name属性が「tower」のものが定義されているとします。このとき、ページ上に、「[東京スカイツリー][東京タワー][通天閣]」のように名称フィールドのデータが横に並ぶように配置するには、ページファイルのHTMLをどのように記述すれば良いでしょうか？　空欄を埋めてください。ページファイルのヘッダ部やBODYタグには必要な要素が記載されているとします。</p>
+                    <div class="code">
+<pre><code>&lt;p&gt;
+    &lt;<input type="text" class=IM[question@answertext3]"> class=&quot;<input type="text" class=IM[question@answertext4]">&quot;&gt;
+        &lt;<input type="text" class=IM[question@answertext5]"> class=&quot;<input type="text" class=IM[question@answertext6]">&quot;&gt;
+            [&lt;<input type="text" class=IM[question@answertext7]"> class=&quot;<input type="text" class=IM[question@answertext8]">&quot;&gt;&lt;/<input type="text" class=IM[question@answertext9]">&gt;]
+        &lt;/<input type="text" class=IM[question@answertext10]">&gt;
+    &lt;/<input type="text" class=IM[question@answertext11]">&gt;
+&lt;/p&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>解答調査</h2>
+
+        <div style="font-size: 80%; text-align: right;">
+            ログインユーザ：<span class="_im_enclosure"><span class="_im_repeater IM[loginuser@username]"></span></span>|
+            <button onclick="INTERMediatorOnPage.logout();location.href='/room1/';">ログアウト</button>
+        </div>
+
+        <div class="insidebox _im_enclosure _im_postonly">
+            <div class="_im_repeater">
+                <p>
+                    解答し終わったとき、以下のラジオボタンのいずれかを選択して、「解答した」ボタンをクリックしてください。
+                </p>
+
+                <p>
+                    この問題を解くのにどれくらいの労力がかかったでしょうか？
+
+                <div style="margin-left: 20px">
+                    <input type="radio" name="q1" class="IM[progress@status]" value="1">問題を見るだけで解答が分かった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="2">他のページは書籍を調べて分かった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="3">実際にコードを打ち込み確認するなどして分かった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="4">調べたり確認したりして悩み抜いて解答した<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="5">さっぱり分からないので勘で答えた<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="6">解答を保留した
+                </div>
+                </p>
+
+                <p>
+                    <input type="hidden" class="IM[progress@page]" value="105"/>
+                    <input type="hidden" class="IM[progress@startdt]" id="startdt"/>
+                    <button class="_im_postonly">解答した</button>
+                    ←クリックすると、次のページに移動します。
+                </p>
+
+                <p>
+                    <a href="index.html">実験のトップページ（Room 1）へ</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 1</title>
+    <script type="text/javascript" src="contexts.php"></script>
+    <script type="text/javascript" src="survery.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById('startdt').value = dateTimeForSQL(new Date());
+            if (INTERMediatorOnPage.INTERMediatorCheckBrowser(document.getElementById('nonsupportmessage'))) {
+                INTERMediator.additionalCondition['question'] = {field: 'qnum', operator: '=', value: 8};
+                INTERMediator.construct(true);
+            }
+        }
+        INTERMediatorOnPage.doAfterConstruct = function () {
+            INTERMediatorOnPage.setCookieDomainWide('currentpage', '108');
+        }
+    </script>
+</head>
+<body>
+<div id="nonsupportmessage" style="background-color:#333333">
+    <div style="text-align:center;color:yellow">If you see this, you must use any unsupported web browser. Or
+        constructing the page.
+    </div>
+    <div style="text-align:center;color:yellow">この表示が見えている場合、描画処理中です。しばらくお待ちください。
+        長時間見えている場合は、非対応ブラウザで参照しています。
+    </div>
+</div>
+<div id="container">
+    <h1 onclick="location.href='/';">
+        <img class="logoInH1" src="../im-icon.png"/>
+        <img class="logo2InH1" src="../im-lab.png"/>
+        INTER-Mediator Lab. - Room 1
+    </h1>
+
+    <div class="box">
+        <h2>問題8：関連レコードの展開</h2>
+
+        <div class="insidebox">
+            <p>
+                ある駅には、マクドナルドや吉野家といったチェーン店があるとします。別の駅では、最初の駅と同じくマクドナルドがあるかもしれませんが、また別のチェーン店があるかもしれません。このような状況をデータベースに記録するために、以下のように3つのテーブルを用意しました。駅やチェーン店はもちろん、もっとたくさんありますが、その一部がデータになっていると考えてください。なお、チェーン店名は実在のものですが、駅に存在するかどうかの情報は架空のものです。</p>
+
+            <p>駅名を記録した主キーフィールドがstation_idのテーブル「station」は以下の通りです。</p>
+
+            <div class="table">
+                <table>
+                    <tr>
+                        <th>station_id</th>
+                        <th>station_name</th>
+                    </tr>
+                    <tr>
+                        <td>101</td>
+                        <td>東川口</td>
+                    </tr>
+                    <tr>
+                        <td>102</td>
+                        <td>北朝霞</td>
+                    </tr>
+                    <tr>
+                        <td>103</td>
+                        <td>東松戸</td>
+                    </tr>
+                    <tr>
+                        <td>104</td>
+                        <td>北府中</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p>チェーン店名を記録した主キーフィールドがchain_idのテーブル「chain」は以下の通りです。</p>
+
+            <div class="table">
+                <table>
+                    <tr>
+                        <th>chain_id</th>
+                        <th>chain_name</th>
+                    </tr>
+                    <tr>
+                        <td>501</td>
+                        <td>マクドナルド</td>
+                    </tr>
+                    <tr>
+                        <td>502</td>
+                        <td>モスバーガー</td>
+                    </tr>
+                    <tr>
+                        <td>503</td>
+                        <td>スターバックス</td>
+                    </tr>
+                    <tr>
+                        <td>504</td>
+                        <td>ドトールコーヒー</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p>
+                以下のようなテーブル「association」があるとします。主キーフィールドは「id」です。このテーブルにある、station_idと、stationテーブルのstation_idとに入力する数値に関して、同一のものが対応付けられています。同様に、このテーブルのchain_idと、chainテーブルのchain_idフィールドの値が対応付けられています。たとえば、id=2のレコードは、station_id=101なので、stationテーブルより「東川口」駅に関する情報であることが分かり、さらにchain_id=502なので「モスバーガー」であることが分かります。このようなテーブルを作る事で、東川口駅にはモスバーガーがあることが記録できています。同様に、id=3〜5のレコードが存在することで、station_id=102より「北朝霞駅」には、chain_id=501,
+                503,
+                504がそれぞれ存在するので、マクドナルドとスターバックス、ドトールコーヒーがあることが記録されています。なお、station_id=104に対応する北府中駅のレコードがassociationテーブルにはなく、この駅の周辺にはこれらのチェーン店がまったく存在しないこともこのテーブルの内容から判断できます。</p>
+
+            <div class="table">
+                <table>
+                    <tr>
+                        <th>id</th>
+                        <th>station_id</th>
+                        <th>chain_id</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>101</td>
+                        <td>501</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>101</td>
+                        <td>502</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>102</td>
+                        <td>501</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>102</td>
+                        <td>503</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>102</td>
+                        <td>504</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>103</td>
+                        <td>501</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>103</td>
+                        <td>502</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>103</td>
+                        <td>504</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="_im_enclosure">
+                <div class="_im_repeater">
+                    <p>
+                        このとき、すべてのチェーン店に対して、それらが存在する駅名の一覧を表示するページを作りたいとします。駅名の一覧では、station_idフィールドの値と駅名を表示するとします。まず、次のようなコンテキストを定義ファイルに記述します。定義ファイルの空欄を埋めてください。なお、記述が不要な箇所は「記述不要」と記入してください。</p>
+
+                    <div class="code">
+<pre><code>name: station
+key:<input type="text" class=IM[question@answertext1]">
+relation:<input type="text" class=IM[question@answertext2]" size="100">
+-
+name: chain
+key:<input type="text" class=IM[question@answertext3]">
+relation:<input type="text" class=IM[question@answertext4]" size="100">
+-
+name: association
+key:<input type="text" class=IM[question@answertext5]">
+relation:<input type="text" class=IM[question@answertext6]" size="100"></code></pre>
+                    </div>
+
+
+                    <p>
+                        前述の定義ファイルを利用するページファイルを作ります。ヘッダ部とBODY要素に記述する内容はすでに記述されているとして、テーブルの見出しに対応したデータが表示されるように、空欄を埋めてください。</p>
+
+                    <div class="code">
+<pre><code>&lt;table&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;&lt;th&gt;チェーン店名&lt;/th&gt;&lt;th&gt;駅名&lt;/th&gt;&lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td class=&quot;<input type="text" class=IM[question@answertext7]" size="60">&quot;&gt;&lt;/td&gt;
+            &lt;td&gt;
+                &lt;table&gt;
+                    &lt;tr&gt;
+                        &lt;td&gt;
+                            &lt;span class="IM[association@station_id]"&gt;&lt;/span&gt;
+                            &lt;span class=&quot;<input type="text" class=IM[question@answertext8]">&quot;&gt;
+                                &lt;span class=&quot;_im_repeater&quot;&gt;
+                                    &lt;span class=&quot;<input type="text" class=IM[question@answertext9]" size="60">&quot;&gt;&lt;/span&gt;
+                                &lt;/span&gt;
+                            &lt;/span&gt;
+                        &lt;/td&gt;
+                    &lt;/tr&gt;
+                &lt;/table&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>解答調査</h2>
+
+        <div style="font-size: 80%; text-align: right;">
+            ログインユーザ：<span class="_im_enclosure"><span class="_im_repeater IM[loginuser@username]"></span></span>|
+            <button onclick="INTERMediatorOnPage.logout();location.href='/room1/';">ログアウト</button>
+        </div>
+
+        <div class="insidebox _im_enclosure _im_postonly">
+            <div class="_im_repeater">
+                <p>
+                    解答し終わったとき、以下のラジオボタンのいずれかを選択して、「解答した」ボタンをクリックしてください。
+                </p>
+
+                <p>
+                    この問題を解くのにどれくらいの労力がかかったでしょうか？
+
+                <div style="margin-left: 20px">
+                    <input type="radio" name="q1" class="IM[progress@status]" value="1">問題を見るだけで解答が分かった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="2">他のページは書籍を調べて分かった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="3">実際にコードを打ち込み確認するなどして分かった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="4">調べたり確認したりして悩み抜いて解答した<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="5">さっぱり分からないので勘で答えた<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="6">解答を保留した
+                </div>
+                </p>
+
+                <p>
+                    <input type="hidden" class="IM[progress@page]" value="108"/>
+                    <input type="hidden" class="IM[progress@startdt]" id="startdt"/>
+                    <button class="_im_postonly">解答した</button>
+                    ←クリックすると、次のページに移動します。
+                </p>
+
+                <p>
+                    <a href="index.html">実験のトップページ（Room 1）へ</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

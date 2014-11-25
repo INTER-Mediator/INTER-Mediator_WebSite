@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 1</title>
+    <script type="text/javascript" src="contexts.php"></script>
+    <script type="text/javascript" src="survery.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById('startdt').value = dateTimeForSQL(new Date());
+            if (INTERMediatorOnPage.INTERMediatorCheckBrowser(document.getElementById('nonsupportmessage'))) {
+                INTERMediator.additionalCondition['question'] = {field: 'qnum', operator: '=', value: 7};
+                INTERMediator.construct(true);
+            }
+        }
+        INTERMediatorOnPage.doAfterConstruct = function () {
+            INTERMediatorOnPage.setCookieDomainWide('currentpage', '107');
+        }
+    </script>
+</head>
+<body>
+<div id="nonsupportmessage" style="background-color:#333333">
+    <div style="text-align:center;color:yellow">If you see this, you must use any unsupported web browser. Or
+        constructing the page.
+    </div>
+    <div style="text-align:center;color:yellow">この表示が見えている場合、描画処理中です。しばらくお待ちください。
+        長時間見えている場合は、非対応ブラウザで参照しています。
+    </div>
+</div>
+<div id="container">
+    <h1 onclick="location.href='/';">
+        <img class="logoInH1" src="../im-icon.png"/>
+        <img class="logo2InH1" src="../im-lab.png"/>
+        INTER-Mediator Lab. - Room 1
+    </h1>
+
+    <div class="box">
+        <h2>問題7：マスター参照の組み込み</h2>
+
+        <div class="insidebox">
+            <p>次のようなテーブル「structure」があるとします。主キーフィールドはidです。</p>
+
+            <div class="table">
+                <table>
+                    <tr>
+                        <th>id</th>
+                        <th>name</th>
+                        <th>height</th>
+                        <th>kind_id</th>
+                        <th>constructing</th>
+                        <th>backcolor</th>
+                        <th>prefecture</th>
+                    </tr>
+                    <tr>
+                        <td>101</td>
+                        <td>東京スカイツリー</td>
+                        <td>634.0</td>
+                        <td>501</td>
+                        <td></td>
+                        <td>#DDDDDD</td>
+                        <td>東京都</td>
+                    </tr>
+                    <tr>
+                        <td>102</td>
+                        <td>東京タワー</td>
+                        <td>332.6</td>
+                        <td>501</td>
+                        <td></td>
+                        <td>#FFDDFF</td>
+                        <td>東京都</td>
+                    </tr>
+                    <tr>
+                        <td>201</td>
+                        <td>あべのハルカス</td>
+                        <td>300.0</td>
+                        <td>502</td>
+                        <td>1</td>
+                        <td>#DDFFFF</td>
+                        <td>大阪府</td>
+                    </tr>
+                    <tr>
+                        <td>202</td>
+                        <td>横浜ランドマークタワー</td>
+                        <td>295.8</td>
+                        <td>502</td>
+                        <td></td>
+                        <td>#FFFFDD</td>
+                        <td>神奈川県</td>
+                    </tr>
+                    <tr>
+                        <td>203</td>
+                        <td>りんくうゲートタワービル</td>
+                        <td>256.1</td>
+                        <td>502</td>
+                        <td></td>
+                        <td>#DDFFDD</td>
+                        <td>大阪府</td>
+                    </tr>
+                    <tr>
+                        <td>204</td>
+                        <td>大阪府咲洲庁舎</td>
+                        <td>256.0</td>
+                        <td>502</td>
+                        <td></td>
+                        <td>#DDDDFF</td>
+                        <td>大阪府</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p>また、次のようなテーブル「kind」があるとします。主キーフィールドはidです。</p>
+
+            <div class="table">
+                <table>
+                    <tr>
+                        <th>id</th>
+                        <th>kind_name</th>
+                    </tr>
+                    <tr>
+                        <td>501</td>
+                        <td>タワー</td>
+                    </tr>
+                    <tr>
+                        <td>502</td>
+                        <td>ビル</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p>structureテーブルの内容を1つずつ表示するために、ページネーションの表示を行います。また、名称や高さの表示や編集ができるようにします。加えて、区分をマスター参照し、ラジオボタンで選択するようにします。建設中フィールドはチェックボックスで入力するとします。さらに、structureテーブルのそれぞれのレコードを追加したり削除するボタンが表示されるようにしてください。以下の空欄を埋めてください。</p>
+
+            <div class="_im_enclosure">
+                <div class="_im_repeater">
+                    <p>ページファイル（ファイル名：page.html）</p>
+
+                    <div class="code">
+<pre><code>&lt;div id="IM_NAVIGATOR"&gt;&lt;/div&gt;
+&lt;table&gt;
+    &lt;tr&gt;
+        &lt;th&gt;名称：&lt;/th&gt;
+        &lt;td class=&quot;IM[<input type="text" class=IM[question@answertext1]">]&quot;&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;th&gt;高さ：&lt;/th&gt;
+        &lt;td&gt;&lt;input type=&quot;text&quot; class=&quot;IM[<input type="text" class=IM[question@answertext2]">]&quot;/&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;th&gt;区分：&lt;/th&gt;
+        &lt;td&gt;
+            &lt;input type=&quot;radio&quot; class=&quot;IM[<input type="text" class=IM[question@answertext3]">]&quot; value=&quot;<input type="text" class=IM[question@answertext4]">&quot;/&gt;タワー
+            &lt;input type=&quot;radio&quot; class=&quot;IM[<input type="text" class=IM[question@answertext5]">]&quot; value=&quot;<input type="text" class=IM[question@answertext6]">&quot;/&gt;ビル
+        &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;th&gt;建設中：&lt;/th&gt;
+        &lt;td&gt;&lt;input type=&quot;checkbox&quot; class=&quot;IM[<input type="text" class=IM[question@answertext7]">]&quot; value=&quot;<input type="text" class=IM[question@answertext8]">&quot;/&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+                    </div>
+
+                    <p>定義ファイル（ファイル名：def.php）</p>
+
+                    <div class="code">
+<pre><code>name: structure
+key: id
+paging: <input type="text" class=IM[question@answertext12]">
+records: <input type="text" class=IM[question@answertext13]">
+repeat-control: <input type="text" class=IM[question@answertext14]">
+-
+name: <input type="text" class=IM[question@answertext9]">
+view: <input type="text" class=IM[question@answertext10]">
+key: <input type="text" class=IM[question@answertext11]"></code></pre>
+                    </div>
+                    <p>テーブルには「都道府県」フィールドのデータが表示されていませんが、それも表示したくなりました。建設中の行の次に都道府県を、編集できない形式、つまり文字としてデータを表示します。表示するために必要なHTMLを記述はどのようなものでしょうか？以下は、前掲のページファイルの末尾に追加する一部のHTMLソースを示しています。赤字の部分が追加した箇所です。空欄に入るHTMLを記入してください。</p>
+                    <div class="code">
+<pre><code>     &lt;tr&gt;
+        &lt;th&gt;建設中：&lt;/th&gt;
+        &lt;td&gt;&lt;input type=&quot;checkbox&quot; class=&quot;IM[...]&quot; value=&quot;...&quot;/&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    <strong>&lt;tr&gt;
+        &lt;th&gt;都道府県：&lt;/th&gt;
+        <input type="text" class=IM[question@answertext15]" size="60" />
+    &lt;/tr&gt;</strong>
+&lt;/table&gt;</code></pre>
+                    </div>
+                    <p>「名称：」と見えているセルの背景色を、テーブルの「背景色」フィールドに設定したいとします。その場合、「名称：」を表示しているTHタグを、どのように修正すれば良いでしょうか。なお、CSSでは背景色はbackground-colorですが、JavaScriptでのスタイル名に相当するプロパティはbackgroundColorです。</p>
+                    <div class="code">
+<pre><code>変更したTHタグ：<input type="text" class=IM[question@answertext16]" size="60" /></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>解答調査</h2>
+
+        <div style="font-size: 80%; text-align: right;">
+            ログインユーザ：<span class="_im_enclosure"><span class="_im_repeater IM[loginuser@username]"></span></span>|
+            <button onclick="INTERMediatorOnPage.logout();location.href='/room1/';">ログアウト</button>
+        </div>
+
+        <div class="insidebox _im_enclosure _im_postonly">
+            <div class="_im_repeater">
+                <p>
+                    解答し終わったとき、以下のラジオボタンのいずれかを選択して、「解答した」ボタンをクリックしてください。
+                </p>
+
+                <p>
+                    この問題を解くのにどれくらいの労力がかかったでしょうか？
+
+                <div style="margin-left: 20px">
+                    <input type="radio" name="q1" class="IM[progress@status]" value="1">問題を見るだけで解答が分かった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="2">他のページは書籍を調べて分かった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="3">実際にコードを打ち込み確認するなどして分かった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="4">調べたり確認したりして悩み抜いて解答した<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="5">さっぱり分からないので勘で答えた<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="6">解答を保留した
+                </div>
+                </p>
+
+                <p>
+                    <input type="hidden" class="IM[progress@page]" value="107"/>
+                    <input type="hidden" class="IM[progress@startdt]" id="startdt"/>
+                    <button class="_im_postonly">解答した</button>
+                    ←クリックすると、次のページに移動します。
+                </p>
+
+                <p>
+                    <a href="index.html">実験のトップページ（Room 1）へ</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

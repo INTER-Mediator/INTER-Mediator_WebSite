@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 1</title>
+    <script type="text/javascript" src="contexts.php"></script>
+    <script type="text/javascript" src="survery.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById('startdt').value = dateTimeForSQL(new Date());
+            if (INTERMediatorOnPage.INTERMediatorCheckBrowser(document.getElementById('nonsupportmessage'))) {
+                INTERMediator.construct(true);
+            }
+        }
+        INTERMediatorOnPage.doAfterConstruct = function () {
+            INTERMediatorOnPage.setCookieDomainWide('currentpage', '7');
+        }
+    </script>
+</head>
+<body>
+<div id="nonsupportmessage" style="background-color:#333333">
+    <div style="text-align:center;color:yellow">If you see this, you must use any unsupported web browser. Or
+        constructing the page.
+    </div>
+    <div style="text-align:center;color:yellow">この表示が見えている場合、描画処理中です。しばらくお待ちください。
+        長時間見えている場合は、非対応ブラウザで参照しています。
+    </div>
+</div>
+<div id="container">
+    <h1 onclick="location.href='/';">
+        <img class="logoInH1" src="../im-icon.png"/>
+        <img class="logo2InH1" src="../im-lab.png"/>
+        INTER-Mediator Lab. - Room 1
+    </h1>
+
+    <div class="box">
+        <h2>7. マスター参照の組み込み</h2>
+
+        <div class="insidebox">
+            <h3>マスターにあるデータを使う</h3>
+            <p>住所録では名前や電話番号を記録するだけでなく、「友人」「会社関連」などといった分類を入力したいと思うかもしれません。通常、そうした情報を文字列で入れていても役に立つ場合がありますが、常に一定の情報を入れないと意味がない場合もあります。たとえば、売り上げを記録するのに同じ商品であれば、すべて同じ商品名である必要があります。そうしないと、商品ごとの集計が簡単にはできなくなります。</p>
+            <p>このように、常に決まっているデータを入力したい場合、その決まったデータを単独のテーブルに入力し、そのテーブルの情報を参照して入力をします。こうした決まったデータを入れておくテーブルを「マスターテーブル」と一般には呼ばれています。</p>
+
+            <p>住所録をaddressテーブルで作っているとして、分類を記録するconnectionテーブルがデータベースに用意されているとします。idとcnameの2つのフィールドがあり、idフィールドが主キーフィールドです。</p>
+
+            <div class="table">
+                <table>
+                    <tr><th>id</th><th>cname</th></tr>
+                    <tr><td>1</td><td>親戚</td></tr>
+                    <tr><td>2</td><td>友人</td></tr>
+                    <tr><td>3</td><td>会社関係</td></tr>
+                </table>
+            </div>
+
+            <p>ここで、住所録の各レコードで、種類を記録したいとします。そのような場合、以下のように、addressテーブルに、con_idフィールドを設けて、connectionテーブルのidフィールドと対応づけます。つまり、風下寒子さんは、「会社関係」の友人であることが記録されたわけです。</p>
+
+            <div class="table">
+                <table>
+                    <tr><th>id</th><th>pname</th><th>tel</th><th>con_id</th></tr>
+                    <tr><td>1</td><td>山田一郎</td><td>0123-456-9876</td><td>1</td></tr>
+                    <tr><td>2</td><td>風下寒子</td><td>0123-456-9876</td><td>3</td></tr>
+                    <tr><td>3</td><td>屋根裏夫</td><td>0123-456-9876</td><td>1</td></tr>
+                </table>
+            </div>
+
+            <p>このような、数字で突き合わせて2つのテーブルの値を合成するのは、一見すると分かりにくく、余分なことをしていると思うかもしれません。con_idというフィールドに直接「会社関係」と入力した方が手っ取り早いと思うかもしれません。</p>
+            <p style="color:darkred">上記のページを実際に作ったサンプルは、「<a href="trial.html" target="_blank">実験環境</a>（別ウインドウに表示）」に用意してあります。実験環境のページのsample7.html/phpをご覧ください。</p>
+            <p>まず、この方法の利点を説明しましょう。住所録にたくさんのデータが蓄積された後、「親戚」ではなくて「親類」に変更したいとします。上記のようなデータ構造を取っていれば、connectionフィールドのid=1のレコードのcnameフィールドを変更するだけですべて変更が完了します。addressフィールドのいくつかのレコードのあるフィールドに「親戚」という文字列が入っていたら、それらを検索して特定して、不定数のレコードに対する更新を正しく行う必要があり、より多くの作業が発生することになります。このように、表現や情報そのものを別途管理するということで、確実に同一の値を記録管理できるということです。</p>
+            <p>このような複数のテーブルでデータを管理して突き合わせなどを行う仕組みを持っているのがリレーショナルデータベースの特徴です。マスターテーブルを使う手法はその代表的な利用方法です。</p>
+            <p>この住所録が、顧客管理的なものだったとします。そして、各顧客に対するコンタクト（訪問、問い合わせ、電話連絡といったもの）を記録したい場合、addressテーブル以外に、コンタクトをいつ誰がどのような方法で行い、どうだったのかを記録するcontactテーブルを作ります。このとき、1人の顧客に対しては複数のコンタクト結果が発生することが想定されます。一方、1回のコンタクトは1顧客だけという運用をします。このような場合、顧客とコンタクトの関係は「1対多」と呼ばれます。contactテーブルには、対応するaddressテーブルのid値を入れるフィールド（たとえば、address_idフィールド）を用意して、そこに対応するレコードのidフィールドの値を入力します。逆に、addressフィールドには対応するcontactテーブルの主キー値を記録するフィールドは設けません。2つ以上かもしれないという数が決まらない問題もさることながら、contactテーブルのaddress_idフィールドの値から組み合わせは特定できることから、それ以上の対応付けのための情報は不要になります。</p>
+
+            <h3>コピーをする場合もある</h3>
+            <p>なお、ここで、マスターテーブルの値をコピーした方がいいような場合もあります。売り上げをテーブルで記録する場合、商品を別のテーブルで管理するという商品マスターを確保するのは典型的な設計手法です。商品マスター側では、商品名や単価を記録します。売り上げのテーブルでは、商品テーブルの特定のレコードを参照する情報をだけを記録するということができます。商品名や単価は売り上げのテーブルでは記録しないというわけです。</p>
+            <p>しかしながら、そうなると、あるときある商品の単価が変わった場合、不都合が起きるかもしれません。商品マスターの単価を書き換えれば、過去の売り上げデータはすべて新しい単価で売ったという結果になります。このように、変更があるような情報については、商品マスターの単価の値を、売り上げのテーブルにもつどつどコピーして記録するのが一般的です。それでも「現在の単価」を記録する意味で商品テーブルを別に用意するのは、間違いなく入力できるなどのメリットをもたらすものです。</p>
+
+            <h3>ポップアップメニューで入力</h3>
+            <p>addressテーブルのcon_idフィールドに入力するためにポップアップメニューを利用したいとします。このとき、addressテーブルのためのコンテキストだけではなく、connectionテーブルのためのコンテキストも必要になります。定義ファイルでは複数のコンテキストを定義でき、それらは並べて記述します。以下のように、区切りに線を入れて、2つのコンテキストが定義されていることを示します。なお、connectionコンテキストについてはkeyの指定はあってもなくてもかまいません。connectionテーブルにクライアントから更新をすることがないので、必要ないのです。</p>
+
+            <div class="code">
+<pre><code>name: address
+key: id
+-
+name: con
+view: connection</code></pre>
+            </div>
+
+            <p>そして、ページファイルでは次のようなターゲット指定を持った要素が加わります。</p>
+
+            <div class="code">
+<pre><code>&lt;table&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;&lt;th&gt;名前&lt;/th&gt;&lt;th&gt;電話番号&lt;/th&gt;&lt;th&gt;分類&lt;/th&gt;&lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td class=&quot;IM[address@pname]&quot;&gt;&lt;/td&gt;
+            &lt;td class=&quot;IM[address@tel]&quot;&gt;&lt;/td&gt;
+            &lt;td&gt;
+                &lt;select class=&quot;IM[address@con_id]&quot;&gt;
+                    &lt;option class=&quot;IM[con@id@value|con@cname]&quot;&gt;&lt;/option&gt;
+                &lt;/select&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+            </div>
+
+            <p>これで、テーブルには3つ目の「分類」列が追加され、各レコードに対してポップアップメニューが表示されます。すでにconn_idフィールドにデータがあれば、それに対応する選択肢が選択されているはずです。また、ポップアップメニューを選択すれば、その選択結果で、conn_idの値が更新されます。</p>
+            <p>ページファイルのターゲット指定をあらためて解説をします。まず、addressコンテキストの展開中に、conという別のコンテキストが登場しています。ここでは、まず、TBODY/TRによるエンクロージャー/リピーターが識別されますが、そのとき、さらに内部にSELCT/OPTIONによるエンクロージャー/リピーターが存在しています。リピーター内部のエンクロージャー以下の要素は、データベースの結果を合成するときには特に何もしません。その代わり、データベースから得られたデータを合成した後、さらに内部のエンクロージャー/リピーターの展開に入ります。ここでは、名前と電話番号をTD要素の値に組み込んだ後、conというnameを持つコンテキストを見て、connectionテーブルへアクセスをしてレコードを受け取り、レコードの数だけOPTIONタグを複製して、OPTIONタグ要素内部にconnectionテーブルから得られた結果を合成します。</p>
+            <p>OPTIONタグ要素では、2つの新しい内容が含まれています。まず、ターゲット指定は、半角の|によって区切る事で1つの要素に複数の指定を入れる事ができ、それぞれの合成が行われます。ターゲット指定では@で区切られた3つ目の項目があります。3つ目の項目は、データベースのデータを設定する先を指定します。</p>
+            <p>この場合だと、「con@id@value」という指定により、conコンテキスト（connectionテーブル）のidフィールドの値を、OPTIONタグ要素のvalue属性の値にします。続いて「con@cname」により、conコンテキストのcnameフィールドの値がOPTIONタグの値として設定され、その文字列が選択肢として見るようになります。結果として、ポップアップメニュー部分はデータベースから得れた結果を合成すると、次のようなHTMLと同じ結果になります。</p>
+
+            <div class="code">
+<pre><code>&lt;select class=&quot;IM[address@conn_id]&quot;&gt;
+    &lt;option class=&quot;IM[con@id@value|con@cname]&quot; value=&quot;1&quot;&gt;親類&lt;/option&gt;
+    &lt;option class=&quot;IM[con@id@value|con@cname]&quot; value=&quot;2&quot; &gt;友人&lt;/option&gt;
+    &lt;option class=&quot;IM[con@id@value|con@cname]&quot; value=&quot;3&quot; &gt;会社関係&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+            </div>
+
+            <p>ターゲット指定の3つ目の項目では、以下のような仕組みを利用できます。</p>
+
+            <ul>
+                <li>省略：要素の値。ただし、フォーム要素は種類に応じて適切な属性へ設定</li>
+                <li>属性名：その属性の値</li>
+                <li>style.スタイル名：指定したスタイルの値（スタイル名はJavaScriptでのプロパティ名）</li>
+                <li>innerHTML：要素のinnerHTML属性にフィールドの値を設定</li>
+                <li>（$を最初に付加）：現在の値の中の$をフィールドの値に置き換える</li>
+                <li>（#を最初に付加）：現在の値の後にフィールドの値を追加する</li>
+            </ul>
+
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>学習時間調査</h2>
+
+        <div style="font-size: 80%; text-align: right;">
+            ログインユーザ：<span class="_im_enclosure"><span class="_im_repeater IM[loginuser@username]"></span></span>|
+            <button onclick="INTERMediatorOnPage.logout();location.href='/room1/';">ログアウト</button>
+        </div>
+
+        <div class="insidebox _im_enclosure _im_postonly">
+            <div class="_im_repeater">
+                <p>
+                    読み終わったとき、以下のラジオボタンのいずれかを選択して、「読み終わった」ボタンをクリックしてください。
+                </p>
+
+                <p>
+                    開いてから今まで、このページを、
+
+                <div style="margin-left: 20px">
+                    <input type="radio" name="q1" class="IM[progress@status]" value="1">ほとんどの時間は読む事に使わなかった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="2">あまり時間をかけて読んではいなかった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="3">他のことと半々くらいの時間をかけて読んだ<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="4">多くの時間をかけて読んだ<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="5">ほとんどの時間を読む事に使った
+                </div>
+                </p>
+
+                <p>
+                    このページの内容について、自分が感じる理解度は、
+
+                <div style="margin-left: 20px">
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="1">ほとんど分からなかった<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="2">少しは分かったが半分以下しか分からなかった<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="3">半々くらい<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="4">すべては理解できないが半分以上は理解した<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="5">ほとんど理解できた
+                </div>
+                </p>
+
+                <p>
+                    <input type="hidden" class="IM[progress@page]" value="7"/>
+                    <input type="hidden" class="IM[progress@startdt]" id="startdt"/>
+                    <button class="_im_postonly">読み終わった</button>
+                    ←クリックすると、次のページに移動します。
+                </p>
+
+                <p>
+                    <a href="index.html">実験のトップページ（Room 1）へ</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

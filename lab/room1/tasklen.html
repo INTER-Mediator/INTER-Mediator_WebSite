@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 1</title>
+    <script type="text/javascript" src="result.php"></script>
+    <style>
+        h2  {
+            border:none;
+            background-color: #CCCCCC;
+        }
+        th  {
+            text-align: left;
+        }
+        td.right  {
+            text-align: right;
+        }
+    </style>
+</head>
+<body onload="INTERMediator.construct(true)">
+<h1>Summary of task length</h1>
+<h2>Summary of study length</h2>
+<table class="tableformat">
+    <thead>
+    <tr>
+        <th>username</th>
+        <th>sum(length) by seconds</th>
+        <th>avg(status)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="IM[studytimesummary@username]"></td>
+        <td class="right IM[studytimesummary@sum(length)]"></td>
+        <td class="right IM[studytimesummary@avg(status)]"></td>
+    </tr>
+    </tbody>
+</table>
+<h2>Summary of exam length</h2>
+<table class="tableformat">
+    <thead>
+    <tr>
+        <th>username</th>
+        <th>sum(length) by seconds</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="IM[examtimesummary@username]"></td>
+        <td class="right IM[examtimesummary@sum(length)]"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

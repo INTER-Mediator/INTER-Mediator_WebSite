@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 1</title>
+    <script type="text/javascript" src="contexts.php"></script>
+    <script type="text/javascript" src="survery.js"></script>
+    <script type="text/javascript">
+        var pNum = parseInt(INTERMediatorOnPage.getCookie('currentpage'));
+        var cateNum = Math.floor(pNum / 100);
+        var itemNum = (pNum % 100) + 1;
+        var fileName = "page";
+        var overflow = false;
+        switch (cateNum) {
+            case 0:
+                fileName = "page";
+                overflow = (itemNum > 10);
+                break;
+            case 1:
+                fileName = "question";
+                overflow = (itemNum > 8);
+                break;
+        }
+        if (overflow) {
+            location.href = "../../index.html"
+        } else {
+            location.href = fileName + (itemNum < 10 ? "0" : "") + itemNum + ".html"
+        }
+    </script>
+</head>
+<body>
+次のページに移動します。
+</body>
+</html>

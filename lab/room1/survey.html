@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 1</title>
+    <script type="text/javascript" src="contexts.php"></script>
+    <script type="text/javascript" src="survery.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            if (INTERMediatorOnPage.INTERMediatorCheckBrowser(document.getElementById('nonsupportmessage'))) {
+                INTERMediator.additionalCondition['question'] = {field:'qnum',operator:'=',value:201};
+                INTERMediator.construct(true);
+            }
+        }
+        INTERMediatorOnPage.doAfterConstruct = function () {
+            INTERMediatorOnPage.setCookieDomainWide('currentpage', '201');
+        }
+    </script>
+</head>
+<body>
+<div id="nonsupportmessage" style="background-color:#333333">
+    <div style="text-align:center;color:yellow">If you see this, you must use any unsupported web browser. Or
+        constructing the page.
+    </div>
+    <div style="text-align:center;color:yellow">この表示が見えている場合、描画処理中です。しばらくお待ちください。
+        長時間見えている場合は、非対応ブラウザで参照しています。
+    </div>
+</div>
+<div id="container">
+    <h1 onclick="location.href='/';">
+        <img class="logoInH1" src="../im-icon.png"/>
+        <img class="logo2InH1" src="../im-lab.png"/>
+        INTER-Mediator Lab. - Room 1
+    </h1>
+
+    <div class="box">
+        <h2></h2>
+
+        <div class="insidebox">
+            <div class="_im_enclosure"><div class="_im_repeater">
+            <p>学習と試験の長い調査に参加いただきありがとうございました。最後にアンケートにお答えいただきたく存じます。</p>
+            <h3>ご本人に関するプロフィール</h3>
+            <p>以下の質問は、ここ2年くらいの様子でお答えください</p>
+            <p>Q1：自分の仕事や職種を一言で言えば？<input type="text" size="30" class=IM[question@answertext1]"></p>
+            <p>Q2：HTMLのソースレベルのコーディングを（<input type="radio" class=IM[question@answer1]" value="1">ほとんど毎日行う｜<input type="radio" class=IM[question@answer1]" value="2">よくやる｜<input type="radio" class=IM[question@answer1]" value="3">時々行う｜<input type="radio" class=IM[question@answer1]" value="4">たまに行う｜<input type="radio" class=IM[question@answer1]" value="5">滅多にやらない）</p>
+            <p>Q3：CSSのソースコードレベルのコーディング（<input type="radio" class=IM[question@answer2]" value="1">ほとんど毎日行う｜<input type="radio" class=IM[question@answer2]" value="2">よくやる｜<input type="radio" class=IM[question@answer2]" value="3">時々行う｜<input type="radio" class=IM[question@answer2]" value="4">たまに行う｜<input type="radio" class=IM[question@answer2]" value="5">滅多にやらない）</p>
+            <p>Q4：JavaScriptのソースコードレベルのコーディング（<input type="radio" class=IM[question@answer3]" value="1">ほとんど毎日行う｜<input type="radio" class=IM[question@answer3]" value="2">よくやる｜<input type="radio" class=IM[question@answer3]" value="3">時々行う｜<input type="radio" class=IM[question@answer3]" value="4">たまに行う｜<input type="radio" class=IM[question@answer3]" value="5">滅多にやらない）</p>
+            <p>Q5：その他の言語での開発（<input type="radio" class=IM[question@answer4]" value="1">ほとんど毎日行う｜<input type="radio" class=IM[question@answer4]" value="2">よくやる｜<input type="radio" class=IM[question@answer4]" value="3">時々行う｜<input type="radio" class=IM[question@answer4]" value="4">たまに行う｜<input type="radio" class=IM[question@answer4]" value="5">滅多にやらない）</p>
+            <p>Q6：その他の言語はどんな言語？<input type="text" size="30" class=IM[question@answertext9]"></p>
+            <p>Q7：Webページ制作で普段使っているツール（アプリケーションやサービス）にはどのようなものがありますか？<br/><textarea rows="5" cols="60" class=IM[question@answertext2]"></textarea></p>
+
+            <h3>INTER-Mediatorについての感想・意見</h3>
+            <p>Q8：INTER-MediatorによるWebアプリケーション開発は（<input type="radio" class=IM[question@answer5]" value="1">分かりやすい｜<input type="radio" class=IM[question@answer5]" value="2">どちらでもない｜<input type="radio" class=IM[question@answer5]" value="3">わかりにくい）</p>
+            <p>Q9：INTER-MediatorによるWebアプリケーション開発を（<input type="radio" class=IM[question@answer6]" value="1">すぐにでもできそう｜<input type="radio" class=IM[question@answer6]" value="2">勉強すればできそう｜<input type="radio" class=IM[question@answer6]" value="3">できるにはかなり勉強しないといけないだろう｜<input type="radio" class=IM[question@answer6]" value="4">できるようになるとは思えない）</p>
+            <p>Q10：INTER-Mediatorについて、良い印象を持った機能や分かりやすいと感じた機能は何ですか？<br/><textarea rows="5" cols="60" class=IM[question@answertext3]"></textarea></p></p></p>
+            <p>Q11：INTER-Mediatorについて、難しいと感じた機能や理解に苦しむ機能は何ですか？<br/><textarea rows="5" cols="60" class=IM[question@answertext4]"></textarea></p></p></p>
+            <p>Q12：INTER-Mediatorについて、こんな機能が組み込まれていればいいのではとおもったことはありますか？<br/><textarea rows="5" cols="60" class=IM[question@answertext5]"></textarea></p></p></p>
+            <p>Q13：INTER-Mediatorについて、機能がありそうだけどやり方が分からなかったことはありますか？<br/><textarea rows="5" cols="60" class=IM[question@answertext6]"></textarea></p></p></p>
+            <p>Q14：今回の調査の中で、自分で知っている事で話題にならなかった事がありましたか？<br/><textarea rows="5" cols="60" class=IM[question@answertext7]"></textarea></p></p></p>
+            <p>Q15：その他、お気づきになったことがありましたら、お書きください。<br/><textarea rows="5" cols="60" class=IM[question@answertext8]"></textarea></p></p></p>
+
+            <p>お忙しい中、時間を割いていただき大変感謝しています。ありがとうございました。</p>
+                <p><a href="index.html">トップページに戻る</a></p>
+                </div></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
