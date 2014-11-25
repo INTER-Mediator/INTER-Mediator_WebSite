@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 1</title>
+    <script type="text/javascript" src="contexts.php"></script>
+    <script type="text/javascript" src="survery.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById('startdt').value = dateTimeForSQL(new Date());
+            if (INTERMediatorOnPage.INTERMediatorCheckBrowser(document.getElementById('nonsupportmessage'))) {
+                INTERMediator.construct(true);
+            }
+        }
+        INTERMediatorOnPage.doAfterConstruct = function () {
+            INTERMediatorOnPage.setCookieDomainWide('currentpage', '10');
+        }
+    </script>
+</head>
+<body>
+<div id="nonsupportmessage" style="background-color:#333333">
+    <div style="text-align:center;color:yellow">If you see this, you must use any unsupported web browser. Or
+        constructing the page.
+    </div>
+    <div style="text-align:center;color:yellow">この表示が見えている場合、描画処理中です。しばらくお待ちください。
+        長時間見えている場合は、非対応ブラウザで参照しています。
+    </div>
+</div>
+<div id="container">
+    <h1 onclick="location.href='/';">
+        <img class="logoInH1" src="../im-icon.png"/>
+        <img class="logo2InH1" src="../im-lab.png"/>
+        INTER-Mediator Lab. - Room 1
+    </h1>
+
+    <div class="box">
+        <h2>10. INTER-Mediatorのその他の機能</h2>
+
+        <div class="insidebox">
+            <p>このページでは、INTER-Mediatorの機能について、ここまでのところでは触れていないことについてまとめておきます。これらの機能については、この後の試験問題では触れていません。プログラミングなどの技術的な知識背景がないと理解がしづらい事柄が中心です。それでも、ここまでの解説を読んで、他にどんな機能があるのかを興味を持っていただけたのであれば、INTER-Mediatorの全体像を知るのに有用な情報になると思われます。</p>
+            <p>以下、（設定）は定義ファイルの設定やページファイル内のターゲット指定で実現できるものです。（JavaScript）はJavaScript言語でプログラムを記述する場合に利用できる機能です。（PHP）はサーバサイドでのPHP言語によるプログラムの追加が必要な機能です。</p>
+
+            <ul>
+                <li>日付・時刻を書式を整えた形式で表示したり、数値フィールドのデータをカンマ付きの数字や通貨記号付きで表示したりする機能があります。また、修正結果を元のフィールドに書き戻すこともできます。（設定）</li>
+                <li>データベースから得れた文字列について文字実体参照にして、HTMLとしてテキストエリア等で編集できるようにする仕組みがあります。加えてタグ要素のinnerHTMLにデータベースから得られたデータを代入することもできます。（設定）</li>
+                <li>新規レコードを作成するための専用のページを構築でき、その中のポップアップメニュー等はマスターテーブルから構築する事ができます。ボタンを押た後にボタンを消してメッセージを表示し、別のページに自動的に移動します。（設定）</li>
+                <li>検索条件では、OR条件の設定も可能です。（設定）</li>
+                <li>対応ブラウザを定義し、ブラウザを判別して対応外の場合にはメッセージを表示して処理を行わないようにする仕組みがあります。（設定＋JavaScript）</li>
+                <li>JavaScriptのライブラリをパーツとして使用する機能があり、ファイルのアップロードやHTMLエディなど一部はプログラミングなしに使えます。（設定+JavaScript）</li>
+                <li>認証や認可の仕組みを利用できます。認証では、ユーザテーブルをデータベースに確保し、グループの設定もできます。またデータベースエンジンのネイティブユーザでの認証もできます。認可ではコンテキスト単位の処理の可否や認証の要求ができます。さらにレコード単位に特定のユーザやグループに対してのみ利用できるような設定もできます。認証のためのログインパネルをカスタマイズすることもできます。画像などのメディアファイルに対する認可の仕組みの適用もできます。（設定）</li>
+                <li>データベースへの要求や応答結果を変換する仕組みを追加できます。この仕組みにより検索条件をデータに合わせて変更したり、得られた検索結果を集計して戻すなどの処理ができます。（PHP）</li>
+                <li>クライアント側のプログラムでは、エンクロージャーやリピーターの合成時に割り込み処理を入れる事などが可能です。（JavaScript）</li>
+                <li>クライアント側のプログラミングをサポートするために、データベースのデータを織り込んだ結果から、特定のフィールドと関連付けられている要素を参照するためのid属性を得るメソッドなどが用意されています。</li>
+                <li>修正時に値のチェックができ、内容に応じてメッセージを出すことができます。（設定）</li>
+                <li>楽観的ロックにより、同一フィールドを同時に2人で変更した場合、後から保存しようとしたユーザの側に警告メッセージを表示し、更新をキャンセルすることもできます。</li>
+            </ul>
+
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>学習時間調査</h2>
+
+        <div style="font-size: 80%; text-align: right;">
+            ログインユーザ：<span class="_im_enclosure"><span class="_im_repeater IM[loginuser@username]"></span></span>|
+            <button onclick="INTERMediatorOnPage.logout();location.href='/room1/';">ログアウト</button>
+        </div>
+
+        <div class="insidebox _im_enclosure _im_postonly">
+            <div class="_im_repeater">
+                <p>
+                    読み終わったとき、以下のラジオボタンのいずれかを選択して、「読み終わった」ボタンをクリックしてください。
+                </p>
+
+                <p>
+                    開いてから今まで、このページを、
+
+                <div style="margin-left: 20px">
+                    <input type="radio" name="q1" class="IM[progress@status]" value="1">ほとんどの時間は読む事に使わなかった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="2">あまり時間をかけて読んではいなかった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="3">他のことと半々くらいの時間をかけて読んだ<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="4">多くの時間をかけて読んだ<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="5">ほとんどの時間を読む事に使った
+                </div>
+                </p>
+
+                <p>
+                    このページの内容について、自分が感じる理解度は、
+
+                <div style="margin-left: 20px">
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="1">ほとんど分からなかった<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="2">少しは分かったが半分以下しか分からなかった<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="3">半々くらい<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="4">すべては理解できないが半分以上は理解した<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="5">ほとんど理解できた
+                </div>
+                </p>
+
+                <p>
+                    <input type="hidden" class="IM[progress@page]" value="10"/>
+                    <input type="hidden" class="IM[progress@startdt]" id="startdt"/>
+                    <button class="_im_postonly">読み終わった</button>
+                    ←クリックすると、次のページに移動します。
+                </p>
+
+                <p>
+                    <a href="index.html">実験のトップページ（Room 1）へ</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>
