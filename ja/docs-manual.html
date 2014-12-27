@@ -1400,7 +1400,7 @@ echo ${h1}${h2}
 <p><a href="http://pusher.com/" target="_blank">Pusher</a>のサイトでアカウントを取得します。Pusherでは「App」という単位で管理ができるので、たとえばINTER-Mediatorで作る1つのソリューションを、1つのPusherのAppとして登録するという方法もありますし、複数のソリューションで共有してもいいかもしれません。いずれにしても、アカウントを作成し、New Appというボタンなどで新たに1つのAppを作成します。ページ上に表示されるapp_id、key、secretの3つの情報がこの後に必要となります。</p>
 
 <h3>Pusherのサーバプログラムのインストール</h3>
-<p>PusherのサーバモジュールはPHP版を利用します。こちらのレポジトリをダウンロードし、そこから得られるlibディレクトリにあるPusher.phpという1つのファイルだけをサーバにインストールします。他は使用しません。ファイルはPHPの設定ファイル（php.iniが代表的）で、include_pathの設定で参照できるディレクトリにあればかまいません。もっとも安直な方法は、INTER-Mediatorフォルダに入れて、サーバにコピーしておくことです。もし、設定が以下のようなものであれば、例えば/usr/lib/phpディレクトリにPusher.phpをコピーしておけば良いでしょう。</p>
+<p>PusherのサーバモジュールはPHP版を利用します。<a href="https://github.com/pusher/pusher-php-server">こちらのレポジトリ</a>をダウンロードし、そこから得られるlibディレクトリにあるPusher.phpという1つのファイルだけをサーバにインストールします。他は使用しません。ファイルはPHPの設定ファイル（php.iniが代表的）で、include_pathの設定で参照できるディレクトリにあればかまいません。もっとも安直な方法は、INTER-Mediatorフォルダに入れて、サーバにコピーしておくことです。もし、設定が以下のようなものであれば、例えば/usr/lib/phpディレクトリにPusher.phpをコピーしておけば良いでしょう。</p>
 <div class="code"><pre><code>include_path = ".:/usr/lib/php/pear:/usr/lib/php"</code></pre></div>
 
 <h3>ページファイルへの追加</h3>
