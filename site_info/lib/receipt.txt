@@ -1,0 +1,13 @@
+=================================================
+ INTER-Mediator Ver.4.6 was successfully Build
+ Check out: /Users/msyk/Downloads/im_build
+=================================================
+Date: 2014年 12月30日 火曜日 12時09分47秒 JST
+OS Info: Darwin msyk-macbookair-2.local 14.0.0 Darwin Kernel Version 14.0.0: Fri Sep 19 00:26:44 PDT 2014; root:xnu-2782.1.97~2/RELEASE_X86_64 x86_64
+Original: /Users/msyk/Downloads/INTER-Mediator-4.6
+Build to: /Users/msyk/Downloads/im_build/INTER-Mediator
+Your Choice: (2) Core only (the least set to work wep applications)
+
+You can deploy the 'INTER-Mediator' folder into your web applications. Enjoy!!
+
+INTER-Mediator Web Site: http://inter-mediator.org

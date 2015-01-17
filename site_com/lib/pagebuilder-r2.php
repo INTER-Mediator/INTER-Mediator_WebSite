@@ -25,7 +25,7 @@ IM_Entry(
     array(
         'db-class' => 'Null',
     ),
-    2
+    false
 );
 
 ?>

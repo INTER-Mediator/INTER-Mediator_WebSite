@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<!--
+/*
+ * INTER-Mediator Ver.@@@@2@@@@ Released @@@@1@@@@
+ *
+ *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2014 Masayuki Nii, All rights reserved.
+ *
+ *   This project started at the end of 2009.
+ *   INTER-Mediator is supplied under MIT License.
+ */
+-->
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link href="../lib/pagebuilder-r2.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../images/im-icon.png" type="image/png"/>
+    <link rel="icon" href="../images/im-icon.png" type="image/png"/>
+    <title>INTER-Mediator</title>
+    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.js"></script>
+    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.php"></script>
+    <style>
+    </style>
+</head>
+<body>
+<article>
+<h2>定義ファイルでの記述方法</h2>
+
+<p>定義ファイルに記述するIM_Entry関数の引数に、データベースに関する情報を与えておきます。4つの引数があり、うち3つは配列を指定します。配列の内容を記載します。以下の表で、次元の列にキーワードがあれば、「 'キーワード' =>
+    '値' 」で該当する値を与えます。次元が「（なし）」というのは、その次元では、単に要素が並ぶということを意味します。サンプルファイルの例などを見ながら解読してください。</p>
+
+<h3>第1引数、テーブルとそれに関連した属性</h3>
+
+<p>
+    テーブルと、テーブル間を関連づけるフィールドを指定します。この引数の第2次元にまとめられた1つの配列の設定を「コンテキスト定義」と呼ぶことにします。つまり、name、keyなどのキーを持った連想配列の1つ1つがコンテキスト定義です。もちろん、コンテキスト定義は複数を定義することが可能です。ここでのnameが、ターゲット指定のテーブル名で使用します。テーブル間の結合における相手のテーブル名がないと思われるかもしれませんが、相手のテーブル名は、ページファイル側の記述で自動的に決まってきます。</p>
+
+<div class="table">
+<table>
+<tr>
+    <th colspan="3">
+        配列指定
+    </th>
+    <th rowspan="2">
+        値
+    </th>
+</tr>
+<tr>
+    <th width="91">
+        キー
+    </th>
+    <th width="121">
+        インデックス
+    </th>
+    <th width="121">
+        下位のキー
+    </th>
+</tr>
+<tr>
+    <td>
+        'name'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        テーブル名[必須]。'view'がなければすべての処理を適用する「テーブル名」、'view'があれば書き込みや更新処理のときの「テーブル名」
+    </td>
+</tr>
+<tr>
+    <td>
+        'table'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        指定すると更新時の「テーブル名」に使用される。指定しないと、nameで指定した名前のテーブルに書き込む
+    </td>
+</tr>
+<tr>
+    <td>
+        'view'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        指定すると読み込みのときの「テーブル名」に使用される。指定しないと、nameで指定した名前のテーブルから読み込む
+    </td>
+</tr>
+<tr>
+    <td>
+        'records'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        1ページに何レコード分表示するか。最初のテーブルの設定のみ有効。省略すると大きな数値
+    </td>
+</tr>
+<tr>
+    <td>
+        'maxrecords'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>1ページ内の最大表示レコード数。INTERMediator.pagedSizeの値を調整することで1ページ内の表示レコード数を変更できるが、その際にこのキーで指定した値を超えて表示することはできない</td>
+</tr>
+<tr>
+    <td>
+        'paging'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>recordsで指定したレコード数ずつ表示するとき、前後のページに移動するナビゲーションを表示する場合、trueを指定する。既定値はfalse</td>
+</tr>
+<tr>
+    <td>
+        'key'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        主キーフィールド名
+    </td>
+</tr>
+<tr>
+    <td>
+        'cache'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        trueを指定するとキャッシュが機能する（Ver.3.0より順次組み込みのため、機能制限に注意）
+    </td>
+<tr>
+    <td>
+        'sequence'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        PostgreSQLにおいて、レコード追加を行うためには、シーケンスを利用してキーフィールドに連番を設定する必要がある。そのシーケンス名をここで指定をする。
+    </td>
+</tr>
+<tr>
+    <td rowspan="4">
+        'relation'
+    </td>
+    <td rowspan="4">
+        (なし)
+    </td>
+    <td>
+        'foreign-key'
+    </td>
+    <td>
+        リレーションの外部キーフィールド名（この設定は事実上データ取り出し時のみ有効）
+    </td>
+</tr>
+<tr>
+    <td>
+        'join-field'
+    </td>
+    <td>
+        外部キーフィールドに対応するテーブル側の関連フィールド
+    </td>
+</tr>
+<tr>
+    <td>
+        'operator'
+    </td>
+    <td>
+        外部キーフィールドと対応するフィールドの比較演算子
+    </td>
+</tr>
+<td>
+    'portal'
+</td>
+<td>
+    FileMaker Serverを利用しているときに、このコンテキストのデータを、親コンテキストのレイアウト上にあるポータルから取得する場合にtrueを値に指定する
+</td>
+</tr>
+<tr>
+    <td rowspan="3">
+        'query'
+    </td>
+    <td rowspan="3">
+        (なし)
+    </td>
+    <td>
+        'field'
+    </td>
+    <td>
+        検索条件のフィールド名（この設定はデータ取り出し時のみ有効）
+    </td>
+</tr>
+<tr>
+    <td>
+        'value'
+    </td>
+    <td>
+        検索値
+    </td>
+</tr>
+<tr>
+    <td>
+        'operator'
+    </td>
+    <td>
+        検索値の解釈
+    </td>
+</tr>
+<tr>
+    <td rowspan="2">
+        'sort'
+    </td>
+    <td rowspan="2">
+        (なし)
+    </td>
+    <td>
+        'field'
+    </td>
+    <td>
+        ソート条件のフィールド名（この設定はデータ取り出し時のみ有効）
+    </td>
+</tr>
+<tr>
+    <td>
+        'direction'
+    </td>
+    <td>
+        昇順か降順か
+    </td>
+</tr>
+<tr>
+    <td rowspan="2">
+        'calculation'
+    </td>
+    <td rowspan="2">
+        (なし)
+    </td>
+    <td>
+        'field'
+    </td>
+    <td>
+        計算結果を表示するリンクノードのターゲット指定。コンテキスト名は現在のコンテキスト名を使うため指定しない。属性やスタイル等の指定は可能
+    </td>
+</tr>
+<tr>
+    <td>
+        'expression'
+    </td>
+    <td>
+        計算式。同一コンテキストのフィールド参照はフィールド名のみ記述する。他のコンテキストのフィールド参照は「コンテキスト名@フィールド名」の形式で記述する。
+
+    </td>
+</tr>
+<tr>
+    <td rowspan="2">
+        'default-values'
+    </td>
+    <td rowspan="2">
+        (なし)
+    </td>
+    <td>
+        'field'
+    </td>
+    <td>
+        新規レコード作成時の初期値指定のフィールド名
+    </td>
+</tr>
+<tr>
+    <td>
+        'value'
+    </td>
+    <td>
+        初期値
+    </td>
+</tr>
+<tr>
+    <td>'soft-delete'</td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>コンテキストに対する削除において、論理削除を行う。検索時には、論理的に削除されたレコードは検索対象外とする。値をtrueにすると、レコード削除時に、deleteフィールドに1を代入する。deleteフィールドのタイプは数値を想定している。delete以外のフィールドを利用したい場合には、値をフィールド名にする。</td>
+</tr>
+<tr>
+    <td>
+        'post-reconstruct'
+    </td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>trueなら、入力型フォームにおいて、登録ボタンを押した後にページの再合成を行う。post-dismiss-messageが指定されていれば、4秒後待って再合成する。falseあるいは指定なしなら何もしない</td>
+</tr>
+<tr>
+    <td>
+        'post-dismiss-message'
+    </td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>入力型フォームにおいて、登録ボタンを押した後に、ボタンを消してここに記述したメッセージの文字列を表示する。文字列はSPANタグでclass属性が「IM_POSTMESSAGE」となる。</td>
+</tr>
+<tr>
+    <td>
+        'post-move-url'
+    </td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>入力型フォームにおいて、登録ボタンを押した後に、ここで指定したURLにページを移動させる。指定しない場合にはページ移動はない。post-dismiss-messageが指定されていれば、4秒後に移動する</td>
+</tr>
+<tr>
+    <td>
+        'repeat-control'
+    </td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        繰り返し表示する部分に、レコードの追加や削除の機能を追加する。値には文字列として「insert」「insert-top」「delete」「confirm-insert」「confirm-insert-top」「confirm-delete」の文字で。confirmがあれば確認ダイアログが表示される。複数を指定する場合はそれぞれの文字列を空白で区切って書き並べる
+    </td>
+</tr>
+<tr>
+    <td>
+        'navi-control'
+    </td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>2つのコンテキストを利用して、マスター/ディテール形式のユーザインタフェースを構築する。2つのコンテキストは、原則として同一のテーブルを元にした異なるコンテキストである必要がある。マスター側のコンテキストに指定できるのは「master」ないしは「master-hide」で、通常、こちらのコンテキストは複数のレコードを表示する。マスター側には詳細を表示するボタンが追加される。ディテール側のコンテキストは「detail」を指定して、1レコードを表示する。「master」だと、2つのコンテキストによる展開結果は常に見えている。「master-hide」にするといずれか一方のみ表示し、masterに戻るボタンがディテール側に追加される。「detail-bottom」ないしは「detail-top」でボタンの位置を指定できるが、「detail」は「detail-top」と同等である
+    </td>
+</tr>
+<tr>
+    <td rowspan="4">
+        'validation'
+    </td>
+    <td rowspan="4">
+        (なし)
+    </td>
+    <td>
+        'field'
+    </td>
+    <td>
+        データ確認を行うフィールド名（バリデーションはVer.2.1以降で実装）
+    </td>
+</tr>
+<tr>
+    <td>
+        'rule'
+    </td>
+    <td>
+        確認処理。JavaScriptの式を記述する。コンポーネントの値は変数value、ノードへの参照は変数targetに入っているものとして、式を組み立てることができる。式の結果がtrueならそのまま処理を進めるが、falseならmessageの文字列をダイアログボックスで表示して、コンポーネントの値を元に戻す
+    </td>
+</tr>
+<tr>
+    <td>
+        'message'
+    </td>
+    <td>
+        正しくない場合に表示するメッセージ（ruleがfalseのときに表示される）
+    </td>
+</tr>
+<tr>
+    <td>
+        'notify'
+    </td>
+    <td>
+        'inline'なら直後、'end-of-sibling'なら兄弟ノードの最後にメッセージのテキストを追加する。このとき、ノードのクラス名は'_im_alertmessage'となる。これ以外の表記あるいは、notifyを省略すると、ダイアログボックスで表示される。
+    </td>
+</tr>
+<tr>
+    <td>'post-repeater'</td>
+    <td></td>
+    <td></td>
+    <td>ページ合成時に1つのリピータの処理が終わった後に呼び出される関数名を記述する。その関数自体は、INTERMediatorOnPageオブジェクトのメソッドとして定義する。</td>
+</tr>
+<tr>
+    <td>'post-enclosure'</td>
+    <td></td>
+    <td></td>
+    <td>ページ合成時に1つのエンクロージャーの処理が終わった後に呼び出される関数名を記述する。その関数自体は、INTERMediatorOnPageオブジェクトのメソッドとして定義する。</td>
+</tr>
+<tr>
+    <td rowspan="3">
+        'script'
+    </td>
+    <td rowspan="3">
+        (なし)
+    </td>
+    <td>
+        'db-operation'
+    </td>
+    <td>
+        データベース処理の前後に行う処理の指定。スクリプトを実行する場面で、値は'load', 'update', 'new', 'delete'のいずれか
+    </td>
+</tr>
+<tr>
+    <td>
+        'situation'
+    </td>
+    <td>
+        スクリプトの実行を行うタイミングで、'pre', 'presort', 'post'のいずれかの値を取る（'presort'はFileMaker Serverのみサポート）
+    </td>
+</tr>
+<tr>
+    <td>
+        'definition'
+    </td>
+    <td>
+        MySQLは指定したSQLコマンドを実行、FileMaker Serverはスクリプト名を指定。（FileMaker Serverでforeign-keyの指定されたテーブルの読み込み時の設定はすべて無視される）
+    </td>
+</tr>
+<tr>
+    <td rowspan="3">
+        'global'
+    </td>
+    <td rowspan="3">
+        (なし)
+    </td>
+    <td>
+        db-operation
+    </td>
+    <td>
+        設定する場面で、値は 'load', 'update', 'new', 'delete'のいずれか（グローバルの設定はFileMaker Serverのみ）
+    </td>
+</tr>
+<tr>
+    <td>
+        field
+    </td>
+    <td>
+        グローバルフィールド名
+    </td>
+</tr>
+<tr>
+    <td>
+        value
+    </td>
+    <td>
+        グローバルフィールドに与える値
+    </td>
+</tr>
+<tr>
+    <td rowspan="9">
+        'authentication'
+    </td>
+    <td>media-handling</td>
+    <td></td>
+    <td>メディアアクセス時の認証を通すためのクッキー情報を、このコンテキストの読み出し時にクライアントに送り込む。必要なときに値にtrueを指定する</td>
+</tr>
+<tr>
+    <td rowspan="4">
+        all
+    </td>
+    <td>
+        'user'
+    </td>
+    <td>
+        すべての操作について、このコンテキストを利用可能なユーザを配列で指定。この記述がなければすべての認証ユーザにアクセス権
+    </td>
+</tr>
+<tr>
+    <td>
+        'group'
+    </td>
+    <td>
+        すべての操作について、このコンテキストを利用可能なグループを配列で指定。この記述がなければすべてのグループにアクセス権
+    </td>
+</tr>
+<tr>
+    <td>
+        'target'
+    </td>
+    <td>
+        省略あるいは'table'なら、テーブル全体に対する権限の設定、'field-user'あるいは'field-group'ならレコードごとに権限を指定できる
+    </td>
+</tr>
+<tr>
+    <td>
+        'field'
+    </td>
+    <td>
+        'field-user'あるいは'field-group'に指定した場合、ユーザ名やグループ名を指定するフィールドのフィールド名
+    </td>
+</tr>
+<tr>
+    <td>
+        load
+    </td>
+    <td>
+        （allと同様）
+    </td>
+    <td>
+        クエリーの操作について、このコンテキストに関する設定を行う
+    </td>
+</tr>
+<tr>
+    <td>
+        update
+    </td>
+    <td>
+        （allと同様）
+    </td>
+    <td>
+        更新の操作について、このコンテキストに関する設定を行う
+    </td>
+</tr>
+<tr>
+    <td>
+        new
+    </td>
+    <td>
+        （allと同様）
+    </td>
+    <td>
+        新規レコード作成の操作について、このコンテキストに関する設定を行う
+    </td>
+</tr>
+<tr>
+    <td>
+        delete
+    </td>
+    <td>
+        （allと同様）
+    </td>
+    <td>
+        レコード削除の操作について、このコンテキストに関する設定を行う。ただし、targetとfieldは無視してテーブルに対する設定のみを利用
+    </td>
+</tr>
+<tr>
+    <td>
+        extending-class
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        データアクセス時に処理プログラムを追加するクラスのクラス名を指定する
+    </td>
+</tr>
+<tr>
+    <td>
+        protect-writing
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        この配列に指定したフィールド名に対する更新処理を禁止する
+    </td>
+</tr>
+<tr>
+    <td>
+        protect-reading
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        この配列に指定したフィールド名から読み出したデータをクライアントに送る事を禁止する
+    </td>
+</tr>
+<tr>
+    <td rowspan="2">file-upload</td>
+    <td rowspan="2">（なし）</td>
+    <td>field</td>
+    <td>コンテキスト内のここで指定したフィールドに対してファイルアップロードのコンポーネントが設定されている場合</td>
+</tr>
+<tr>
+    <td>context</td>
+    <td>この指定があると、指定したコンテキストのpathフィールドにファイルパスを値として指定する新規レコードを作成する。こちらのコンテキストとのリレーションが設定されていれば正しく外部キーが設定される</td>
+</tr>
+<tr>
+    <td>
+        'db-class'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        このコンテキストで使うデータアクセスクラスの名前（例：PDO、FileMaker_FX）この指定がなければ、IM_Entry関数の第3引数あるいはparams.phpの値が使われます。以下、'datatype'まで同様
+    </td>
+</tr>
+<tr>
+    <td>
+        'dsn'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        [PDO]このコンテキストで使う接続時に指定するDSN
+    </td>
+</tr>
+<tr>
+    <td>
+        'option'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        [PDO]このコンテキストで使うオプション指定。array型で指定
+    </td>
+</tr>
+<tr>
+    <td>
+        'database'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        [FileMaker_FX]このコンテキストで使うデータベース名
+    </td>
+</tr>
+<tr>
+    <td>
+        'user'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        [PDO][FileMaker_FX]このコンテキストで使うユーザ名
+    </td>
+</tr>
+<tr>
+    <td>
+        'password'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        [PDO][FileMaker_FX]このコンテキストで使うパスワード
+    </td>
+</tr>
+<tr>
+    <td>
+        'server'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        [FileMaker_FX]このコンテキストで使うサーバアドレス（例：127.0.0.1）
+    </td>
+</tr>
+<tr>
+    <td>
+        'port'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        [FileMaker_FX]このコンテキストで使うサーバポート（例：80）
+    </td>
+</tr>
+<tr>
+    <td>
+        'protocol'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        [FileMaker_FX]このコンテキストで使うサーバへの接続プロトコル（例：HTTP）
+    </td>
+</tr>
+<tr>
+    <td>
+        'datatype'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        [FileMaker_FX]このコンテキストで使うサーバがサポートするデータ形式（例：FMPro7）
+    </td>
+</tr>
+</table>
+</div>
+<p>
+    認証についは別項目「ユーザ認証とアクセス権の動作について」も参照してください。
+</p>
+
+<p>
+    'relation'、'query'、'sort'、'script'については、配列の配列を指定します。サンプルのソース等で具体例を見てください。
+</p>
+
+<p>
+    それぞれのパラメータの解釈は、データベースドライバによって異なる場合があります。
+</p>
+
+<h3>第2引数、オプション設定</h3>
+
+<p>
+    こちらは、「定義ファイルのオプション設定」と呼ぶことにします。
+</p>
+
+<div class="table">
+<table>
+<tr>
+    <th colspan="3">
+        配列指定
+    </th>
+    <th rowspan="2">
+        値
+    </th>
+</tr>
+<tr>
+    <th width="120">
+        第1次元
+    </th>
+    <th width="80">
+        第2次元
+    </th>
+    <th width="160">
+        第3次元
+    </th>
+</tr>
+<tr>
+    <td>
+        'separator'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        テーブル名とフィールド名を区切る文字（既定値は「@」）
+    </td>
+</tr>
+<tr>
+    <td rowspan="3">
+        'formatter'
+    </td>
+    <td rowspan="3">
+        (なし)
+    </td>
+    <td>
+        'field'
+    </td>
+    <td>
+        データコンバータを適用するフィールド名
+    </td>
+</tr>
+<tr>
+    <td>
+        'converter-class'
+    </td>
+    <td>
+        データコンバータクラス名
+    </td>
+</tr>
+<tr>
+    <td>
+        'parameter'
+    </td>
+    <td>
+        コンバータクラスに与えるパラメータ
+    </td>
+</tr>
+<tr>
+    <td>
+        'aliases'
+    </td>
+    <td>
+        (なし)
+    </td>
+    <td>
+        エイリアス名
+    </td>
+    <td>
+        エイリアスに対応する値。この値は正しい1つのターゲット指定である必要がある。この指定があれば、ターゲット指定の代わりに、エイリアス名をリンクノードに指定できる。
+    </td>
+</tr>
+<tr>
+    <td rowspan="2">
+        'browser-compatibility'
+    </td>
+    <td rowspan="2">
+        (なし)
+    </td>
+    <td>
+        文字列
+    </td>
+    <td>
+        キーにブラウザを示す文字列（safari, msieなど）を指定し、値にはバージョン番号を指定する。バージョン番号の後に+や-をつけて、以上あるいは以下をのバージョンを示すことができる
+    </td>
+</tr>
+<tr>
+    <td>
+        配列
+    </td>
+    <td>
+        要素にはキーにOSを指定し、その要素に前の行に説明のあるバージョン番号とプラス／マイナス記号を指定する。
+    </td>
+</tr>
+<tr>
+    <td>
+        'transaction'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        編集可能コンポーネントの変更時の書き戻しについて、'none'なら行わない、'automatic'ならchangeイベントが発生するたびに書き戻す。省略するとautomaticが指定されたものとみなす
+    </td>
+</tr>
+<tr>
+    <td rowspan="11">
+        'authentication'
+    </td>
+    <td>
+        'user'
+    </td>
+    <td>
+    </td>
+    <td>
+        利用可能なユーザを配列で指定。この記述がなければすべてのユーザにアクセス権。データベースのネイティブユーザで認証する場合には、値を「array('database_native')」と指定する。
+    </td>
+</tr>
+<tr>
+    <td>
+        'group'
+    </td>
+    <td>
+    </td>
+    <td>
+        利用可能なグループを配列で指定。この記述がなければすべてのグループにアクセス権
+    </td>
+</tr>
+<tr>
+    <td>
+        'user-table'
+    </td>
+    <td>
+    </td>
+    <td>
+        ユーザ情報が保存されているテーブル名。省略すると'authuser'
+    </td>
+</tr>
+<tr>
+    <td>
+        'group-table'
+    </td>
+    <td>
+    </td>
+    <td>
+        ユーザ情報が保存されているテーブル名。省略すると'authgroup',
+    </td>
+</tr>
+<tr>
+    <td>
+        'corresponding-table'
+    </td>
+    <td>
+    </td>
+    <td>
+        ユーザとグループが対応づけられている情報が保存されているテーブル名。省略すると'authcor',
+    </td>
+</tr>
+<tr>
+    <td>
+        'challenge-table'
+    </td>
+    <td>
+    </td>
+    <td>
+        チャレンジが保存されているテーブル名。省略すると'issuedhash',
+    </td>
+</tr>
+<tr>
+    <td>
+        'authexpired'
+    </td>
+    <td>
+    </td>
+    <td>認証が自動的に継続される時間を秒数で指定する。省略すると'3600'（1時間）。バージョン4.4以降では、0を指定すると有効期限はWebブラウザー終了時まで</td>
+</tr>
+<tr>
+    <td>
+        'storing'
+    </td>
+    <td>
+    </td>
+    <td>
+        認証情報のクライアントへの保存を指定。'cookie'ならPathを指定しないでクッキーに保存（既定値）、'cookie-domainwide'ならドメイン全体で共有できるようにクッキーに保存、'none'ならクッキーに保存しない
+    </td>
+</tr>
+<tr>
+    <td>
+        'realm'
+    </td>
+    <td>
+    </td>
+    <td>
+        認証領域名。ログインパネルの上部に表示される。また、認証情報を記憶するクッキーの名称の末尾に付与される。
+    </td>
+</tr>
+<tr>
+    <td>
+        'email-as-username'
+    </td>
+    <td>
+    </td>
+    <td>
+        trueを指定すると、authuserテーブルのusernameと同時にemailフィールドも検索する。つまり、電子メールアドレスでの認証が可能になる。既定値はfalse
+    </td>
+</tr>
+<td>
+    'issuedhash-dsn'
+</td>
+<td>
+</td>
+<td>
+    issuedhashテーブルに対するDSNを指定する。たとえば、FileMakerデータベースで、issuedhashテーブルをSQLiteで運用する場合に使える
+</td>
+</tr>
+<tr>
+    <td>
+        'media-root-dir'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        メディアアクセスに対して定義ファイルにリダイレクトの設定をWebサーバで行う。そうすれば、この設定に指定したディレクトリにある画像などのメディアファイルを読み出す。
+    </td>
+</tr>
+<tr>
+    <td>
+        'media-context'
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+        メディアアクセスに認証を設定するとき、ここで指定したコンテキストにアクセスしたときにメディアの認証用のトークンをクライアントに届ける。このトークンをクライアントが持つ事で、メディアプロキシが認証される
+    </td>
+</tr>
+<tr>
+    <td rowspan="3">'pusher'</td>
+    <td>app_id</td>
+    <td></td>
+    <td>Pusherで定義したAppのapp_id</td>
+</tr>
+<tr>
+    <td>key</td>
+    <td></td>
+    <td>Pusherで定義したAppのkey</td>
+</tr>
+<tr>
+    <td>secret</td>
+    <td></td>
+    <td>Pusherで定義したAppのsecret</td>
+</tr>
+</table>
+</div>
+<p>
+    認証についは別項目「ユーザ認証とアクセス権の動作について」も参照してください。
+</p>
+
+<p>
+    browser-compatibilityは、params.phpファイルでも指定できますが、ここに指定をした方が有効になります。この指定に含まれているブラウザで通常処理を行い、含まれていないブラウザでは処理を行わないようにします。
+</p>
+
+<p>
+    以前「trigger」というキーワードを書いていましたが、この設定は不要で、普通にノードに対してJavaScriptの記述をすればいいので、設定としては組み込まないこととします。
+</p>
+
+<h3>第3引数、データベースへの接続情報</h3>
+
+<p>
+    データベースヘの接続情報を設定します。この設定を「定義ファイルのデータベース接続設定」と呼ぶことにします。なお、INTER-Mediator.phpと同じフォルダに入れておく「params.php」でも、データベース接続に関する指定が可能です。ページごとに接続情報が違うなら、この引数に指定してもいいのですが、たくさんのファイルで同じ設定ならparams.phpで指定をしてもいいでしょう。さらに、IM_Entry関数の第一パラーメータで指定する配列のコンテキストに対しても設定できます。params.php内で指定できる変数についてもまとめておきます。なお、必要な情報は、データベースクラスごとに異なります。以下の表には、値を必要とするクラスも記述してあります。
+</p>
+
+<div class="table">
+    <table>
+        <tr>
+            <th>
+                インデックス
+            </th>
+            <th>
+                値
+            </th>
+            <th>
+                params.phpで変数名
+            </th>
+        </tr>
+        <tr>
+            <td>
+                'db-class'
+            </td>
+            <td>
+                データアクセスクラスの名前（例：PDO、FileMaker_FX）
+            </td>
+            <td>
+                $dbClass
+            </td>
+        </tr>
+        <tr>
+            <td>
+                'dsn'
+            </td>
+            <td>
+                [PDO]接続時に指定するDSN
+            </td>
+            <td>
+                $dbDSN
+            </td>
+        </tr>
+        <tr>
+            <td>
+                'option'
+            </td>
+            <td>
+                [PDO]オプション指定。array型で指定
+            </td>
+            <td>
+                $dbOption
+            </td>
+        </tr>
+        <tr>
+            <td>
+                'database'
+            </td>
+            <td>
+                [FileMaker_FX]データベース名
+            </td>
+            <td>
+                $dbDatabase
+            </td>
+        </tr>
+        <tr>
+            <td>
+                'user'
+            </td>
+            <td>
+                [PDO][FileMaker_FX]ユーザ名
+            </td>
+            <td>
+                $dbUser
+            </td>
+        </tr>
+        <tr>
+            <td>
+                'password'
+            </td>
+            <td>
+                [PDO][FileMaker_FX]パスワード
+            </td>
+            <td>
+                $dbPassword
+            </td>
+        </tr>
+        <tr>
+            <td>
+                'server'
+            </td>
+            <td>
+                [FileMaker_FX]サーバアドレス（例：127.0.0.1）
+            </td>
+            <td>
+                $dbServer
+            </td>
+        </tr>
+        <tr>
+            <td>
+                'port'
+            </td>
+            <td>
+                [FileMaker_FX]サーバポート（例：80）
+            </td>
+            <td>
+                $dbPort
+            </td>
+        </tr>
+        <tr>
+            <td>
+                'protocol'
+            </td>
+            <td>
+                [FileMaker_FX]サーバへの接続プロトコル（例：HTTP）
+            </td>
+            <td>
+                $dbProtocol
+            </td>
+        </tr>
+        <tr>
+            <td>
+                'datatype'
+            </td>
+            <td>
+                [FileMaker_FX]サーバがサポートするデータ形式（例：FMPro7）
+            </td>
+            <td>
+                $dbDataType
+            </td>
+        </tr>
+    </table>
+</div>
+<h3>第4引数、デバッグ情報の表示</h3>
+
+<p>
+    数値かfalseかを指定します。false以外だと、デバッグ情報をページの最初に表示します。1ないしは2を指定でき、2の方が多くの情報を出します。
+</p>
+
+</article>
+
+</body>
+</html>
