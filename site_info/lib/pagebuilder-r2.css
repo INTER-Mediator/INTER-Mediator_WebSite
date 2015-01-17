@@ -274,38 +274,14 @@ div#embed_player {
     margin: 8px 0 8px 40px;
 }
 
-#latestnews div {
-    display: none;
-}
-
-#latestnews div.top3 {
-    display: block;
-    font-size: 10pt;
-    margin: 4px 0 8px 0;
-}
-
-#latestnews span {
-    margin: 0 10px 0 0;
-    font-weight: bold;
-    font-size: 14pt;
-    color: #666666;
-}
-
-div.ad {
-    display: none;
-}
-
-#latestnews div.ad {
-    display: display;
-    text-align: center;
-}
-
-div.top3 {
+div.newsitem {
     padding: 0 4px 8px 4px;
 }
 
-div.top3 span {
+div.newsitem span {
     font-weight: bold;
+    font-size: 14pt;
+    color: #545454;
     padding: 0 12px 0 0;
 }
 
@@ -355,6 +331,24 @@ nav._im_pb_PageNavigation li {
 nav._im_pb_PageNavigation ul {
     padding-left: 12px;
 }
+
+nav._im_pb_PageNavigation div {
+    margin: 0;
+}
+
+nav._im_pb_PageNavigation div.top3 {
+    display: block;
+    font-size: 10pt;
+    margin: 4px 0 8px 0;
+}
+
+nav._im_pb_PageNavigation div.top3 span {
+    margin: 0 10px 0 0;
+    font-weight: bold;
+    font-size: 14pt;
+    color: #666666;
+}
+
 
 span.datestring {
     border-bottom: 1px dotted black;
