@@ -9,7 +9,7 @@ body {
 p {
     font-size: 12pt;
     line-height: 160%;
-    padding: 4px 40px 0 64px;
+    padding: 4px 20px 0 28px;
     margin: 0;
 }
 
@@ -19,7 +19,7 @@ div {
 
 pre {
     font-size: 10pt;
-    margin: 8px 40px 16px 0px;
+    margin: 8px 20px 16px 0px;
     padding: 6px 0 6px 32px;
     background-color: #EEEEEE;
     line-height: 130%;
@@ -37,7 +37,7 @@ h1 {
 
 h2 {
     background-color: #BBBBBB;
-    margin: 12px 40px 4px 40px;
+    margin: 12px 20px 4px 20px;
     padding: 8px;
     font-size: 18pt;
 }
@@ -45,15 +45,19 @@ h2 {
 h3 {
     font-size: 14pt;
     line-height: 160%;
-    margin: 10px 40px 0 62px;
+    margin: 10px 20px 0 28px;
     padding: 0;
     border-bottom: 1pt solid gray;
+}
+
+nav h3  {
+    padding: 0 0 0 4px;
 }
 
 h4 {
     font-size: 12pt;
     font-weight: bold;
-    margin: 8px 40px 0 64px;
+    margin: 8px 20px 0 28px;
     padding: 0;
 }
 
@@ -82,7 +86,7 @@ ul {
 }
 
 li {
-    margin: 4px 0 0 auto;
+    margin: 4px 0 0 12px;
     padding: 0;
     line-height: 160%;
 }
@@ -90,7 +94,7 @@ li {
 ul ul {
     margin-top: 6px;
     margin-bottom: 6px;
-    margin-left: 16px;
+    margin-left: 4px;
     margin-right: 0px;
 }
 
@@ -302,6 +306,8 @@ div.top3 {
 
 div.top3 span {
     font-weight: bold;
+    font-size: 140%;
+    color: #545454;
     padding: 0 12px 0 0;
 }
 
@@ -310,13 +316,14 @@ div._im_pb_PageHeader {
 
 div._im_pb_PageHeader div.otheritem {
     float: left;
-    min-width: 110px;
-    max-width: 120px;
-    min-height: 40px;
+    width: 120px;
+    min-height: 30px;
     text-align: center;
+    vertical-align: middle;
     font-size: 9pt;
     cursor: pointer;
     margin: 0 0 0 2px;
+    line-height: 120%;
 }
 
 nav._im_pb_PageNavigation {
@@ -351,8 +358,38 @@ nav._im_pb_PageNavigation ul {
     padding-left: 12px;
 }
 
+nav._im_pb_PageNavigation div {
+    margin: 0;
+}
+
 span.datestring {
     border-bottom: 1px dotted black;
     color: #4444BB;
 }
 
+.docblock   {
+    border: solid 2px #4444BB;
+    margin: 8px 300px 8px 40px;
+    padding-bottom: 8px;
+}
+.docblock h3    {
+    margin-left: 12px;
+}
+.Siteblock  {
+    border: solid 2px #3b6444;
+    margin: 8px 300px 8px 40px;
+    padding-bottom: 8px;
+}
+.Siteblock h3    {
+    margin-left: 12px;
+}
+
+.header-title   {
+    color: #3a3a3a;
+    font-size: 24pt;
+    font-weight: bold;
+    text-align: left;
+    margin: 0 0 0 0;
+    padding: 0 0 0 20px;
+    background-color: #cac690;
+}

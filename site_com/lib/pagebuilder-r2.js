@@ -53,5 +53,12 @@ window.onload = function()  {
     node.className = "_im_pb_PageFooter";
     wrapNodeRepeater.appendChild(node);
 
+    INTERMediatorOnPage.doAfterConstruct = function() {
+        var today = new Date();
+        var docDT = document.lastModified;
+        document.getElementById("updatedate").appendChild(document.createTextNode(docDT.toLocaleString()));
+        document.getElementById("thisyear").appendChild(document.createTextNode(today.getFullYear()));
+    };
+
     INTERMediator.construct(true);
-}
+};

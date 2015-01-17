@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!--
+/*
+ * INTER-Mediator Ver.@@@@2@@@@ Released @@@@1@@@@
+ *
+ *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2014 Masayuki Nii, All rights reserved.
+ *
+ *   This project started at the end of 2009.
+ *   INTER-Mediator is supplied under MIT License.
+ */
+-->
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link href="../lib/pagebuilder-r2.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../images/im-icon.png" type="image/png"/>
+    <link rel="icon" href="../images/im-icon.png" type="image/png"/>
+    <title>INTER-Mediator</title>
+    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.js"></script>
+    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.php"></script>
+    <style>
+    </style>
+</head>
+<body>
+<article>
+<h2>メール送信</h2>
+    <p>メールはサーバで送ります。送信方法は、PHPのmail関数を使う方法なので、UNIX系ならsendmailコマンドをたたく方法になります。一方、これだとSMTPサーバへの転送ができないので、<a href="http://hal456.net/qdsmtp/">qdsmtp</a>も組み込みました（Thanks to Mr. Spok）。SMTP認証はPlainのみの対応となっています。Windowsの場合はmail関数がすでにSMTPですので、php.iniにサーバ情報などを書くことで対処できます。なお、Windows環境はチェックしていないので、何かあれば知らせてもらえると助かります。</p>
+
+    <p>ただ、これだけではだめだろうというのはご存知の方はお分かりかと思いますが、昔作っていたOMEというメールソフトにはPHPのクラスもあったので、それをUTF-8で動くように改造してエンコードなどをさせるようにしました。ちなみに、さらにその前に『<a href="http://msyk.net/emailbool/">メール送信システムの作り方大全</a>』という書籍も書いていて、その中の一部のクラスを使いやすいようにしたのがOME.phpです。この本、もう10年以上前なのですね…。</p>
+
+    <p>定義ファイルに指定可能なキーワードは以下の通り全て列挙します。しかしながら、すべてを記述することはないです。</p>
+    <div class="code">
+<pre><code>IM_Entry(
+        array(   // Contexts
+            array(
+                'name' =&gt; 'request',
+                'send-mail' =&gt; array(
+                    'new' =&gt; array(
+                        'from' =&gt; '',
+                       'to' =&gt; 'email',
+                        'cc' =&gt; '',
+                        'bcc' =&gt; '',
+                        'subject' =&gt; '',
+                        'body' =&gt; '',
+                       'from-constant' =&gt; 'Officer &lt;info@msyk.net&gt;',
+                        'to-constant' =&gt; 'msyk@me.com',
+                       'cc-constant' =&gt; 'businessmatching@cocoa-study.com',
+                        'bcc-constant' =&gt; '',
+                       'subject-constant' =&gt; 'Cocoa勉強会ビジネスマッチング申し込み',
+                        'body-constant' =&gt; 'テストメール',
+                       'body-template' =&gt; 'welcome.txt',
+                       'body-fields' =&gt; 'name,compnay,email,tel',
+                       'f-option' =&gt; true,
+                        'body-wrap' =&gt; 68,
+                    )
+                )
+             )
+        ),
+        array(   // Options
+            'formatter' =&gt; array(...),
+            'smtp' =&gt; array(
+                'server' =&gt; 'mysmtp.msyk.net',
+                'port' =&gt; 587,
+              　　　'username' =&gt; 'msyktest@msyk.net',
+                'password' =&gt; 'oshienai',
+            )
+        ),
+        array('db-class' =&gt; 'PDO'),
+        false
+    );</code></pre>
+    </div>
+    <h3>メールを送信するタイミングの指定</h3>
+    <p>'send-mail'キーの配列の次のレベルのキーとして、'load' 'edit' 'new'のいずれかを指定できます。それぞれ、データベースからの読み込み時、更新時、新規レコード作成時を意味し、コンテキストに対するそれぞれのタイミングでメールを送信します。いずれも、データベース処理が終了してからメールの送信にかかります。上記の例では、新規レコード作成時に、メールが送信されます。</p>
+    <h3>宛先や送信者の指定</h3>
+    <p>宛先の指定は、'to'ないしは'to-constant'キーに指定します。もし、宛先が一定のものであれば、'to-constant'キーに指定をしてください。'to'キーにはフィールド名を指定します。データベース処理の結果、たとえば新規レコードの場合には新しいレコードが1つ作成されて、そのレコードの内容から'to'キーに指定したフィールドより宛先のデータが取り出されます。編集も原則は1レコードです。一方、読み出しの場合は1レコードにならないかもしれませんが、その場合は最初のレコードから取り出します。むしろ、1レコードに絞り込むコンテキストにするのがメールを送る場合には妥当だと考えられます。</p>
+
+    <p>メールアドレスは「名前 &lt;アドレス&gt;」ないしは「アドレス」の2つの形式のみのサポートになります。'to-constant'キーに対する値、あるいは'to'キーで指定されるフィールドの値は、このどちらかの形式にしてください。</p>
+
+    <p>cc、bccについてもまったく同様のルールです。'to'と'to-constant'の両方の指定があれば、'to-constant'が優先されます。cc、bccでも-constantが優先となります。</p>
+
+    <p>fromについても、fromとfrom-constantキーがあり、設定や動作等は同じです。ただし、UNIXでSMTPサーバを使わない場合だと、通常はソース側のFrom:は無視されて、UNIXアカウントそのものをFrom:として設定してしまいます。ただし、サーバ側で許可されていれば「'f-option' =&gt; true」の指定を定義ファイル内に記述することで、sendmailコマンドの-fパラメータを指定して、送信者の指定が可能です。</p>
+    <h3>件名と本文の指定</h3>
+    <p>件名は、subjectあるいはsubject-constantのいずれかのキーに指定します。toなどと同じルールです。</p>
+
+    <p>メールの本文は、定義ファイル内に指定した通りに送信する'body-constant'、フィールドの内容をそのまま送信する'body'に加えて、テンプレートの処理も可能です。優先順はテンプレート、body-constant、bodyの順になりますので、不要なフィールドは消しておきましょう。</p>
+
+    <p>テンプレート処理をするには、テンプレートのファイル名をbody-templateキーに指定します。このとき、テンプレートのファイルは、定義ファイルのあるディレクトリを基準に検索します。つまり、定義ファイルといっしょに何らかのテキストファイルを億としたら、body-templateキーの値はファイル名だけでかまいません。</p>
+
+    <p>テンプレートのファイル内では、そのファイルの内容を本文にしますが、フィールドの値との置き換えも可能です。置き換えたい箇所に@@1@@、@@2@@のように、アットマーク2つに囲まれた1から始まる整数を指定します。テンプレートのファイルはUTF-8で保存します。</p>
+
+    <p>フィールドについては、'body-fields'キーに、半角のカンマで区切って指定します。最初が1で、順次番号が増えるようになります。例で言えば、emailフィールドの値は、テンプレート内の@@3@@と置き換わって表示されます。'body-fields'キーを省略すると、テンプレートのファイル通りにメールが送信されます。</p>
+
+    <p>本文は一定の長さで改行を入れます。既定値では72バイトですが、'body-wrap'キーで異なる値にできます。0に設定すると改行しません。ここで、バイト数ですが、実際のバイト数ではなく、日本語は2バイト、英語は1バイトと数えた結果で示しています。実際のエンコードはUTF-8なので、嘘と言えば嘘のカウントになりますが、おそらくこうして指定をすることに慣れている人が多いので、ここでは実態とは関係ない数値ではありますけども実用的という意味で「2バイトルール」でカウントしたものとします。</p>
+    <h3>UNIXの場合のSMTPサーバの指定</h3>
+    <p>定義ファイルのIM_Entry関数の第3引数のオプション領域に'smtp'キーで配列を指定します。その他のキーは、前記の例の通りで、キーを見れば意味は分かると思います。もし、SMTP認証をしない場合は、serverとportだけを指定します。認証する場合は、server, port, username, passwordを指定します。したがって、2つないしは4つの要素があるかのどちらかになります。</p>
+
+    <p>SMTPサーバの指定は、params.phpファイルでも指定が可能です。変数名として、$sendMailSMTPの定義し、値は'smtp'の右側の配列と同様に指定をします。params.phpファイルでの指定よりも、定義ファイルの指定が優先されます。どこにもSMTPサーバの設定がない場合には、mail関数での送信になります。</p>
+
+    <p>Windowsの場合は、'smtp'の指定やparams.phpファイルでの指定は一般には不要ですが、もし設定すれば、mail関数ではなく、qdsmtpによるメール送信ができます。</p>
+    <h3>送信されるメールの文字セット</h3>
+    <p>基本的にはメールはUTF-8でエンコードして送られます。ISO-2022-JPの指定はOME.phpではできるのですが、必要なら定義ファイルでの指定ができるようにしようと思います。リクエストがなければUTF-8固定で行きます。</p>
+
+    <p>ヘッダについては、base64のインラインエンコードを、ASCIIコード以外の文字について行います。本文はそのままですが、ヘッダのContent-TyleのcharsetにUTF-8という文字を付けます。つまり、本文はbase64等でのエンコードは行いません。</p>
+
+    <p>ファイルの添付は実装する予定はありません。ファイルを送りたいのなら、そのリンクを送るようなアプリケーションの動作にしましょう。</p>
+
+</article>
+</body>
+</html>

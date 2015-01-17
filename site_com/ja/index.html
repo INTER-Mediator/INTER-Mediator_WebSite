@@ -13,26 +13,85 @@
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <link href="../lib/pagebuilder.css" rel="stylesheet" media="screen"/>
+    <link href="../lib/pagebuilder-r2.css" rel="stylesheet" media="screen"/>
     <link rel="shortcut icon" href="../images/im-icon.png" type="image/png"/>
     <link rel="icon" href="../images/im-icon.png" type="image/png"/>
     <title>INTER-Mediator</title>
-    <script type="text/javascript" language="JavaScript">
-        var htmlDocumentModDate = document.lastModified;
-    </script>
     <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.js"></script>
-    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder.php"></script>
+    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.php"></script>
     <style>
     </style>
 </head>
 <body>
 <article>
-    <header>
-    <h1>Title</h1>
-    </header>
-    <h2>Subtitle</h2>
-    <p>テストページ.</p>
-</article>
+<div id="infosign">INFO</div>
+    <table id="topmessage">
+        <tr>
+            <td>INTER-Mediatorについて、じっくり学習したい方向けに、<strong>e-Learningコース</strong>をご用意しました。<br/>有償（20,000円税込）ですが、基礎から応用までがビデオによる解説と演習でマスターできます。<a
+                    href="http://edu.msyk.net">こちら</a>よりお申し込みください。
+            </td>
+        </tr>
+    </table>
 
+    <div id="Contents" class="_im_enclosure">
+        <div class="_im_repeater">
+            <h2>INTER-Mediatorについて</h2>
+
+            <div>
+                <table style="margin-left: 96px; margin-top: 30px">
+                    <tr>
+                        <td style="font-size:18pt;border:3px dotted #BBBBBB; padding: 8px;">
+                            INTER-Mediatorは<br><span style="color: #DD3333">少ない開発作業でやりたいことを実現</span><br>
+                            できるWebアプリケーションフレームワークです。
+                        </td>
+                    </tr>
+                </table>
+
+                <br clear="left"/>
+
+                <h3 style="color: #494685;">データベースとのやりとりは、手続き的なプログラミングをせずに、宣言的な記述だけで実現します</h3>
+                <img style="float:right; padding: 0 0 8px 8px" src="../images/toppic1.png"/>
+                <ul>
+                    <li>HTMLのタグの属性にテーブル名やフィールド名を書き込むことで、テキストフィールドにデータベースのデータが表示されます。</li>
+                    <li>テキストフィールドに表示されたデータを修正すると、自動的にデータベースに更新できます。</li>
+                    <li>こうした処理をHTMLのフォーム要素で実現しています。その他の要素ではデータベースの値の表示や属性への適用が可能です。</li>
+                    <li>レコードを繰り返し表示したり、あるいは一定数ごとのレコードを表示するページネーションも指定を記述するだけ利用できます。</li>
+                    <li>レコードの追加や削除のボタンを自動的に表示させることができます。</li>
+                    <li>画像データについても、データベースと連動して行えます</li>
+                    <li>認証や認可の指定もプログラミングの必要はなく指定を記述することで実現できます。</li>
+                </ul>
+                <br clear="left"/>
+
+                <h3 style="color: #494685;">複雑な処理やユーザの応答に細かく応える仕組みをプログラミングで組み込めます</h3>
+                <img style="float:right; padding: 0 0 8px 8px" src="../images/toppic2.png"/>
+                <ul>
+                    <li>データベースから取り出したデータを処理したり、クライアントでのプログラム追加が可能なので、拡張性もあります。</li>
+                    <li>データベース処理を「フィールド単位」および「レコード単位」での拡張が可能であり、この仕組みを利用する事で、単なる2階層システムではなく、間に処理をかませることができます。</li>
+                    <li>JavaScriptで作られたコンポーネントを統合する仕組みも持っており、tinyMCEとの連動に加えて独自コンポーネントでのファイルのアップロードなどもできます。</li>
+                    <li>ブラウザを認識して非対応ブラウザにメッセージを表示する事や、対応範囲を定義することもできます。</li>
+                </ul>
+                <br clear="left"/>
+
+                <h3>INTER-Mediatorのデモ</h3>
+
+                <p>デモビデオを別のウインドウで表示します。<a href="javascript:showDemoVideo()">ここをクリックしてください。</a></p>
+
+                <h3>稼働環境</h3>
+
+                <p>サーバサイドではPHPを使います。クライアントサイドではJavaScriptを利用します。HTML5対応となっているブラウザであれば基本的には利用できるはずです。</p>
+                <ul>
+                    <li>Web Server: Apache2 with PHP 5.2-5.6, IIS with PHP 5.2-5.6</li>
+                    <li>Database: FileMaker Server 10 or later, MySQL(PDO Support version), PostgreSQL(PDO Support
+                        Version), SQLite3(PDO Support Version)
+                    </li>
+                    <li>Support Browser: Chrome, Safari, Firefox, Opera (Most of versions), Internet Explorer Ver.8 or
+                        later (Ver.7 is limited, and Ver.6 is NOT)
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</article>
 </body>
 </html>
