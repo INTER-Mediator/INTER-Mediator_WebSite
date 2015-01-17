@@ -56,7 +56,7 @@ window.onload = function()  {
     INTERMediatorOnPage.doAfterConstruct = function() {
         var today = new Date();
         var docDT = document.lastModified;
-        document.getElementById("updatedate").appendChild(document.createTextNode(docDT.toLocaleString()));
+        document.getElementById("updatedate").appendChild(document.createTextNode(docDT.toLocaleDateString()));
         document.getElementById("thisyear").appendChild(document.createTextNode(today.getFullYear()));
     };
 

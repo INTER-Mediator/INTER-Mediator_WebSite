@@ -1,0 +1,350 @@
+body {
+    background-color:white;
+    margin:0;
+    padding:0;
+    line-height:160%;
+    font-size:12pt;
+}
+p {
+    font-size:12pt;
+    line-height:160%;
+    padding:4px 20px 0 28px;
+    margin:0;
+}
+div {
+    line-height:160%;
+}
+pre {
+    font-size:10pt;
+    margin:8px 40px 16px 0px;
+    padding:6px 0 6px 32px;
+    background-color:#EEEEEE;
+    line-height:130%;
+}
+h1 {
+    color:#5c5c5c;
+    background-color: #c0bf81;
+    text-align:center;
+    margin:0;
+    padding:16px 0 10px 0;
+    font-size:28pt;
+    line-height: 140%;
+}
+h2 {
+    margin:12px 20px 4px 20px;
+    padding:8px;
+    font-size:18pt;
+    border:dotted 2px #5962b8;
+}
+h3 {
+    font-size:14pt;
+    line-height:160%;
+    margin:10px 20px 0 28px;
+    padding:0;
+    border-bottom:1pt solid gray;
+}
+h4 {
+    font-size:12pt;
+    font-weight:bold;
+    margin:8px 20px 0 28px;
+    padding:0;
+}
+table {
+    text-align:left;
+    position:relative;
+    width:auto;
+    background-color:#EEEEEE;
+    padding:4px;
+    margin-top:0;
+}
+td {
+    font-size:12pt;
+    line-height:160%;
+}
+th {
+    font-size:12pt;
+    line-height:160%;
+}
+ul {
+    margin:6px 40px 6px 64px;
+    line-height:160%;
+}
+li {
+    margin:4px 0 0 auto;
+    padding:0;
+    line-height:160%;
+}
+ul ul {
+    margin-top:6px;
+    margin-bottom:6px;
+    margin-left:16px;
+    margin-right:0px;
+}
+td ul {
+    margin-top:6px;
+    margin-bottom:6px;
+    margin-left:12px;
+    margin-right:0px;
+}
+td ul ul {
+    margin-top:6px;
+    margin-bottom:6px;
+    margin-left:16px;
+    margin-right:0px;
+}
+td h3 {
+    font-size:14pt;
+    margin-bottom:0px;
+    margin-left:12px;
+    margin-right:40px;
+    border-bottom:1pt solid gray
+}
+ol {
+    margin-top:6px;
+    margin-bottom:6px;
+    margin-left:64px;
+    margin-right:40px;
+}
+li pre {
+    margin-left:30px;
+    margin-right:0px;
+}
+.floatbox8 {
+    float:right;
+    margin:8px;
+}
+.floatbox20 {
+    float:right;
+    padding:20px;
+    background-color:white;
+}
+.centerimage {
+    text-align:center;
+}
+.sideimage {
+    margin:8pt 16pt 12pt 0pt
+}
+.imageinstep {
+    margin-top:6pt;
+    margin-bottom:6pt
+}
+.graybox {
+    background-color:#dddddd;
+    text-align:left;
+    margin-top:16px;
+    margin-bottom:16px;
+    margin-left:80px;
+    margin-right:40px;
+    padding:16px;
+    width:auto;
+    height:auto;
+    overflow:visible;
+}
+.whitebox {
+    background-color:#FFFFFF;
+    text-align:left;
+    margin-right:40px;
+    padding:16px;
+    width:auto;
+    height:auto;
+    overflow:visible;
+    float:right;
+}
+.credit {
+    text-align:right;
+    margin-right:60px;
+}
+.sitenavi {
+    text-align:right;
+    margin:0px;
+    padding-right:40px;
+    background-color:#DDD;
+}
+div.picture {
+    text-align:center;
+    margin-left:64px;
+    margin-right:40px;
+    margin-top:20px;
+    margin-bottom:20px;
+    padding-top:14px;
+    padding-bottom:14px;
+    background-color:#E7E7E7
+}
+div.table {
+    margin:8px 40px 8px 64px;
+    padding:0;
+    background-color:#E7E7E7
+}
+div.code {
+    margin:0 40px 0 64px;
+    padding:0;
+    background-color:#E7E7E7
+}
+div.caption {
+    font-size:12pt;
+    color:#333;
+    margin-bottom:20px;
+}
+#gv-link {
+    color:#808080;
+    font-size:9pt;
+    text-align:center;
+    margin-left:80px;
+    margin-right:80px;
+    margin-top:12px;
+    padding-top:4px;
+    border-top:solid 2px #808080;
+}
+#gv-link a:link {
+    color:#808080;
+}
+div.table td {
+    vertical-align:top;
+    border-bottom:1px solid #888888;
+    padding:0 2px 0 2px;
+}
+div.table th {
+    vertical-align:bottom;
+    border-bottom:2px solid #333333;
+    font-weight:900;
+    padding: 0 2px 0 2px;
+}
+
+div#navigationbox	{
+    background-color: #FFFFEE;
+    float:right;
+    width:240px;
+    border-bottom: 2px solid gray;
+    border-left: 2px solid gray;
+    font-size: 10pt;
+    margin: 0 0 10px 16px;
+}
+div#navigationbox li{
+    font-size: 12pt;
+}
+div#navigationbox ul{
+    padding-left: 12px;
+}
+span.datestring {
+    border-bottom: 1px dotted black;
+    color: #4444BB;
+}
+table#topmessage {
+    margin: 0px 40px 6px 0px;
+    padding: 0;
+}
+table#topmessage td {
+    border-bottom: 2px solid white;
+    margin: 0;
+}
+div#infosign    {
+    float:left;
+    margin:24px 4px 0px 40px;
+    padding:8px 8px 8px 8px;
+    background-color:black;
+    color:#CCCCCC;
+    font-size: 16pt;
+    font-weight: 900;
+    border-radius: 8px;
+}
+
+div#embed_player    {
+    margin: 8px 0 8px 40px;
+}
+
+#latestnews div {
+    display: none;
+}
+#latestnews div.top3    {
+    display: block;
+    font-size: 10pt;
+    margin: 4px 0 8px 0;
+}
+#latestnews span{
+    margin: 0 10px 0 0;
+    font-weight: bold;
+    font-size: 14pt;
+    color: #666666;
+}
+div.ad {
+    display: none;
+}
+#latestnews div.ad {
+    display: display;
+    text-align: center;
+}
+#newslist div  {
+    padding:4px 40px 0 64px;
+}
+#newslist span  {
+    font-weight: bold;
+    padding: 0 12px 0 0;
+}
+img.photo {
+    width: 150px;
+    float: left;
+    margin: 0 48px 8px 40px;
+    padding: 8px 0 0 4px;
+}
+
+h3.name {
+    background-color: #CBCBCB;
+    border: none;
+    padding-left: 4px;
+    margin-top: 18px;
+}
+
+.contact    {
+    margin: 0 0 0 120px;
+}
+
+img.contact-icon {
+    float: none;
+    display: inline;
+    width: 24px;
+    margin: 0 4px 0 8px;
+    padding: 0;
+    vertical-align: -5px;
+}
+
+table.other-im-navi {
+    margin: 0 auto 0 auto;
+
+}
+
+table.other-im-navi th {
+    text-align: center;
+}
+
+table.other-im-navi td {
+    width: 110px;
+    height: 100px;
+    border: solid 2px white;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 120%;
+    line-height: 110%;
+    cursor : pointer;
+}
+
+.call-member-box {
+    float: right;
+    width: 280px;
+    background-color: #DDDDDD;
+    padding: 8px;
+    margin: 12px 40px 0 0;
+}
+
+.call-member-box ul {
+    margin: 0;
+}
+
+.call-member-box li {
+    margin: 0;
+    font-size: 80%;
+}
+
+.call-member-box h3 {
+    margin: 4px 6px 0 6px;
+    font-size: 80%;
+}
