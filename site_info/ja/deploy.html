@@ -40,13 +40,13 @@
     <p>まず、あるフォルダに作成するWebアプリケーションのファイルをまとめておくとします。そのフォルダを作ります。以下は、Documentsの下にmywebappフォルダを作りました。</p>
 
     <div class="picture">
-        <img src="../files/doc-deploy-fig1.png" />
+        <img src="../images/doc-deploy-fig1.png" />
     </div>
 
     <p>次に、GitHubのINTER-Mdiatorのページに行きます。アカウントを持ってサインインしていただくのがいいのですが、なくてもソースのダウンロードは可能です。ここで、中央右付近にあるbranchがmasterになっているのを確認してください。ブランチのmasterがその時点でのコンプリートなソースです。そして、右の方にあるHTTPS clone URLをコピーしておきます。URLが薄く見える右のボタンをクリックすれば、コピーできます。</p>
 
     <div class="picture">
-        <img src="../files/doc-deploy-fig2.png" />
+        <img src="../images/doc-deploy-fig2.png" />
     </div>
 
     <p>そして、ターミナルを開いてください。次のように作業をします。#以降はコメントです。ファイルパスはもちろん、ご自分の作られているフォルダ構成に従って指定をしてください。</p>
@@ -58,7 +58,7 @@ git clone https://github.com/msyk/INTER-Mediator.git  # サーバからレポジ
 
     <p>これだけでOKです。すると、mywebappフォルダに、INTER-Mediatorフォルダが作られます。このINTER-Mediatorフォルダがフレームワーク本体となります。この階層に、たとえば、index.htmlファイルやら、アプリケーションのhtml/phpファイルを作って行けばOKです。後はこれをサーバにコピーして稼働を確認します。</p>
 
-    <div class="picture"><img src="../files/doc-deploy-fig3.png" /></div>
+    <div class="picture"><img src="../images/doc-deploy-fig3.png" /></div>
 
     <p>ここで、レポジトリからクローンしたINTER-Mediatorを参照するには、定義ファイルのcontext.phpはたとえば、次のように記述をします。</p>
 
@@ -89,7 +89,7 @@ git pull</code></pre>
 
     <p>GitHubのページには、「Clone in Desktop」というボタンがあるので、それをクリックするとGitHubアプリケーションが起動して、いきなりINTER-Mediatorフォルダを作る場所を聞いてきます。そこで、配置した場所を選択してCloneボタンを押せばOKです。その後は、GitHubアプリケーションで、レポジトリのChangeのボタンを左側で選び、右上のSyncボタンをクリックすれば、サーバにある最新のレポジトリの内容をダウンロードしてアップデートします。</p>
 
-    <div class="picture"><img src="../files/doc-deploy-fig9.png" /></div>
+    <div class="picture"><img src="../images/doc-deploy-fig9.png" /></div>
 
     <p>ただし、この方法だと、2つ目のクローンを同じアカウント内に作成しようとしても、最初に作ったレポジトリをGitHubアプリケーション側では提示して、新たなレポジトリを作りに行きません。その場合は、クローン作成については、コマンドで行ってください。その上で、レポジトリの一覧を表示します。GitHubアプリケーションのタイトルバーの一番左の「Repositories」をクリックすればいいでしょう。そして、ウインドウ下にある「＋」ボタンをクリックして、「Add Local Repository」を選択します。そして、コマンドで作ったクローンのフォルダを指定すると、INTER-Mediatorの項目が複数登録できるようになります。あるいは、レポジトリのフォルダを、Repotoriesを選択してレポジトリ一覧が見えているウインドウの中にドラッグして追加します。ただし、レポジトリのリストで区別ができなくなるので、レポジトリのリストを右クリックして「Show in Finder」を選択してフォルダを確認して、間違えて作業しないように気をつけないといけません。</p>
 
@@ -98,11 +98,11 @@ git pull</code></pre>
 
     <p>もし、どうしても出てこないなら、Git Shellという機能を使ってコマンドラインを呼び出し、クローンを作りたい場所をカレントディレクトリにして、「git clone https://github.com/msyk/INTER-Mediator.git」というコマンドを実行します。コマンドラインで作ったクローンをGitHubアプリケーションで認識させるには、フォルダをアプリケーションのウインドウにドラッグ&amp;ドロップします。</p>
 
-    <div class="picture"><img src="../files/doc-deploy-fig5.png" /></div>
+    <div class="picture"><img src="../images/doc-deploy-fig5.png" /></div>
 
     <p>作成すると、レポジトリの詳細を表示すれば、上にsyncボタンが登場します。更新はこのボタンを押すだけでOKです。</p>
 
-    <div class="picture"><img src="../files/doc-deploy-fig7.png" /></div>
+    <div class="picture"><img src="../images/doc-deploy-fig7.png" /></div>
 
     <h2>ダウンロードしたバージョンを開発時に利用する</h2>
     <p>GitHubのINTER-Mdiatorのページで、右側の「Donwload ZIP」ボタンをクリックすると、現状のレポジトリの各ファイルを圧縮・アーカイブしてダウンロードします。ブランチがmasterであれば、ダウンロードして展開したフォルダは、INTER-Mediator-masterという名前になっています。フォルダ名を適当に変更して、開発中のアプリケーションのフォルダ等へ移動します。</p>
@@ -125,7 +125,7 @@ git pull</code></pre>
     <p>一方、Windowsの場合はCygwinで実行させてください。buildup.shファイルを、Cygwinのターミナルのウインドウにドラッグ&amp;ドロップして、Cygwinのターミナルでreturnキーを押すのが手軽でしょう。なお、ドライブのパスを指定したい場合は、Cygwinでは、/cygdrive/c/で、C:¥ドライブのルートを示すパスとなります。</p>
 
     <div class="picture">
-        <img src="../files/doc-deploy-fig11.png" />
+        <img src="../images/doc-deploy-fig11.png" />
     </div>
 
 
