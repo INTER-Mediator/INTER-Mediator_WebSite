@@ -24,28 +24,187 @@
 </head>
 <body>
 <article>
-    <div style="border: solid 2px #4444BB;margin: 8px 300px 14px 40px;padding-bottom: 10px">
-        <h1 style="border:none;font-size:16pt;">ソースコードの投稿</h1>
-        <p></p>
+    <div class="titlebox">
+        <h1>ソースコードの投稿</h1>
+
+        <p>
+            INTER-Mediatorへのソースコードを投稿する場合の手順をまとめておきます。INTER-Mediatorのコミッターや、あるいはバグレポートの1つの方法として、ソースコードの投稿を歓迎します。手順は、Webサイトを利用した、いちばん手軽な方法が中心です。</p>
     </div>
     <h2>GitHubの組織「INTER-Mediator」</h2>
-    <div class="picture"><img src="../images/shot9809.png" /></div>
+
+    <p>INTER-Mediatorは、<a href="https://github.com/INTER-Mediator/">GitHub上に「INTER-Mediator」という名称の組織</a>を作成しており、そこにあるレポジトリが「マスターレポジトリ」となります。コミッターの開発結果はこのマスターレポジトリにまとめられますが、まとめる作業は、INTER-Mediator
+        Directive
+        Committeeのメンバーによって行われます。レポジトリの1つ「INTER-Mediator」は、フレームワーク本体やサンプルプログラムなどのソフトウエア全般がまとめられています。「INTER-Mediator_WebSite」は、INTER-MediatorのWebサイトのソースです。「INTER-Mediator」はforkをしてPull
+        Requestを送る手法を基本とします。「INTER-Mediator_WebSite」はINTER-Mediator Directive
+        Committeeメンバによる書き込み権限を与えることで、forkをしないで単一のレポジトリでの運用を基本とします。したがって、本文書に書かれた内容は、フレームワーク本体の「INTER-Mediator/INTER-Mediator」というレポジトリの運用方法を記載したものとなります。
+    </p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9809.png"/></div>
     <h2>Forkする</h2>
-    <div class="picture"><img src="../images/shot9811.png" /></div>
-    <p>自分のアカウントにレポジトリを作成</p>
-    <div class="picture"><img src="../images/shot9812.png" /></div>
-    <p>ローカルにレポジトリのクローンを作る</p>
-    <div class="picture"><img src="../images/shot9813.png" /></div>
+
+    <p>
+        組織で管理しているマスターレポジトリーは「INTER-Mediator/INTER-Mediator」と記載します。Gitの表記にしたがって「組織名/レポジトリ名」でレポジトリを記述することにします。ここで、GitHubのあるユーザmsykが、INTER-Mediator本体のレポジトリーに対して、ソースコードの追加等を行い、その開発結果を投稿しようとします。最初に行うは、マスターレポジトリーのforkを作ることです。forkにより、レポジトリの複製を自分自身のアカウントの領域に作成をします。マスターレポジトリーへの書き込み権限を持つ人は限られていますが、パブリックなプロジェクトなので、ソースコードは誰でも取得できます。したがって、GitHubにアカウントがあれば、誰でもforkができることになります。GitHubにユーザmsykでログインをして作成した、ユーザmsykのINTER-Mediatorフレームワーク本体は、「msyk/INTER-Mediator」と記述をします。さらに、現実には、自分のアカウントにあるリモートのレポジトリのクローンを作業者のMac/PCの中にローカルのレポジトリとして作成をします。ソースコードの改変をする前に、まず、ここまでの準備が必要です。概念図は以下のとおりで、左側のマスターレポジトリーをforkして、あるユーザのリモートレポジトリを作成し、そのクローンのレポジトリがローカルにあるという状態です。ここで、masterはブランチ名で、「A」はある状態を示します。この後に、ローカルのレポジトリのソースコードを変更した結果、状態が「B」になるというような図が出てきます。</p>
+
+    <div class="picture"><img style="width: 75%" src="../images/git-fig1.png"/></div>
+    <p>
+        forkをするには、GitHubに自分のアカウント（この場合はmsyk）でログインをします。そして、組織のページに移動して、マスタレポジトリのトップページを表示します。組織のマスターレポジトリは、レポジトリ名が「INTER-Mediator/INTER-Mediator」となっていることから、判別できます。そして、右上にある「Fork」のボタンをクリックします。これだけで、自分の領域にマスターレポジトリの複製のレポジトリが作成されます。なお、単に複製するだけでなく、マスターレポジトリが元々のオリジナルであることもきちんと記録されています。</p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9811.png"/></div>
+    <p>
+        「Fork」ボタンをクリックした後、画面が遷移して、自分自身の複製したレポジトリのページに移動しています。レポジトリ名が「msyk/INTER-Mediator」となっていて、ユーザmsykにINTER-Mediatorというレポジトリーが作られたことがわかります。この段階では、マスターと同一のレポジトリーです。</p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9812.png"/></div>
+    <p>
+        さらに自分のレポジトリのクローンを自分のMac/PCに作成します。ここで、クローンはコマンドラインで作る方法などいろいろありますが、使用しているパソコンにGitHubアプリケーションをインストールしておけば、レポジトリーのページの「Clone
+        in Desktop」のボタンをクリックし、そしてローカルレポジトリを作るフォルダを指定するだけで、作成することができます。コマンドラインで作るときには、ローカルレポジトリを作りたいフォルダをカレントフォルダにして、「git
+        clone [レポジトリのURL]」と入力します。レポジトリのURLは、やはりレポジトリーのページ右側にある「HTTPS clone
+        URL」の部分のURLを指定しますが、コピーボタンがあるので、URLをコピーし、コマンドライン入力中にペースとすれば良いでしょう。
+    </p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9813.png"/></div>
     <h2>変更結果を自分のレポジトリにpush</h2>
-    <div class="picture"><img src="../images/shot9815.png" /></div>
+
+    <p>ローカルのレポジトリーにあるファイルを変更して、なんらかの機能を組み込んだとします。ここで、原則として、新たな機能は独立したブランチでコミットするということでお願いをしたいと考えます。</p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" style="width: 75%" src="../images/git-fig2.png"/></div>
+    <p>
+        ローカルのレポジトリーであらたなブランチを作ったり、あるいはマスターレポジトリーにすでにブランチがある場合には、そのブランチを現在利用するブランチとしてプログラムの追加や変更を行います。ブランチの切り替えは、GitHubアプリケーションでは、左側でBranchesのボタンをクリックし、ブランチの一覧にある右端の▼をクリックして、「Switch
+        to This
+        Branch」を選択します。プログラムの変更を行った後は、GitHubアプリケションの左側でChangesを選択し、CommitとSyncを行います。Syncにより現在のブランチへのpushも行います。</p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9815.png"/></div>
+    <p>
+        ローカルのレポジトリーではmasterブランチのまま作業をして、それを自分のリモートレポジトリーにpushするときに、新たなブランチを作成するの良いでしょう。たとえば、PHPStormで作業をしているのであれば、ブランチに含めたいファイルを選択したり、あるいはルートのフォルダを選択するなどして、VCSメニューからCommit
+        Changesを選択します。するとコミットされるファイルの一覧と、コミットメッセージが見えるダイアログボックスが表示されます。メッセージを書き込んだ上で、Commitボタンにマウスポインタを移動させるとポップアップメニューが出るので「Commit
+        and Push」を選択します。すると、さらにGit
+        Pushと書かれたダイアログボックスが表示されるので、その下の部分のチェックボックスをオンにして、右側のテキストフィールドに、新たなブランチ名をキータイプします。すると、コミット結果が新たなブランチにpushされ、リモートレポジトリにここで入力した名前のブランチが作成されています。</p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9829.png"/></div>
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9830.png"/></div>
     <h2>プルリクエストの作成</h2>
-    <div class="picture"><img src="../images/shot9817.png" /></div>
-    <div class="picture"><img src="../images/shot9818.png" /></div>
+
+    <p>ここまでの作業で、変更結果は、自分のリモートレポジトリー側には反映されていますが、これをマスターに反映するためには、Pull Requestをマスターレポジトリーに対して要求します。Pull
+        Requestは、特定のブランチを、相手に取り込んでもらうというためのものです。以下の図では、new-funcというブランチに、改変結果が記録されているので、そのブランチをマスターレポジトリーへ取り込んでもらうということを示しています。</p>
+
+    <div class="picture"><img style="width: 75%" src="../images/git-fig3.png"/></div>
+    <p>ここまでの作業で改変した結果は自分自身のリモートレポジトリーにあります。自分のアカウントでログインをして、自分のリモートレポジトリーのページを開きます。ここで、ファイルリストの上の部分に、薄い黄色の枠で、Your
+        recently pushed branches:という記述があれば、そこにある「Compare &amp; pull
+        request」ボタンをクリックします。もし、出ていないようであれば、ファイルリストの上部の「branch:
+        master」などと書かれいる部分からブランチを選択して、その左の緑色のボタンをクリックして、移動したページで「Create pull request」ボタンをクリックします。</p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9817.png"/></div>
+    <p>Pull Requestを作成するページになります。ここで、追加した機能の概要などを記載して「Create pull
+        request」ボタンをクリックします。作業はこれだけです。このユーザ側のレポジトリーは、マスターリポジトリーからforkしたものなので、このPull Requestは、マスターレポジトリー側に送られます。</p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9818.png"/></div>
     <h2>プルリクエストの受け入れ</h2>
-    <div class="picture"><img src="../images/shot9819.png" /></div>
-    <h2>自分のアカウントのレポジトリを削除</h2>
-    <div class="picture"><img src="../images/shot9823.png" /></div>
-    <div class="picture"><img src="../images/shot9824.png" /></div>
+
+    <p>マスターレポジトリー側での受け入れ作業は、INTER-Mediator Directive Committeeで行います。Pull
+        Requestがあれば、それをいったんマスターレポジトリーにpullします。その段階では、リクエストを送ったのと同じブランチ名のものがマスターレポジトリにできあがります。そして、動作の検証やコードのレビューを行い、masterへマージします。この場合、マスターレポジトリーでPull
+        Requestを行い、それを受け入れればmasterに反映されるということになります。</p>
+
+    <div class="picture"><img style="width: 75%" src="../images/git-fig4.png"/></div>
+    <div class="picture"><img style="width: 75%" src="../images/git-fig5.png"/></div>
+    <p>受け付けられたPull Requestはマスターレポジトリー側はでは次のように見えます。</p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9819.png"/></div>
+    <h2>マスターレポジトリーの更新結果の取り込み</h2>
+
+    <p>
+        以上はmsykアカウントで更新した結果をマスターレポジトリのmasterブランチに取り込むまでの流れです。これで、msykと組織のレポジトリのmasterブランチは同一になるので、msykは最新版を持っていることになります。しかしながら、別のアカウント（以下の図にあるsomeone）が、msykによるpull
+        requestを発行する前にforkして、自分アカウントにレジストリーを作っていたとしたら、組織のアカウントは状態Bになっても、someoneの方は状態Aのままになります。someoneのレポジトリは状態Bにしたいと考えます。</p>
+
+    <div class="picture"><img style="width: 75%" src="../images/git-fig6.png"/></div>
+    <p>
+        ここで、1つの大きな前提として「ほとんどの場合はmasterブランチを更新したい」というニーズであるとします。つまり、マスターレポジトリー全体ではなく、「最新のちゃんと動くことが期待されたソース」はmasterであるという前提があるとうことになります。とすれば、someoneのレポジトリのmasterが状態Bになればいいのであって、msykがpull
+        requestしたnew-funcブランチは、一般には必要はないと考えれば、別のレポジトリーの内容をマージする以下の手順で自分のローカルレポジトリーのmasterブランチを更新して、自分のレポジトリにpushすることで更新できます。以下、青色で太字が入力するコマンドで、#で始まるグレーの文字は説明です。</p>
+
+<div class="code"><pre><code><span style="color:gray"># forkした自分のレポジトリーをローカル側にクローンを作る（すでに作成済みなら不要）</span>
+$ <strong>git clone https://github.com/msayukinii/INTER-Mediator.git</strong>
+Cloning into 'INTER-Mediator'...
+remote: Counting objects: 7408, done.
+remote: Compressing objects: 100% (2387/2387), done.
+remote: Total 7408 (delta 4983), reused 7408 (delta 4983)
+Receiving objects: 100% (7408/7408), 8.04 MiB | 1.71 MiB/s, done.
+Resolving deltas: 100% (4983/4983), done.
+Checking connectivity... done.
+<span style="color:gray"># ローカルレポジトリーのルートをカレントディレクトリにする</span>
+$ <strong>cd INTER-Mediator/</strong>
+<span style="color:gray"># 現在、masterブランチが選択されている。自分のレポジトリーにはmaster以外に<br/># targeting-generalizationというブランチもあり、ローカル側にもそのブランチはある</span>
+$ <strong>git branch -a</strong>
+* master
+  targeting-generalization
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+  remotes/origin/targeting-generalization
+<span style="color:gray"># リモートレポジトリーの一覧を見る。自分のリモートレポジトリーが見えている</span>
+$ <strong>git remote -v</strong>
+origin https://github.com/msayukinii/INTER-Mediator.git (fetch)
+origin https://github.com/msayukinii/INTER-Mediator.git (push)
+<span style="color:gray"># 新たに、マスターリポジトリーをupstreamという名前でローカルリポジトリに登録する</span>
+$ <strong>git remote add upstream https://github.com/INTER-Mediator/INTER-Mediator.git</strong>
+<span style="color:gray"># originだけでなくupstreamも管理対象のリモートレポジトリとして登録された</span>
+$ <strong>git remote -v</strong>
+origin https://github.com/msayukinii/INTER-Mediator.git (fetch)
+origin https://github.com/msayukinii/INTER-Mediator.git (push)
+upstream https://github.com/INTER-Mediator/INTER-Mediator.git (fetch)
+upstream https://github.com/INTER-Mediator/INTER-Mediator.git (push)
+<span style="color:gray"># upstreamで指定されるレポジトリの内容を取り込む</span>
+$ <strong>git fetch upstream</strong>
+remote: Counting objects: 13, done.
+remote: Compressing objects: 100% (10/10), done.
+remote: Total 13 (delta 4), reused 7 (delta 3)
+Unpacking objects: 100% (13/13), done.
+From https://github.com/INTER-Mediator/INTER-Mediator
+* [new branch] master -> upstream/master
+* [new branch] targeting-generalization -> upstream/targeting-generalization
+<span style="color:gray"># remotes/upstreamの2つのブランチが新たに加わった</span>
+$ <strong>git branch -a</strong>
+* master
+  targeting-generalization
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+  remotes/origin/targeting-generalization
+  remotes/upstream/master
+  remotes/upstream/targeting-generalization
+<span style="color:gray"># upstream/masterを現在のローカルのmasterにマージする。これで、ローカルのmasterは、マスターレポジトリーのmasterと同一の内容になった</span>
+$ <strong>git merge upstream/master</strong>
+Updating 10e5c96..720ff24
+Fast-forward
+DB_Null.php | 177 +++++++++++++++
+INTER-Mediator-Element.js | 27 ---------------
+README.md | 2 +-
+Samples/templates/definition_file_full.php | 1 +
+4 files changed, 179 insertions(+), 28 deletions(-)
+create mode 100644 DB_Null.php
+<span style="color:gray"># 自分のリモートレポジトリのmasterに、ローカルの内容をpushすることで、リモート側にも反映される。ただし、この作業は必須ではない</span>
+$ <strong>git push origin master</strong>
+<span style="color:gray"># さらにマスターレポジトリー側の別のブランチを取り込みたいのなら、まず、ローカル側を受け入れるブランチに切り替える</span>
+$ <strong>git checkout targeting-generalization</strong>
+Switched to branch 'targeting-generalization'
+Your branch is ahead of 'origin/targeting-generalization' by 2 commits.
+  (use "git push" to publish your local commits)
+<span style="color:gray"># すでにマスターレポジトリーのブランチは取り込んであるので、マージすれば、このブランチもマスターレポジトリーの内容と同じになる</span>
+$ <strong>git merge upstream/targeting-generalization</strong>
+Already up-to-date!
+Merge made by the 'recursive' strategy.</code></pre>
+</div>
+	<p>上位の一連のコマンドの流れを図示すると次のようになります。一度、upstreamで参照を作っておけば、以後は、fetchしてmergeすることで、マスターレポジトリーの内容をローカルのmasterに取り込むことができます。</p>
+    <div class="picture"><img style="width: 75%" src="../images/git-fig7.png"/></div>
+    <p>最初に前提として「masterが正」であるということを記述しましたが、場合によっては、機能が完成する前にレビューや共同作業目的で、ブランチのpull requestが発生するかど思われます。そういうブランチはマスターレポジトリーに残したままになり、fetchによってupstreamにも取り込まれます。こちらは必要に応じてマージすればいいと思われます。また、共同で新たな機能を作る場合、各自がforkしたレポジトリで作業するのは、更新結果の配布に時間がかかることも予想されます。その場合、共同開発している中の1人のforkしたレポジトリに他の開発者も書き込み権限を与えて登録して、単一のレポジトリで各自がcommit/pushするという開発モデルの方が効率がいいと思われます。</p>
+
+    <h3>自分のアカウントのレポジトリを削除</h3>
+
+    <p>
+        マスターレポジトリーの内容を別のレポジトリに反映させるもう1つの方法は、自分のレポジトリを削除して、改めてforkすることです。この場合、当然ながら、自分のレポジトリ内にあるさまざまなファイルが全部更新されるので、開発途中の状況や、あるいは自分で設定を変更したものや追加したファイルなどが削除される可能性が非常に高いため。この方法をとるのは慎重にすべきです。しかしながら、「きれいさっぱり」更新されるので、pull
+        requestを完全に終えてしまった場合などには1つ選択肢になります。何度も書きますが、<span style="color:red">この方法は危険ですので、必ず慎重に作業をしてください。</span>以下の方法で自分のアカウントのレポジトリを削除した上で、改めて組織のページにあるレポジトリからforkをしてください。削除は自分のアカウントのレポジトリの右側にあるSettingsのリンクをクリックします。すると、以下のページが出てくるので、Delete
+        this repositoryをクリックします。</p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9823.png"/></div>
+    <p>
+        その後に、念のためにレポジトリ名を手入力するパネルが表示されます。記載のとおり元に戻せないなど、期待しない結果をもたらす可能性があります。指示に従えば削除できますが、安全策としてここでは何を入力すればいいかは記載しないでおきます。</p>
+
+    <div class="picture"><img style="width:70%; max-width: 1084px" src="../images/shot9824.png"/></div>
 </article>
 </body>
 </html>

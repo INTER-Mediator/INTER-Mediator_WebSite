@@ -38,19 +38,19 @@
     <p>利用するデータベースは、郵便番号と地名が含まれているもので、サンプルのデータベースにあるpostalcodeという名称のものです（執筆時点では、MySQL向けのファイルのみ用意しています）。レポジトリ内では、Samples/Practices/search_page.htmlを開く事で、実際に稼働させることができます。Samples/index.htmlにあるサンプルの一覧では「Practices」にある「search」のリンクをクリックして表示できます。</p>
     <p>まず、どのような動作になるのかを見て行くことにしましょう。最初にページを開くと、郵便番号と地名がともかく一覧されています。サンプルのデータベースには、ある時期の東京都のデータのみを収録しています。検索条件は何もなく、おそらく全てのデータがリストされていると想定されます。ここで、ページネーション（ページ移動）の「&gt;」ボタンをクリックすると、次々と10件ずつレコードが表示されます。また、何件目のデータを現在表示しているのかという情報も見えています。</p>
 
-    <div class="picture"><img class="picture-small" src="../files/pr1-1.png" /></div>
+    <div class="picture"><img class="picture-small" src="../images/pr1-1.png" /></div>
 
     <p>ここで、「検索条件」に適当な地名（ここでは「池袋」）を入力して「Search」ボタンをクリックします。すると、一覧表には、池袋を含む地名やビル名のものだけに絞り込まれました。全部で68件の地名があることが分かります。「&gt;」ボタンでページ移動ができますが、ページ移動後にも、検索条件はそのまま見えていることにも注意を払いましょう。また、地名には「池袋」を含むものが検索されています。</p>
 
-    <div class="picture"><img class="picture-small" src="../files/pr1-2.png" /></div>
+    <div class="picture"><img class="picture-small" src="../images/pr1-2.png" /></div>
 
     <p>検索条件に、ここでは「171」と入力しました。すると、郵便番号が171で始まる地名だけが絞り込まれています。また、ここで、「郵便番号」と書かれた右側の▼をクリックすると、郵便番号の逆順で表示されるようになりました。つまり、一覧表示が「郵便番号」の逆順にソートされて表示されるようになっています。</p>
 
-    <div class="picture"><img class="picture-small" src="../files/pr1-4.png" /></div>
+    <div class="picture"><img class="picture-small" src="../images/pr1-4.png" /></div>
 
     <p>検索条件に、東京都に明らかになさそうな「大阪」という文字列を指定して検索してみます。もちろん、大阪を含む地名は存在しませんが、検索結果が0件のときに表示する行が見えています。</p>
 
-    <div class="picture"><img class="picture-small" src="../files/pr1-3.png" /></div>
+    <div class="picture"><img class="picture-small" src="../images/pr1-3.png" /></div>
 
     <p>「表示件数」については、ここでは省略します。</p>
 
