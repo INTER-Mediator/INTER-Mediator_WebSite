@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--
+/*
+ * INTER-Mediator Ver.@@@@2@@@@ Released @@@@1@@@@
+ *
+ *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2014 Masayuki Nii, All rights reserved.
+ *
+ *   This project started at the end of 2009.
+ *   INTER-Mediator is supplied under MIT License.
+ */
+-->
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link href="../lib/pagebuilder-r2.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../images/im-icon.png" type="image/png"/>
+    <link rel="icon" href="../images/im-icon.png" type="image/png"/>
+    <title>INTER-Mediator</title>
+    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.js"></script>
+    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.php"></script>
+    <style>
+    </style>
+</head>
+<body>
+<article>
+    <div class="titlebox">
+        <h1>検索ページを作成するための機能</h1>
+        <p>データベースの内容を一覧するときに、検索結果を適用するという仕組みを一切プログラムを書かずに実現するために、ボタンやテキストフィールド、あるいは一般的なノードに対して機能を割り当てるという考え方を導入しました。要素のdata-im属性を利用して、ローカルコンテキスト（名前は「_」）に特別なキー名でバインドすることで、機能が割り当てられます。今の所、検索ページを作るための以下のものが利用できます。抽象的に記述してもわかりにくいと思いますので、具体的なタグのテキストともに紹介します。</p>
+    </div>
+
+    <h2>検索条件の付加</h2>
+    <p>テキストフィールドを「_@condition:....」のローカルコンテキストへバインドさせると、そのテキストフィールドに入れた文字列が検索条件になります。また、Enterキーで、コンテキストの更新が実行されます。</p>
+    <div class="code"><pre><code>&lt;input type="text" data-im="_@condition:postalcode:f3,f7,f8,f9:*match*"&gt;</code></pre></div>
+    <p>@以降は、コロン（:）で4つのセクションに分かれます。</p>
+    <ul>
+        <li>第1セクション（例：condition）：この文字列</li>
+        <li>第2セクション（例：postalcode）：コンテキスト名</li>
+        <li>第3セクション（例：f3,f7）：フィールド名。複数の指定も可能</li>
+        <li>第4セクション（例：*match*）：演算子</li>
+    </ul>
+    <p>最初の2つはいいとして、3つ目のフィールドは複数指定も可能です。複数指定をすると、それぞれのフィールドに対して同じ値の検索条件をORで与えます。演算子は、一般的なものに加えて「*match」「match*」「*match*」の3つが用意されています。データベースエンジンに関わらずに、部分一致や前方一致などをこの演算子で記述します。</p>
+
+    <p>上記のテキストフィールドに、例えば「新宿」と入れてEnterキーを押すと、以下の検索条件がコンテキストに付加されて、再度検索を行い、そのコンテキストのエンクロージャー内が更新されます。</p>
+    <div class="code"><pre><code>(f3 LIKE '%新宿%' OR f7 LIKE '%新宿%' OR f8 LIKE '%新宿%' OR f9 LIKE '%新宿%')</code></pre></div>
+    <h2>表示件数の制御</h2>
+    <p>以下のポップアップメニューを選択すると、レコードの表示件数をポップアップの選択肢で指定でき、選択と同時にコンテキストが更新されます。「limitnumber」が決められた名前で、コロンより後にはコンテキスト名を記述します。changeイベントにより、コンテキストの更新します。</p>
+    <div class="code"><pre><code>&lt;select type="text" data-im="_@limitnumber:postalcode"&gt;...&lt;/select&gt;</code></pre></div>
+    <h2>コンテキストの更新ボタン（検索ボタン）</h2>
+    <p>以下のボタンをクリックすると、指定したコンテキストが更新されます。つまり、「検索」ボタンとして機能するということです。「update」が決められた名前で、コロンより後にはコンテキスト名を記述します。clickイベントにより、コンテキストの更新します。</p>
+    <div class="code"><pre><code>&lt;button data-im="_@update:postalcode"&gt;search&lt;/button&gt;</code></pre></div>
+    <h2>並べ替えフィールドの指定</h2>
+    <p>以下のSPANタグ内の▲をクリックすると、f3フィールドの昇順で並べ替えを行います。同一のコンテキストに対する「addorder」の機能を持った要素は連動します。たとえば「f3で昇順」の後に「f9の降順」を選択すると、「f9の降順」を最優先とし、続くキーとして「f3で昇順」を設定します。最後に設定した条件が最優先になるようになっています。このバインドはclickイベントに対応しており、クリックすれば指定したコンテキストが更新されます。</p>
+    <div class="code"><pre><code>&lt;span style="cursor: pointer" data-im="_@addorder:postalcode:f3:asc"&gt;▲&lt;/span&gt;</code></pre></div>
+    <p>@以降は、コロン（:）で4つのセクションに分かれます。</p>
+    <ul>
+        <li>第1セクション（例：addorder）：この文字列</li>
+        <li>第2セクション（例：postalcode）：コンテキスト名</li>
+        <li>第3セクション（例：f3）：フィールド名。1つのみ</li>
+        <li>第4セクション（例：asc）：昇順ならasc、降順ならdesc</li>
+    </ul>
+</article>
+</body>
+</html>

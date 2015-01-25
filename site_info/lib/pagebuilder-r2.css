@@ -30,6 +30,11 @@ strong  {
     color: #0023ff;
 }
 
+div.picture img {
+    width: 70%;
+    max-width: max-content;
+}
+
 div.titlebox    {
     border: solid 2px #4444BB;
     margin: 8px 300px 14px 40px;
