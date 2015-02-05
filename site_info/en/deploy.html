@@ -2,21 +2,21 @@
 <!--
 /*
  * INTER-Mediator Ver.@@@@2@@@@ Released @@@@1@@@@
- *
- *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2014 Masayuki Nii, All rights reserved.
- *
- *   This project started at the end of 2009.
+ * 
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ * 
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
  *   INTER-Mediator is supplied under MIT License.
  */
 -->
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <link href="../lib/pagebuilder-r2.css" rel="stylesheet" media="screen"/>
-    <link rel="shortcut icon" href="../images/im-icon.png" type="image/png"/>
-    <link rel="icon" href="../images/im-icon.png" type="image/png"/>
-    <title>INTER-Mediator</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../lib/pagebuilder-r2.css" rel="stylesheet" media="screen">
+    <link rel="shortcut icon" href="../images/im-icon.png" type="image/png">
+    <link rel="icon" href="../images/im-icon.png" type="image/png">
+    <title>Download, Installation and the Deployment System - INTER-Mediator</title>
     <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.js"></script>
     <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.php"></script>
     <style>
@@ -31,26 +31,26 @@
         </div>
 
     <h2>Download</h2>
-    <p>Please see <a href="https://github.com/msyk/INTER-Mediator/releases">here</a> for the release version of INTER-Mediator. The repository is updated every day, a version number is assigned depending on the fixed functions, and it is opened to the public as the release version. The newest version is Ver. 4.2. Please click <a href="https://github.com/msyk/INTER-Mediator/archive/4.4.zip">here</a> to download it directly.</p>
+    <p>Please see <a href="https://github.com/INTER-Mediator/INTER-Mediator/releases">here</a> for the release version of INTER-Mediator. The repository is updated every day, a version number is assigned depending on the fixed functions, and it is opened to the public as the release version. The newest version is Ver. 4.7. Please click <a href="https://github.com/INTER-Mediator/INTER-Mediator/archive/4.7.zip">here</a> to download it directly.</p>
 
     <h2>Using the version from the repository for development</h2>
     <p>What we recommend is using the version from the repository for general development, and moving to a specifically built version when you actually deploy your application. It can be difficult to use Git, but even if you are not familiar with it, please try to follow the procedure below. Also, the procedure below is a general method that uses command lines, but the procedure is identical when using the GitHub application. First, all the files for the web application have to be collected and placed in a folder. Please make a folder for this. Below, we have made a folder called mywebapp under Documents.</p>
 
     <div class="picture">
-        <img src="../files/doc-deploy-fig1.png" />
+        <img src="../files/doc-deploy-fig1.png">
     </div>
 
     <p>Next, we will go to the INTER-Mediator page on GitHub. It would be best to have an account and sign in, but it is possible to download the source code without an account. Once here, please confirm that the branch in the area at the middle right hand side is set to master. Now, please copy the HTTPS clone URL on the right hand side. You can copy it by clicking on the button on the right where the URL is faintly visible.</p>
 
     <div class="picture">
-        <img src="../files/doc-deploy-fig2.png" />
+        <img src="../files/doc-deploy-fig2.png">
     </div>
 
     <p>Then, please open the terminal. We will perform operations as follows. Everything after # is a comment. Please designate a file path in accordance with the folder that you created.</p>
 
     <div class="code">
 <pre><code>cd ~/Documents/mywebapp # Make the web application folder current.
-git clone https://github.com/msyk/INTER-Mediator.git # Reproduce the repository from the server.</code></pre>
+git clone https://github.com/INTER-Mediator/INTER-Mediator.git # Reproduce the repository from the server.</code></pre>
     </div>
 
     <p>Just doing this is sufficient. When you do this, an INTER-Mediator folder will be created in the mywebapp folder. This INTER-Mediator folder will be the main body of the framework. It is okay to create, for example, an index.html file, or an application html/php file at this level. Afterwards we will copy this to the server to confirm the operation.</p>
@@ -79,19 +79,19 @@ git pull</code></pre>
     <p>For those of you who strongly prefer not to use command lines, we ask that you please obtain and install the GitHub application. Then please complete the setup process. GitHub requires you to log in, so assuming that you have an account, please use that account to log in.</p>
     <p>There is a "Clone in Desktop" button on the GitHub page, so the GitHub application will start up when you click that, and immediately ask where to create your INTER-Mediator folder. Once there, you only need to select the location you prepared, and press the Clone button. After that, in the GitHub application, choose the Change button from the left hand side, and and if you click the Sync button at the top right, it will download and update with the newest version of the repository from the server.</p>
 
-    <div class="picture"><img src="../files/doc-deploy-fig9.png" /></div>
+    <div class="picture"><img src="../files/doc-deploy-fig9.png"></div>
 
     <p>However, using this method, if you try to create a second clone using the same account, the first repository you created will be displayed in the GitHub application, and you won't be able to create a new repository. In that case, please use commands to create a new clone. After that, we will take a look at the repository menu. At the far left of the GitHub application's title bar, you can click on "Repositories". Then click on the "+" button at the bottom of the window, and choose "Add Local Repository". Then indicate the folder for the clone you created using commands, and you will be able to register multiple entries with INTER-Mediator. Otherwise, take the repository folder and drag it into the window containing the repository menu to append it. However, you may not be able to differentiate the repositories in the list, so please right click on the repository list, select "Show in Finder", and confirm the folder to ensure that you don't make any mistakes in your work.</p>
 
     <h2>Using the GitHub application in Windows</h2>
     <p>Windows also has a GitHub application, so of course you can also use that to create a clone and perform updates. However, when you press the "Clone Desktop" button on the site, it will not start up the GitHub application and begin doing something, you will only see some information about the application. Therefore, to create your first clone, select that item from the account menu on the left hand side of the application, and choose "Clone" from the button menu on the right.</p>
-    <p>If it doesn't appear no matter what, use the Git Shell function to call a command line, set the place where you want to create a clone as the current directory, and enter the command "git clone https://github.com/msyk/INTER-Mediator.git". In order to use the GitHub application to confirm the clone created by the command line, drag and drop the folder into the application window.</p>
+    <p>If it doesn't appear no matter what, use the Git Shell function to call a command line, set the place where you want to create a clone as the current directory, and enter the command "git clone https://github.com/INTER-Mediator/INTER-Mediator.git". In order to use the GitHub application to confirm the clone created by the command line, drag and drop the folder into the application window.</p>
 
-    <div class="picture"><img src="../files/doc-deploy-fig5.png" /></div>
+    <div class="picture"><img src="../files/doc-deploy-fig5.png"></div>
 
     <p>After creating a clone, a sync button will appear at the top when you display the repository details. You can perform an update simply by pressing this button.</p>
 
-    <div class="picture"><img src="../files/doc-deploy-fig7.png" /></div>
+    <div class="picture"><img src="../files/doc-deploy-fig7.png"></div>
 
     <h2>Using the downloaded version for development</h2>
     <p>If you click the "Download ZIP" button on the right hand side of GitHub's INTER-Mediator page, it will compress and archive all the current files in the repository and download them. If the branch is a master, the unzipped folder will be named INTER-Mediator-master. You can now change the folder name as appropriate and move it to the folder you are using for development in the application.</p>
@@ -114,7 +114,7 @@ git pull</code></pre>
     <div class="code">
 <pre><code>$ ./buildup.sh
 =================================================
-Start to build the INTER-Mediator Ver.4.1.6
+Start to build the INTER-Mediator Ver.4.7
 -------------------------------------------------
 Original: /Users/msyk/Documents/INTER-Mediator_develop/INTER-Mediator
 Build to: /Users/msyk/Documents/INTER-Mediator_develop/im_build/INTER-Mediator
