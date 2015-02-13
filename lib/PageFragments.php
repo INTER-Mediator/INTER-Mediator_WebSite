@@ -39,7 +39,7 @@ class PageFragments extends DB_UseSharedObjects
             for ($i = 0; $i < $result->length; $i++) {
                 $node = $result->item($i);
                 $newDom = new DOMDocument;
-                if ($node->textContent != "\n" && strpos("top3", $node->getAttribute("class")) !== false) {
+                if ($node->textContent != "\n" && strpos($node->getAttribute("class"), "top3") !== false) {
                     $newDom->appendChild($newDom->importNode($node, true));
                     $newsList[] = array("newsitem" => $newDom->saveHTML());
                     $this->resultCount++;
