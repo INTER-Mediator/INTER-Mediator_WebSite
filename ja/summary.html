@@ -2,45 +2,39 @@
 <!--
 /*
  * INTER-Mediator Ver.@@@@2@@@@ Released @@@@1@@@@
- * 
- *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
- * 
- *   his project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *
+ *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2014 Masayuki Nii, All rights reserved.
+ *
+ *   This project started at the end of 2009.
  *   INTER-Mediator is supplied under MIT License.
  */
 -->
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <link href="../pagestyle.css" rel="stylesheet" media="screen"/>
-    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
-    <link rel="icon" href="../im-icon.png" type="image/png"/>
-    <title>INTER-Mediatorの動作概要 - INTER-Mediator</title>
-    <script type="text/javascript" language="JavaScript">
-        var htmlDocumentModDate = document.lastModified;
-    </script>
-    <script type="text/javascript" language="JavaScript" src="../pagebuilder.js"></script>
-    <script type="text/javascript" language="JavaScript" src="../../files/jquery-1.10.2.min.js"></script>
+    <link href="../lib/pagebuilder-r2.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../images/im-icon.png" type="image/png"/>
+    <link rel="icon" href="../images/im-icon.png" type="image/png"/>
+    <title>INTER-Mediator</title>
+    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.js"></script>
+    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.php"></script>
+    <style>
+    </style>
 </head>
 <body>
-<div id="navigationbox" class="graybox">
-    <div id="navigation"></div>
-    <div id="latestnews"></div>
-</div>
-<div id="page_header"></div>
-<div id="page_contents">
-    <h2>INTER-Mediatorの動作概要</h2>
+<article>
+<h2>INTER-Mediatorの動作概要</h2>
 
     <h3>最初に行うことは、データベースを用意することです</h3>
 
-    <p><img src="../files/step1.png" style="float: left"/>スキーマ等を定義してデータベースにテーブルを用意します。もちろん、テーブルやビューなどを、要求や仕様に応じて作成しておきます。
+    <p><img src="../images/step1.png" style="float: left"/>スキーマ等を定義してデータベースにテーブルを用意します。もちろん、テーブルやビューなどを、要求や仕様に応じて作成しておきます。
     </p>
     <br clear="left"/>
 
     <h3>データベースの情報を記述した「定義ファイル」をPHPファイルとして作成します</h3>
 
-    <p><img src="../files/step2.png" style="float: left"/>定義ファイルの作成のポイントは以下の通りです。</p>
+    <p><img src="../images/step2.png" style="float: left"/>定義ファイルの作成のポイントは以下の通りです。</p>
     <ul>
         <li>[2-A]テーブル名やキーフィールド名など、データベース情報を記述します。</li>
         <li>[2-B]データベースの接続情報を記述します。</li>
@@ -50,7 +44,7 @@
 
     <h3>ユーザインタフェースとなるHTMLファイル（ページファイル）を作成します</h3>
 
-    <p><img src="../files/step3.png" style="float: left"/>HTMLページを通常とおりに作成をします。このとき、たとえば表なら、TBODYタグ要素の内容がデータベースのレコードの数だけ繰り返します。
+    <p><img src="../images/step3.png" style="float: left"/>HTMLページを通常とおりに作成をします。このとき、たとえば表なら、TBODYタグ要素の内容がデータベースのレコードの数だけ繰り返します。
     </p>
     <ul>
         <li>[3-A]ヘッダ部で定義ファイルをscriptタグで読み込みます。</li>
@@ -63,7 +57,7 @@
 
     <h3>データベースの内容を取り込んだページが表示されます</h3>
 
-    <p><img src="../files/step4.png" style="float: left"/>Webブラウザでページファイルを開きます。ファイルに記述された設定をもとに自動的にデータベースの内容がページに表示されます。
+    <p><img src="../images/step4.png" style="float: left"/>Webブラウザでページファイルを開きます。ファイルに記述された設定をもとに自動的にデータベースの内容がページに表示されます。
     </p>
     <ul>
         <li>[4-A]inputタグにデータベースの値が設定されてます。この値をページ内で変更すれば、データベースに書き戻されます。</li>
@@ -74,5 +68,5 @@
     </ul>
     <br clear="left"/>
 </div>
-</body>
+</article>
 </html>
