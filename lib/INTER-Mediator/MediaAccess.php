@@ -1,19 +1,12 @@
 <?php
 /*
- * INTER-Mediator Ver.4.6 Released 2014-12-30
- *
- *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2010-2013 Masayuki Nii, All rights reserved.
- *
- *   This project started at the end of 2009.
- *   INTER-Mediator is supplied under MIT License.
- */
-/**
- * Created by JetBrains PhpStorm.
- * User: msyk
- * Date: 2012/06/24
- * Time: 7:37
- * To change this template use File | Settings | File Templates.
- */
+* INTER-Mediator Ver.4.7 Released 2015-01-25
+*
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+*
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+*   INTER-Mediator is supplied under MIT License.
+*/
 
 class MediaAccess
 {
@@ -47,6 +40,10 @@ class MediaAccess
              * If the FileMaker's object field is storing a PDF, the $file could be "http://server:16000/...
              * style URL. In case of an image, $file is just the path info as like above.
              */
+            $file = str_replace('\0', '', $file);
+            if (strpos($file, '../') !== false) {
+                return;
+            }
             $target = $isURL ? $file : "{$options['media-root-dir']}/{$file}";
             if (isset($options['media-context'])) {
                 $this->checkAuthentication($dbProxyInstance, $options, $target);
@@ -71,6 +68,7 @@ class MediaAccess
                 header("Content-Type: " . $this->getMimeType($fileName));
                 header("Content-Length: " . strlen($content));
                 header("Content-Disposition: {$this->disposition}; filename={$dq}" . urlencode($fileName) . $dq);
+                header('X-XSS-Protection: 1; mode=block');
                 header('X-Frame-Options: SAMEORIGIN');
                 echo $content;
             } else if (stripos($target, 'http://') === 0 || stripos($target, 'https://') === 0) { // http or https
@@ -95,6 +93,7 @@ class MediaAccess
                 header("Content-Type: " . $this->getMimeType($fileName));
                 header("Content-Length: " . strlen($content));
                 header("Content-Disposition: {$this->disposition}; filename={$dq}" . str_replace("+", "%20", urlencode($fileName)) . $dq);
+                header('X-XSS-Protection: 1; mode=block');
                 header('X-Frame-Options: SAMEORIGIN');
 //                echo $target;
                 echo $content;
@@ -171,10 +170,12 @@ class MediaAccess
 
                 $cookieNameUser = '_im_username';
                 $cookieNamePassword = '_im_credential';
-                $urlHost = $dbProxyInstance->dbSettings->getDbSpecProtocol() . "://"
-                    . urlencode($_COOKIE[$cookieNameUser]) . ":"
-                    . urlencode($keyDecrypt->biDecryptedString($_COOKIE[$cookieNamePassword])) . "@"
-                    . $dbProxyInstance->dbSettings->getDbSpecServer() . ":"
+                $credential = isset($_COOKIE[$cookieNameUser]) ? urlencode($_COOKIE[$cookieNameUser]) : '';
+                if (isset($_COOKIE[$cookieNamePassword])) {
+                    $credential .= ':' . urlencode($keyDecrypt->biDecryptedString($_COOKIE[$cookieNamePassword]));
+                }
+                $urlHost = $dbProxyInstance->dbSettings->getDbSpecProtocol() . '://' . $credential . '@'
+                    . $dbProxyInstance->dbSettings->getDbSpecServer() . ':'
                     . $dbProxyInstance->dbSettings->getDbSpecPort();
             } else {
                 $urlHost = $dbProxyInstance->dbSettings->getDbSpecProtocol() . "://"
@@ -186,7 +187,7 @@ class MediaAccess
             $file = $urlHost . str_replace(" ", "%20", $file);
             foreach ($_GET as $key => $value) {
                 if ($key !== 'media' && $key !== 'attach') {
-                    $file .= "&" . $key . "=" . urlencode($value);
+                    $file .= "&" . urlencode($key) . "=" . urlencode($value);
                 }
             }
             $isURL = true;

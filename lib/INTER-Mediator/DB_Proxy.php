@@ -1,20 +1,13 @@
 <?php
 /*
- * INTER-Mediator Ver.4.6 Released 2014-12-30
- *
- *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2010-2014 Masayuki Nii, All rights reserved.
- *
- *   This project started at the end of 2009.
- *   INTER-Mediator is supplied under MIT License.
- */
+* INTER-Mediator Ver.4.7 Released 2015-01-25
+*
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+*
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+*   INTER-Mediator is supplied under MIT License.
+*/
 
-/**
- * Created by JetBrains PhpStorm.
- * User: msyk
- * Date: 12/05/05
- * Time: 20:24
- * To change this template use File | Settings | File Templates.
- */
 class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
 {
     /**
@@ -69,9 +62,23 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
         return $this->outputOfProcessing[$key] = $value;
     }
 
+    public function exportOutputDataAsJSON()
+    {
+        if (((float)phpversion()) >= 5.3) {
+            echo json_encode($this->outputOfProcessing, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+        } else {
+            $this->outputOfProcessing = str_replace(
+                array('\"', '&', '\'', '<', '>'),
+                array('\u0022', '\u0026', '\u0027', '\u003C', '\u003E'),
+                json_encode($this->outputOfProcessing)
+            );
+            echo $this->outputOfProcessing;
+        }
+    }
+
     public function exportOutputDataAsJason()
     {
-        echo json_encode($this->outputOfProcessing);
+        $this->exportOutputDataAsJSON();
     }
 
     /**
@@ -80,9 +87,10 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
     function __construct($testmode = false)
     {
         if (!$testmode) {
-            header('Content-Type: text/javascript;charset="UTF-8"');
+            header('Content-Type: application/json; charset="UTF-8"');
             header('Cache-Control: no-store,no-cache,must-revalidate,post-check=0,pre-check=0');
             header('Expires: 0');
+            header('X-XSS-Protection: 1; mode=block');
             header('X-Content-Type-Options: nosniff');
             header('X-Frame-Options: SAMEORIGIN');
         }
@@ -103,6 +111,16 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
             }
             if ($this->dbClass !== null) {
                 $this->logger->setDebugMessage("The method 'getFromDB' of the class '{$className}' is calling.", 2);
+                $tableInfo = $this->dbSettings->getDataSourceTargetArray();
+                if (isset($tableInfo['soft-delete'])) {
+                    $delFlagField = 'delete';
+                    if ($tableInfo['soft-delete'] !== true) {
+                        $delFlagField = $tableInfo['soft-delete'];
+                    }
+                    $this->dbClass->softDeleteActivate($delFlagField, 1);
+                    $this->logger->setDebugMessage(
+                        "The soft-delete applies to this query with '{$delFlagField}' field.", 2);
+                }
                 $result = $this->dbClass->getFromDB($dataSourceName);
             }
             if ($this->userExpanded !== null && method_exists($this->userExpanded, "doAfterGetFromDB")) {
@@ -273,7 +291,19 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
                 $this->userExpanded->doBeforeDeleteFromDB($dataSourceName);
             }
             if ($this->dbClass !== null) {
-                $result = $this->dbClass->deleteFromDB($dataSourceName);
+                $tableInfo = $this->dbSettings->getDataSourceTargetArray();
+                if (isset($tableInfo['soft-delete'])) {
+                    $delFlagField = 'delete';
+                    if ($tableInfo['soft-delete'] !== true) {
+                        $delFlagField = $tableInfo['soft-delete'];
+                    }
+                    $this->logger->setDebugMessage(
+                        "The soft-delete applies to this delete operation with '{$delFlagField}' field.", 2);
+                    $this->dbSettings->addValueWithField($delFlagField, 1);
+                    $result = $this->dbClass->setToDB($dataSourceName);
+                } else {
+                    $result = $this->dbClass->deleteFromDB($dataSourceName);
+                }
             }
             if ($this->userExpanded !== null && method_exists($this->userExpanded, "doAfterDeleteFromDB")) {
                 $result = $this->userExpanded->doAfterDeleteFromDB($dataSourceName, $result);
@@ -1100,4 +1130,8 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
         return true;
     }
 
+    public function softDeleteActivate($field, $value)
+    {
+
+    }
 }

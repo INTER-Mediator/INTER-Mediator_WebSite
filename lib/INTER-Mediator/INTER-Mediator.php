@@ -1,12 +1,12 @@
 <?php
 /*
- * INTER-Mediator Ver.4.6 Released 2014-12-30
- * 
- *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2010 Masayuki Nii, All rights reserved.
- * 
- *   This project started at the end of 2009.
- *   INTER-Mediator is supplied under MIT License.
- */
+* INTER-Mediator Ver.4.7 Released 2015-01-25
+*
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+*
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+*   INTER-Mediator is supplied under MIT License.
+*/
 
 if (function_exists('mb_internal_encoding')) {
     mb_internal_encoding('UTF-8');
@@ -116,7 +116,10 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
         $dbInstance->initialize($datasource, $options, $dbspecification, $debug);
         $dbInstance->processingRequest($options);
         $dbInstance->finishCommunication(false);
-        $dbInstance->exportOutputDataAsJason();
+        if ($_SERVER['HTTP_X_REQUESTED_WITH'] !== 'XMLHttpRequest') {
+            die(json_encode(array('stat' => "Invalid Request Error.")));
+        }
+        $dbInstance->exportOutputDataAsJSON();
     }
 }
 
