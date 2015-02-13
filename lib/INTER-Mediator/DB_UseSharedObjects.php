@@ -1,19 +1,13 @@
 <?php
 /*
- * INTER-Mediator Ver.4.6 Released 2014-12-30
- *
- *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2012 Masayuki Nii, All rights reserved.
- *
- *   This project started at the end of 2009.
- *   INTER-Mediator is supplied under MIT License.
- */
-/**
- * Created by JetBrains PhpStorm.
- * User: msyk
- * Date: 12/05/20
- * Time: 14:24
- * To change this template use File | Settings | File Templates.
- */
+* INTER-Mediator Ver.4.7 Released 2015-01-25
+*
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+*
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+*   INTER-Mediator is supplied under MIT License.
+*/
+
 abstract class DB_UseSharedObjects
 {
     public $dbSettings = null;

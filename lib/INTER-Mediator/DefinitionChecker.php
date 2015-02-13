@@ -1,19 +1,13 @@
 <?php
 /*
- * INTER-Mediator Ver.4.6 Released 2014-12-30
- *
- *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2012 Masayuki Nii, All rights reserved.
- *
- *   This project started at the end of 2009.
- *   INTER-Mediator is supplied under MIT License.
- */
-/**
- * Created by JetBrains PhpStorm.
- * User: msyk
- * Date: 2012/10/10
- * Time: 16:19
- * To change this template use File | Settings | File Templates.
- */
+* INTER-Mediator Ver.4.7 Released 2015-01-25
+*
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+*
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+*   INTER-Mediator is supplied under MIT License.
+*/
+
 class DefinitionChecker
 {
 
@@ -307,6 +301,7 @@ class DefinitionChecker
             'post-reconstruct' => 'boolean',
             'post-dismiss-message' => 'string',
             'post-move-url' => 'string',
+            'soft-delete' => 'boolean|string',
             'file-upload' => array(
                 '*' => array(
                     'field' => 'string',

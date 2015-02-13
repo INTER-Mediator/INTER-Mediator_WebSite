@@ -1,10 +1,10 @@
 <?php
 /*
-* INTER-Mediator Ver.4.6 Released 2014-12-30
+* INTER-Mediator Ver.4.7 Released 2015-01-25
 *
-*   by Masayuki Nii  msyk@msyk.net Copyright (c) 2010-2014 Masayuki Nii, All rights reserved.
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *
-*   This project started at the end of 2009.
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
 *   INTER-Mediator is supplied under MIT License.
 */
 
@@ -32,6 +32,8 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
     private $queriedEntity = null;
     private $queriedCondition = null;
     private $queriedPrimaryKeys = null;
+    private $softDeleteField = null;
+    private $softDeleteValue = null;
 
     public function queriedEntity()
     {
@@ -56,6 +58,12 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
     public function updatedRecord()
     {
         return $this->updatedRecord;
+    }
+
+    public function softDeleteActivate($field, $value)
+    {
+        $this->softDeleteField = $field;
+        $this->softDeleteValue = $value;
     }
 
     public function isExistRequiredTable()
@@ -297,8 +305,12 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
      */
     private function errorMessageStore($str)
     {
-        $errorInfo = var_export($this->link->errorInfo(), true);
-        $this->logger->setErrorMessage("Query Error: [{$str}] Code={$this->link->errorCode()} Info ={$errorInfo}");
+        if ($this->link) {
+            $errorInfo = var_export($this->link->errorInfo(), true);
+            $this->logger->setErrorMessage("Query Error: [{$str}] Code={$this->link->errorCode()} Info ={$errorInfo}");
+        } else {
+            $this->logger->setErrorMessage("Query Error: [{$str}]");
+        }
     }
 
     /**
@@ -528,6 +540,15 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
                         $queryClause = 'FALSE';
                     }
                 }
+            }
+        }
+        if (! is_null($this->softDeleteField) && ! is_null($this->softDeleteValue)) {
+            $dfEsc = $this->quotedFieldName($this->softDeleteField);
+            $dvEsc = $this->link->quote($this->softDeleteValue);
+            if (strlen($queryClause) > 0)   {
+                $queryClause = "($queryClause) AND ($dfEsc <> $dvEsc OR $dfEsc IS NULL)";
+            } else {
+                $queryClause = "($dfEsc <> $dvEsc OR $dfEsc IS NULL)";
             }
         }
         return $queryClause;

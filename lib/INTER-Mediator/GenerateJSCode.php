@@ -1,20 +1,13 @@
 <?php
 /*
- * INTER-Mediator Ver.4.6 Released 2014-12-30
- *
- *   by Masayuki Nii  msyk@msyk.net Copyright (c) 2010-2013 Masayuki Nii, All rights reserved.
- *
- *   This project started at the end of 2009.
- *   INTER-Mediator is supplied under MIT License.
- */
+* INTER-Mediator Ver.4.7 Released 2015-01-25
+*
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+*
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+*   INTER-Mediator is supplied under MIT License.
+*/
 
-/**
- * Created by JetBrains PhpStorm.
- * User: msyk
- * Date: 2012/10/10
- * Time: 20:07
- * To change this template use File | Settings | File Templates.
- */
 class GenerateJSCode
 {
     public function __construct()
@@ -22,6 +15,7 @@ class GenerateJSCode
         header('Content-Type: text/javascript;charset="UTF-8"');
         header('Cache-Control: no-store,no-cache,must-revalidate,post-check=0,pre-check=0');
         header('Expires: 0');
+        header('X-XSS-Protection: 1; mode=block');
         header('X-Frame-Options: SAMEORIGIN');
     }
 

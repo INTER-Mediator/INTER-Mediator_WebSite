@@ -1,10 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: msyk
- * Date: 14/12/30
- * Time: 16:59
- */
+/*
+* INTER-Mediator Ver.4.7 Released 2015-01-25
+*
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+*
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+*   INTER-Mediator is supplied under MIT License.
+*/
+
 
 require_once('INTER-Mediator/INTER-Mediator.php');
 
@@ -162,6 +165,11 @@ class DB_Null extends DB_UseSharedObjects implements DB_Access_Interface
     }
 
     function authSupportCheckIssuedHashForResetPassword($userid, $randdata, $hash)
+    {
+        return null;
+    }
+
+    public function softDeleteActivate($field, $value)
     {
         return null;
     }
