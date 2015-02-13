@@ -9,7 +9,7 @@
 class PageFragments extends DB_UseSharedObjects
     implements Extending_Interface_AfterGet, Extending_Interface_AfterGet_WithNavigation
 {
-    function doBeforeGetFromDB($dataSourceName, $result)
+    function doBeforeGetFromDB($dataSourceName)
     {
 
     }
@@ -31,7 +31,9 @@ class PageFragments extends DB_UseSharedObjects
             $this->resultCount = 0;
             $newsList = array();
             $dom = new DOMDocument;
-            $dom->loadHTML(mb_convert_encoding(file_get_contents("../../{$lang}/news.html"), 'HTML-ENTITIES', 'UTF-8'));
+            $dom->recover = true;
+            $dom->strictErrorChecking = false;
+            $dom->loadHTML(mb_convert_encoding(file_get_contents("../{$lang}/news.html"), 'HTML-ENTITIES', 'UTF-8'));
             $result = $dom->getElementsByTagName("div");
             for ($i = 0; $i < $result->length; $i++) {
                 $node = $result->item($i);
@@ -60,6 +62,8 @@ class PageFragments extends DB_UseSharedObjects
     function fileContents($filename)
     {
         $dom = new DOMDocument;
+        $dom->recover = true;
+        $dom->strictErrorChecking = false;
         $dom->loadHTML(mb_convert_encoding(file_get_contents($filename), 'HTML-ENTITIES', 'UTF-8'));
         $result = $dom->getElementsByTagName("body");
         $nodeList = $result->item(0)->childNodes;
