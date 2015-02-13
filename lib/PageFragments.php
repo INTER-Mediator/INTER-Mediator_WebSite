@@ -33,6 +33,7 @@ class PageFragments extends DB_UseSharedObjects
             $dom = new DOMDocument;
             $dom->recover = true;
             $dom->strictErrorChecking = false;
+            libxml_use_internal_errors(true);
             $dom->loadHTML(mb_convert_encoding(file_get_contents("../{$lang}/news.html"), 'HTML-ENTITIES', 'UTF-8'));
             $result = $dom->getElementsByTagName("div");
             for ($i = 0; $i < $result->length; $i++) {
@@ -64,6 +65,7 @@ class PageFragments extends DB_UseSharedObjects
         $dom = new DOMDocument;
         $dom->recover = true;
         $dom->strictErrorChecking = false;
+        libxml_use_internal_errors(true);
         $dom->loadHTML(mb_convert_encoding(file_get_contents($filename), 'HTML-ENTITIES', 'UTF-8'));
         $result = $dom->getElementsByTagName("body");
         $nodeList = $result->item(0)->childNodes;
