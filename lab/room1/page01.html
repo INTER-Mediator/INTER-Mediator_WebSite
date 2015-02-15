@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 1</title>
+    <script type="text/javascript" src="contexts.php"></script>
+    <script type="text/javascript" src="survery.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById('startdt').value = dateTimeForSQL(new Date());
+            if (INTERMediatorOnPage.INTERMediatorCheckBrowser(document.getElementById('nonsupportmessage'))) {
+                INTERMediator.construct(true);
+            }
+        }
+        INTERMediatorOnPage.doAfterConstruct = function () {
+            INTERMediatorOnPage.setCookieDomainWide('currentpage', '1');
+        }
+    </script>
+</head>
+<body>
+<div id="nonsupportmessage" style="background-color:#333333">
+    <div style="text-align:center;color:yellow">If you see this, you must use any unsupported web browser. Or
+        constructing the page.
+    </div>
+    <div style="text-align:center;color:yellow">この表示が見えている場合、描画処理中です。しばらくお待ちください。
+        長時間見えている場合は、非対応ブラウザで参照しています。
+    </div>
+</div>
+<div id="container">
+    <h1 onclick="location.href='/';">
+        <img class="logoInH1" src="../im-icon.png"/>
+        <img class="logo2InH1" src="../im-lab.png"/>
+        INTER-Mediator Lab. - Room 1
+    </h1>
+
+    <div class="box">
+        <h2>1. Webページ制作についての基本</h2>
+
+        <div class="insidebox">
+            <p>まず最初に、Webページの成り立ちについて、知っておいていただきたい知識をまとめておきます。次のページ以降の内容を読み進めるための前提知識をこのページで説明します。</p>
+
+            <h3>WebサーバとWebクライアント</h3>
+
+            <p>
+                Webページのコンテンツは、通常は「サーバ」というインターネット上で共有可能なコンピュータ上に保持されています。それらをネットワークを通じてデータをクライアントに転送した上で参照します。クライアントとして使われるアプリケーションは、一般には「Webブラウザ」と呼ばれます。</p>
+
+            <h3>HTMLについて</h3>
+
+            <p>
+                Webページのコンテンツは、HTMLという規格に従ってテキストで記述されたものが中心になっており、サーバ上ではたとえば拡張子が.htmlの1つのファイルで保存されています。そのファイルをWebブラウザが解釈することで、段落や表、色の付いた文字などのレイアウトを施したWebとして表示できます。HTMLで記述されたファイルを「HTMLファイル」、HTMLの記述内容に従って表示された結果を「HTMLページ」と呼びます。</p>
+
+            <p>
+                HTMLによる記述の特徴は、表示する文字とは別に、「タグ」として書式やレイアウトなど、テキストをどのように見せるのかという記述も付加されていることです。また、タグはデータの区切り目を示すなど見せ方に限らない使い方もあります。</p>
+
+            <p>タグは、たとえば &lt;div align=&quot;center&quot;&gt;abcdef&lt;/div&gt;
+                のような書き方をします。開きタグ、閉じタグで囲まれるのが一般的で、divのような「タグ名」はHTMLで決められたものを利用します。また、alignのような「属性」をタグに付与できますが、属性名はタグごとに使える物が決まっています。属性名、イコールに続いて、属性の値がダブルクォート等で囲まれて記述され、値は状況に寄って変わります。</p>
+
+            <p>
+                Webページの表示では、テキスト以外に、画像やムービーも表示できます。これらは、通常はサーバでは別のファイルとして保存されたものになっており、HTMLページ内に特定の画像を表示するには、画像であれば画像を表示するIMGタグのSRC属性に、画像のファイル名やURIを記述します。</p>
+
+            <h3>CSSとJavaScriptについて</h3>
+
+            <p>
+                HTMLで表示されるものの書式設定は、CSSとして別途規格が定められており、多様な表現が可能になっています。CSSを利用する事で表現力が上がるだけでなく、まとめて設定したり、複数のHTMLファイルで設定情報を共有することができます。前者は、idやclass属性、あるいはタグに対する書式設定ができることで実現されています。後者は、CSSの定義自体を独立したファイルに記述して、HTMLからCSSが記述されたファイルの内容を参照する仕組みで実現されています。</p>
+
+            <p>
+                HTMLでの記述やCSSによる記述は、その場でどうするかということ（例えば、画像を見せるとか、段落を右寄せにするなど）を記述する方式ですが、一方で、そうした記述以上のことを行う仕組みとして、JavaScriptというプログラミング言語を用いたプログラムをHTMLページの中で使われる事が一般的になっています。プログラム自体をHTMLの内部やあるいは別のファイルで供給できるようになっています。</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>学習時間調査</h2>
+
+        <div style="font-size: 80%; text-align: right;">
+            ログインユーザ：<span class="_im_enclosure"><span class="_im_repeater IM[loginuser@username]"></span></span>|
+            <button onclick="INTERMediatorOnPage.logout();location.href='/room1/';">ログアウト</button>
+        </div>
+
+        <div class="insidebox _im_enclosure _im_postonly">
+            <div class="_im_repeater">
+                <p>
+                    読み終わったとき、以下のラジオボタンのいずれかを選択して、「読み終わった」ボタンをクリックしてください。
+                </p>
+
+                <p>
+                    開いてから今まで、このページを、
+
+                <div style="margin-left: 20px">
+                    <input type="radio" name="q1" class="IM[progress@status]" value="1">ほとんどの時間は読む事に使わなかった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="2">あまり時間をかけて読んではいなかった<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="3">他のことと半々くらいの時間をかけて読んだ<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="4">多くの時間をかけて読んだ<br>
+                    <input type="radio" name="q1" class="IM[progress@status]" value="5">ほとんどの時間を読む事に使った
+                </div>
+                </p>
+
+                <p>
+                    このページの内容について、自分が感じる理解度は、
+
+                <div style="margin-left: 20px">
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="1">ほとんど分からなかった<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="2">少しは分かったが半分以下しか分からなかった<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="3">半々くらい<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="4">すべては理解できないが半分以上は理解した<br>
+                    <input type="radio" name="q2" class="IM[progress@earn]" value="5">ほとんど理解できた
+                </div>
+                </p>
+
+                <p>
+                    <input type="hidden" class="IM[progress@page]" value="1"/>
+                    <input type="hidden" class="IM[progress@startdt]" id="startdt"/>
+                    <button class="_im_postonly">読み終わった</button>
+                    ←クリックすると、次のページに移動します。
+                </p>
+
+                <p>
+                    <a href="index.html">実験のトップページ（Room 1）へ</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

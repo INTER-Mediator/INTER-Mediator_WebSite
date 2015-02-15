@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="/default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="/im-icon.png" type="image/png"/>
+    <link rel="icon" href="/im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 2</title>
+    <style>
+        .tableformat td {
+            font-size: 70%;
+        }
+
+        .tableformat th {
+            font-size: 70%;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+<h1 onclick="location.href='/';">
+    <img class="logoInH1" src="/im-icon.png"/>
+    <img class="logo2InH1" src="/im-lab.png"/>
+    INTER-Mediator Lab. - Room 2
+</h1>
+
+<div class="box">
+    <h2>Open Bug Fix Festival 2013 Autumn</h2>
+
+    <div class="insidebox">
+        <p>
+            湯浅さんからレポートしていただいたバグは、Windows環境でのサンプルの動作の問題の数々です。
+            あまり数が多く、できれば多くの方々にチェックおよび原因追及をしていただきたいと思いました。
+            この機会に「サンプルからチェックしたときにエラーになってしまう」という状況を打破したいと思います。
+            ご協力をお願いします。
+        </p>
+        <p style="color:#628e4f">そこそこ、バグを取り終えたということで、一度こちらはクローズとします。ご協力いたいだいたみなさんに感謝します。(2013/11/24)</p>
+        <p>新居雅行</p>
+    </div>
+</div>
+<div class="box">
+    <h2>INTER-Mediatorの学習</h2>
+
+    <div class="insidebox">
+        <p>
+            以下、報告されたバグに管理番号を付けます。報告をいただくときには、管理番号を必ず付け加えてください。
+        </p>
+        <ul>
+            <li>バグの報告は、できるだけ、INTER-MediatorのFacebookにあるグループに投稿をお願いします。</li>
+            <li>バグが再現される、されないだけの投稿でも歓迎です。</li>
+            <li>異なる環境でのバグの再現の可否も含めてお願いします。</li>
+            <li>ここにないバグについては、新たなトピックを立てて報告をお願いします。</li>
+        </ul>
+        <p>
+            Facebookに書かれた事はなるべくこちらに反映するようにします。自動ポストは作るかもしれませんが、当初は手作業でやります。
+        </p>
+    </div>
+</div>
+<div class="box">
+    <h2>サーバ環境：Windows Server 2008R2 IIS 7.5 w/ FMS12 ｗ/ IM3.9、クライアント環境：Windows</h2>
+
+    <div class="insidebox">
+        <table class="tableformat">
+            <tr>
+                <th></th>
+                <th></th>
+                <th>IE10（標準）</th>
+                <th>IE10（Quirks）</th>
+                <th>IE10互換（標準）</th>
+                <th>IE10互換（Quirks）</th>
+                <th>IE9（標準）</th>
+                <th>IE9（Quirks）</th>
+                <th>IE8（標準）</th>
+                <th>IE8（Quirks）</th>
+            </tr>
+            <tr>
+                <th>Master-Detail Style Page</th>
+                <th></th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Search Page</th>
+                <td></td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-001《仕様確定》</div>
+                    ナビバーで「NaN」ページ目と表示、データ内容表示しない（検索実行しない？）
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-002《仕様確定》</div>
+                    ナビバーで「NaN」ページ目と表示、データ内容表示しない（検索実行しない？）
+                </td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Client-Side Calculation Page</th>
+                <td></td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-003《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-004《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-005《仕様確定》</div>
+                    ナビバーで「NaN」ページ目と表示。
+                    <div class="flagfixed">管理番号：OBFF2013-005《解決済み》</div>
+                    データ内容表示しない。Total計算しない。
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-006《仕様確定》</div>
+                    ナビバーで「NaN」ページ目と表示。
+                    <div class="flagfixed">管理番号：OBFF2013-006《解決済み》</div>
+                    データ内容表示しない。
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-007《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-008《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-009《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-010《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+            </tr>
+            <tr>
+                <th>List-Detail Style Navigation Pages</th>
+                <th>2 files</th>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-011《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-012《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-013《仕様確定》</div>
+                    レコード表示なし
+                    <div class="flagfixed">管理番号：OBFF2013-013《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-014《仕様確定》</div>
+                    レコード表示なし
+                    <div class="flagfixed">管理番号：OBFF2013-014《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-015《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-016《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-017《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-018《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+            </tr>
+            <tr>
+                <th>〃</th>
+                <th>Detail</th>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-019《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-020《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-021《仕様確定》</div>
+                    レコード表示なし
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-022《仕様確定》</div>
+                    レコード表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-023《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-024《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-025《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-026《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+            </tr>
+            <tr>
+                <th>List-Detail Style Navigation Pages</th>
+                <th>1 file</th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>〃</th>
+                <th>Detail</th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Authentication Pages</th>
+                <td></td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>
+                    <div class="flag">管理番号：OBFF2013-118</div>
+                    ログイン画面を表示しない
+                </td>
+                <td>
+                    <div class="flag">管理番号：OBFF2013-119</div>
+                    ログイン画面を表示しない
+                </td>
+                <td>
+                    <div class="flag">管理番号：OBFF2013-120</div>
+                    ログイン画面を表示しない
+                </td>
+                <td>
+                    <div class="flag">管理番号：OBFF2013-121</div>
+                    ログイン画面を表示しない
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="box">
+    <h2>サーバ環境：Windows Server 2008R2 IIS 7.5 w/ FMS12 ｗ/ IM3.9、クライアント環境：Windows</h2>
+
+    <div class="insidebox">
+        <table class="tableformat">
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Mac</th>
+                <th></th>
+                <th>Windows</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <th>Safari6</th>
+                <th>FireFox24</th>
+                <th>Safari5.1</th>
+            </tr>
+            <tr>
+                <th>Master-Detail Style Page</th>
+                <td></td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Search Page</th>
+                <td></td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-028《解決済み》</div>
+                    sortfieldがundefined
+                </td>
+                <td>OK</td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-029《解決済み》</div>
+                    sortfieldがundefined
+                </td>
+            </tr>
+            <tr>
+                <th>Client-Side Calculation Page</th>
+                <td></td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-030《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-031《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-032《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+            </tr>
+            <tr>
+                <th>List-Detail Style Navigation Pages</th>
+                <th>2 files</th>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-033《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-034《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-035《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+            </tr>
+            <tr>
+                <th>〃</th>
+                <th>Detail</th>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-036《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-037《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-038《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+            </tr>
+            <tr>
+                <th>List-Detail Style Navigation Pages</th>
+                <th>1 file</th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>〃</th>
+                <th>Detail</th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Authentication Pages</th>
+                <td></td>
+                <td>OK</td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-039《解決済み》</div>
+                    ID、PW入力後、応答のないスクリプト（Sample_Auth/FMS_definitions.php）
+                </td>
+                <td>
+                    <div class="flag">管理番号：OBFF2013-122</div>
+                    ログイン画面を表示しない
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<div class="box">
+    <h2>サーバ環境：Windows Server 2008(32bit) IIS 7.0 w/ FMS10 ｗ/ IM3.9、クライアント環境：Windows</h2>
+
+    <div class="insidebox">
+        <table class="tableformat">
+            <tr>
+                <th></th>
+                <th></th>
+                <th>IE10（標準）</th>
+                <th>IE10（Quirks）</th>
+                <th>IE10互換（標準）</th>
+                <th>IE10互換（Quirks）</th>
+                <th>IE9（標準）</th>
+                <th>IE9（Quirks）</th>
+                <th>IE8（標準）</th>
+                <th>IE8（Quirks）</th>
+            </tr>
+            <tr>
+                <th>Master-Detail Style Page</th>
+                <th></th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Search Page</th>
+                <td></td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-085《仕様確定》</div>
+                    ナビバーで「NaN」ページ目と表示、データ内容表示しない（検索実行しない？）
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-086《仕様確定》</div>
+                    ナビバーで「NaN」ページ目と表示、データ内容表示しない（検索実行しない？）
+                </td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Client-Side Calculation Page</th>
+                <td></td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-087《仕様確定》</div>
+                    ナビバーで「NaN」ページ目と表示、データ内容表示しない。
+                    <div class="flagfixed">管理番号：OBFF2013-087《解決済み》</div>
+                    Total計算しない。
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-088《仕様確定》</div>
+                    ナビバーで「NaN」ページ目と表示、データ内容表示しない。
+                </td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>List-Detail Style Navigation Pages</th>
+                <th>2 files</th>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-089《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-090《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-091《仕様確定》</div>
+                    レコード表示なし
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-092《仕様確定》</div>
+                    レコード表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-093《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-094《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-095《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-096《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+            </tr>
+            <tr>
+                <th>〃</th>
+                <th>Detail</th>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-097《解決済み》</div>
+                    *2
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-098《解決済み》</div>
+                    *2
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-099《仕様確定》</div>
+                    レコード表示なし
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-100《仕様確定》</div>
+                    レコード表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-101《解決済み》</div>
+                    *2
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-102《解決済み》</div>
+                    *2
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-103《解決済み》</div>
+                    *2
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-104《解決済み》</div>
+                    *2
+                </td>
+            </tr>
+            <tr>
+                <th>List-Detail Style Navigation Pages</th>
+                <th>1 file</th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-105《仕様確定》</div>
+                    レコード表示なし
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-106《仕様確定》</div>
+                    レコード表示なし
+                </td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>〃</th>
+                <td>Detail</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-107《仕様確定》</div>
+                    レコード表示なし
+                </td>
+                <td>
+                    <div class="flagdetermined">管理番号：OBFF2013-108《仕様確定》</div>
+                    レコード表示なし
+                </td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Authentication Pages</th>
+                <td></td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+        </table>
+        <p>*2
+            構文エラーです。 - db_query関数での通信時のエラー=SyntaxError: 構文エラーです。/<br/>
+            <b>Warning</b>: include_once(PDO.php) [<a href='function.include-once'>function.include-once</a>]: failed to
+            open stream: No such file or directory in
+            <b>C:\inetpub\wwwroot\imbasic\INTER-Mediator\INTER-Mediator.php</b> on line <b>113</b><br/>
+            <br/>
+            <b>Warning</b>: include_once() [<a href='function.include'>function.include</a>]: Failed opening 'PDO.php'
+            for inclusion (include_path='.;C:\Program Files\FileMaker\FileMaker Server\Web
+            Publishing\publishing-engine\php\PEAR;C:\Program Files\FileMaker\FileMaker Server\Web
+            Publishing\publishing-engine\php\FileMaker;C:\Program Files\FileMaker\FileMaker Server\Web
+            Publishing\publishing-engine\php') in <b>C:\inetpub\wwwroot\imbasic\INTER-Mediator\INTER-Mediator.php</b> on
+            line <b>113</b><br/>
+            INTERMediator.setErrorMessage("The class \'PDO\' is not defined.");<br/>
+            <b>Fatal error</b>: Class 'PDO' not found in <b>C:\inetpub\wwwroot\imbasic\INTER-Mediator\DB_PDO.php</b> on
+            line <b>49</b><br/></p>
+    </div>
+</div>
+
+<div class="box">
+    <h2>サーバ環境：Windows Server 2008(32bit) IIS 7.0 w/ FMS10 ｗ/ IM3.9、クライアント環境：Windows</h2>
+
+    <div class="insidebox">
+        <table class="tableformat">
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Mac</th>
+                <th></th>
+                <th>Windows</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Safari6</td>
+                <td>FireFox24</td>
+                <td>Safari5.1</td>
+            </tr>
+            <tr>
+                <th>Master-Detail Style Page</th>
+                <td></td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Search Page</th>
+                <td></td>
+                <td>
+                    <div class="flag">管理番号：OBFF2013-109</div>
+                    *3
+                </td>
+                <td>OK</td>
+                <td>
+                    <div class="flag">管理番号：OBFF2013-110</div>
+                    *3
+                </td>
+            </tr>
+            <tr>
+                <th>Client-Side Calculation Page</th>
+                <td></td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>List-Detail Style Navigation Pages</th>
+                <th>2 files</th>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-111《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-112《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-113《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+            </tr>
+            <tr>
+                <th>〃</th>
+                <th>Detail</th>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-114《解決済み》</div>
+                    *2
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-115《解決済み》</div>
+                    *2
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-116《解決済み》</div>
+                    *2
+                </td>
+            </tr>
+            <tr>
+                <th>List-Detail Style Navigation Pages</th>
+                <th>1 file</th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>〃</th>
+                <th>Detail</th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Authentication Pages</th>
+                <td></td>
+                <td>OK</td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-117《解決済み》</div>
+                    ID、PW入力後、応答のないスクリプト*1
+                </td>
+                <td>OK</td>
+            </tr>
+        </table>
+        <p>*1： 応答のないスクリプト</p>
+
+        <p>*2
+            構文エラーです。 - db_query関数での通信時のエラー=SyntaxError: 構文エラーです。/<br/>
+            <b>Warning</b>: include_once(PDO.php) [<a href='function.include-once'>function.include-once</a>]: failed to
+            open stream: No such file or directory in
+            <b>C:\inetpub\wwwroot\imbasic\INTER-Mediator\INTER-Mediator.php</b> on line <b>113</b><br/>
+            <br/>
+            <b>Warning</b>: include_once() [<a href='function.include'>function.include</a>]: Failed opening 'PDO.php'
+            for inclusion (include_path='.;C:\Program Files\FileMaker\FileMaker Server\Web
+            Publishing\publishing-engine\php\PEAR;C:\Program Files\FileMaker\FileMaker Server\Web
+            Publishing\publishing-engine\php\FileMaker;C:\Program Files\FileMaker\FileMaker Server\Web
+            Publishing\publishing-engine\php') in <b>C:\inetpub\wwwroot\imbasic\INTER-Mediator\INTER-Mediator.php</b> on
+            line <b>113</b><br/>
+            INTERMediator.setErrorMessage("The class \'PDO\' is not defined.");<br/>
+            <b>Fatal error</b>: Class 'PDO' not found in <b>C:\inetpub\wwwroot\imbasic\INTER-Mediator\DB_PDO.php</b> on
+            line <b>49</b><br/></p>
+
+        <p>*3
+            FX reports error at find action: code=102,
+            url=http://web:********@127.0.0.1:80/fmi/xml/FMPXMLRESULT.xml?-db=TestDB&-lay=postalcode&-max=10&-sortfield.1=f3&-sortorder.1=ascend&-sortfield.2=undefined&-sortorder.2=undefined&f9.op=cn&f9=%E8%90%BD%E5%90%88&-find</p>
+    </div>
+</div>
+
+<div class="box">
+<h2>サーバ環境：Mac OS X 10.5 w/ FMS11w/ IM3.9、クライアント環境：Windows</h2>
+
+<div class="insidebox">
+<table class="tableformat">
+<tr>
+    <th></th>
+    <th></th>
+    <th>IE10（標準）</th>
+    <th>IE10（Quirks）</th>
+    <th>IE10互換（標準）</th>
+    <th>IE10互換（Quirks）</th>
+    <th>IE9（標準）</th>
+    <th>IE9（Quirks）</th>
+    <th>IE8（標準）</th>
+    <th>IE8（Quirks）</th>
+</tr>
+<tr>
+    <th>Master-Detail Style Page</th>
+    <td></td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+</tr>
+<tr>
+    <th>Search Page</th>
+    <td></td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-040《仕様確定》</div>
+        ナビバーで「NaN」ページ目と表示、データ内容表示しない（検索実行しない？）
+    </td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-041《仕様確定》</div>
+        Searchしても何も動作しない
+    </td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+</tr>
+<tr>
+    <th>Client-Side Calculation Page</th>
+    <td></td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-042《仕様確定》</div>
+        ナビバーで「NaN」ページ目と表示、データ内容表示しない。
+        <div class="flagfixed">管理番号：OBFF2013-042《解決済み》</div>
+        Total計算しない。
+    </td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-043《仕様確定》</div>
+        レコード表示なし
+    </td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+</tr>
+<tr>
+    <th>List-Detail Style Navigation Pages</th>
+    <th>2 files</th>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-044《解決済み》</div>
+        イメージファイル表示なし
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-045《解決済み》</div>
+        イメージファイル表示なし
+    </td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-046《仕様確定》</div>
+        レコード表示なし
+    </td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-047《仕様確定》</div>
+        レコード表示なし
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-048《解決済み》</div>
+        イメージファイル表示なし
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-049《解決済み》</div>
+        イメージファイル表示なし
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-050《解決済み》</div>
+        イメージファイル表示なし
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-051《解決済み》</div>
+        イメージファイル表示なし
+    </td>
+</tr>
+<tr>
+    <th>〃</th>
+    <th>Detail</th>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-052《解決済み》</div>
+        Connection Error: could not find driver
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-053《解決済み》</div>
+        Connection Error: could not find driver
+    </td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-054《仕様確定》</div>
+        レコード表示なし
+    </td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-055《仕様確定》</div>
+        レコード表示なし
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-056《解決済み》</div>
+        Connection Error: could not find driver
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-057《解決済み》</div>
+        Connection Error: could not find driver
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-058《解決済み》</div>
+        Connection Error: could not find driver
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-059《解決済み》</div>
+        Connection Error: could not find driver
+    </td>
+</tr>
+<tr>
+    <th>List-Detail Style Navigation Pages</th>
+    <th>1 file</th>
+    <td>OK</td>
+    <td>OK</td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-060《仕様確定》</div>
+        レコード表示なし
+    </td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-061《仕様確定》</div>
+        レコード表示なし
+    </td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+</tr>
+<tr>
+    <th>〃</th>
+    <th>Detail</th>
+    <td>OK</td>
+    <td>OK</td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-062《仕様確定》</div>
+        レコード表示なし
+    </td>
+    <td>
+        <div class="flagdetermined">管理番号：OBFF2013-063《仕様確定》</div>
+        レコード表示なし
+    </td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+    <td>OK</td>
+</tr>
+<tr>
+    <th>Authentication Pages</th>
+    <td></td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-064《解決済み》</div>
+        ログイン画面を表示しない
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-065《解決済み》</div>
+        ログイン画面を表示しない
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-066《解決済み》</div>
+        ログイン画面を表示しない
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-067《解決済み》</div>
+        ログイン画面を表示しない
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-068《解決済み》</div>
+        ログイン画面を表示しない
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-069《解決済み》</div>
+        ログイン画面を表示しない
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-070《解決済み》</div>
+        ログイン画面を表示しない
+    </td>
+    <td>
+        <div class="flagfixed">管理番号：OBFF2013-071《解決済み》</div>
+        ログイン画面を表示しない
+    </td>
+</tr>
+</table>
+
+</div>
+</div>
+<div class="box">
+    <h2>サーバ環境：Mac OS X 10.5 w/ FMS11w/ IM3.9、クライアント環境：Windows</h2>
+
+    <div class="insidebox">
+        <table class="tableformat">
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Mac</th>
+                <th></th>
+                <th>Windows</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <th>Safari6</th>
+                <th>FireFox24</th>
+                <th>Safari5.1</th>
+            </tr>
+            <tr>
+                <th>Master-Detail Style Page</th>
+                <td></td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Search Page</th>
+                <td></td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-072《解決済み》</div>
+                    sortfieldがundefined
+                </td>
+                <td>OK</td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-073《解決済み》</div>
+                    sortfieldがundefined
+                </td>
+            </tr>
+            <tr>
+                <th>Client-Side Calculation Page</th>
+                <td></td>
+                <td>OK</td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-074《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-075《解決済み》</div>
+                    Total欄が「.NaN」と表示
+                </td>
+            </tr>
+            <tr>
+                <th>List-Detail Style Navigation Pages</th>
+                <th>2 files</th>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-076《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-077《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-078《解決済み》</div>
+                    イメージファイル表示なし
+                </td>
+            </tr>
+            <tr>
+                <th>〃</th>
+                <th>Detail</th>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-079《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-080《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-081《解決済み》</div>
+                    Connection Error: could not find driver
+                </td>
+            </tr>
+            <tr>
+                <th>List-Detail Style Navigation Pages</th>
+                <th>1 file</th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>〃</th>
+                <th>Detail</th>
+                <td>OK</td>
+                <td>OK</td>
+                <td>OK</td>
+            </tr>
+            <tr>
+                <th>Authentication Pages</th>
+                <td></td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-082《解決済み》</div>
+                    ログイン画面を表示しない
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-083《解決済み》</div>
+                    ログイン画面を表示しない
+                </td>
+                <td>
+                    <div class="flagfixed">管理番号：OBFF2013-084《解決済み》</div>
+                    ログイン画面を表示しない
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+</div>
+</body>
+</html>
