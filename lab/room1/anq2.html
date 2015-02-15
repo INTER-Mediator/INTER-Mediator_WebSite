@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="../im-icon.png" type="image/png"/>
+    <link rel="icon" href="../im-icon.png" type="image/png"/>
+    <title>INTER-Mediator Lab. - Room 1</title>
+    <script type="text/javascript" src="result.php"></script>
+    <style>
+        h2  {
+            border:none;
+            background-color: #CCCCCC;
+        }
+        table.tableformat td  {
+            border-color: white;
+            background-color: #DDDDDD;
+        }
+        th  {
+            text-align: left;
+        }
+    </style>
+</head>
+<body onload="INTERMediator.construct(true)">
+<h1>Survey for each question</h1>
+<h2>Q1-Q7:ご本人に関するプロフィール</h2>
+<table class="tableformat">
+    <thead>
+    <tr>
+        <th>username</th>
+        <th>Q1:自分の仕事や職種を一言で言えば？</th>
+        <th>Q2:HTMLのソースレベルのコーディングを<br>1.ほとんど毎日行う<br>2.よくやる<br>3.時々行う<br>4.たまに行う<br>5.滅多にやらない</th>
+        <th>Q3:CSSのソースコードレベルのコーディング<br>1.ほとんど毎日行う<br>2.よくやる<br>3.時々行う<br>4.たまに行う<br>5.滅多にやらない</th>
+        <th>Q4:JavaScriptのソースコードレベルのコーディング<br>1.ほとんど毎日行う<br>2.よくやる<br>3.時々行う<br>4.たまに行う<br>5.滅多にやらない</th>
+        <th>Q5:その他の言語での開発<br>1.ほとんど毎日行う<br>2.よくやる<br>3.時々行う<br>4.たまに行う<br>5.滅多にやらない<br></th>
+        <th>Q6:その他の言語はどんな言語？</th>
+        <th>Q7:Webページ制作で普段使っているツール（アプリケーションやサービス）にはどのようなものがありますか？</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="IM[survey_use@username]"></td>
+        <td class="IM[survey_use@answertext1]"></td>
+        <td class="IM[survey_use@answer1]"></td>
+        <td class="IM[survey_use@answer2]"></td>
+        <td class="IM[survey_use@answer3]"></td>
+        <td class="IM[survey_use@answer4]"></td>
+        <td class="IM[survey_use@answertext9]"></td>
+        <td class="IM[survey_use@answertext2]"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Q8-Q15:INTER-Mediatorについての感想・意見</h2>
+<table class="tableformat">
+    <thead>
+    <tr>
+        <th>username</th>
+        <th>Q8：INTER-MediatorによるWebアプリケーション開発は<br>1.分かりやすい<br>2.どちらでもない<br>3.わかりにくい</th>
+        <th>Q9：INTER-MediatorによるWebアプリケーション開発を<br>1.すぐにでもできそう<br>2.勉強すればできそう<br>3.できるにはかなり勉強しないといけないだろう<br>4.できるようになるとは思えない</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="IM[survey_use@username]"></td>
+        <td class="IM[survey_use@answer5]"></td>
+        <td class="IM[survey_use@answer6]"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Q10：INTER-Mediatorについて、良い印象を持った機能や分かりやすいと感じた機能は何ですか？</h3>
+<table class="tableformat">
+    <tbody>
+    <tr>
+        <td class="IM[survey_use@username]"></td>
+        <td class="IM[survey_use@answertext3]"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Q11：INTER-Mediatorについて、難しいと感じた機能や理解に苦しむ機能は何ですか？</h3>
+<table class="tableformat">
+    <tbody>
+    <tr>
+        <td class="IM[survey_use@username]"></td>
+        <td class="IM[survey_use@answertext4]"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Q12：INTER-Mediatorについて、こんな機能が組み込まれていればいいのではとおもったことはありますか？</h3>
+<table class="tableformat">
+    <tbody>
+    <tr>
+        <td class="IM[survey_use@username]"></td>
+        <td class="IM[survey_use@answertext5]"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+<h3>Q13：INTER-Mediatorについて、機能がありそうだけどやり方が分からなかったことはありますか？</h3>
+
+<table class="tableformat">
+    <tbody>
+    <tr>
+        <td class="IM[survey_use@username]"></td>
+        <td class="IM[survey_use@answertext6]"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Q14：今回の調査の中で、自分で知っている事で話題にならなかった事がありましたか？</h3>
+<table class="tableformat">
+    <tbody>
+    <tr>
+        <td class="IM[survey_use@username]"></td>
+        <td class="IM[survey_use@answertext7]"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+<h3>Q15：その他、お気づきになったことがありましたら、お書きください。</h3>
+<table class="tableformat">
+    <tbody>
+    <tr>
+        <td class="IM[survey_use@username]"></td>
+        <td class="IM[survey_use@answertext8]"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+The params.phThe params.php file exists in this directory. So it contains the real password for the database,
+the file didn't push to the repogitory. I hope you understand I mean.
+
+The application of the room1 expects the following information in the params.php file.
+Of course, the dbPassword's value is not real and you should replace it with your real one.
+Also take cate of the unix_socket in the dbDSN variable.
+
+$dbUser = 'web_survey';
+$dbPassword = 'qqqqqqqq';
+$dbDSN = 'mysql:unix_socket=/var/run/mysqld/mysqld.sock;dbname=survey_db;';
