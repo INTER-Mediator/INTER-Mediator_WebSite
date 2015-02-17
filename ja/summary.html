@@ -9,64 +9,70 @@
  *   INTER-Mediator is supplied under MIT License.
  */
 -->
-<html>
+<html lang="ja">
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <link href="../lib/pagebuilder-r2.css" rel="stylesheet" media="screen"/>
-    <link rel="shortcut icon" href="../images/im-icon.png" type="image/png"/>
-    <link rel="icon" href="../images/im-icon.png" type="image/png"/>
-    <title>INTER-Mediator</title>
-    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.js"></script>
-    <script type="text/javascript" language="JavaScript" src="../lib/pagebuilder-r2.php"></script>
-    <style>
-    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="../images/im-icon.png" type="image/png">
+    <link rel="icon" href="../images/im-icon.png" type="image/png">
+    <title>INTER-Mediatorの動作概要 - Product Information - INTER-Mediator</title>
+    <link rel="stylesheet" href="../lib/css/normalize.min.css" media="screen">
+    <link rel="stylesheet" href="../lib/css/style.min.css" media="screen">
+    <script src="../lib/pagebuilder-r2.js"></script>
+    <script src="../lib/pagebuilder-r2.php"></script>
 </head>
-<body>
-<article>
-<h2>INTER-Mediatorの動作概要</h2>
-
-    <h3>最初に行うことは、データベースを用意することです</h3>
-
-    <p><img src="../images/step1.png" style="float: left"/>スキーマ等を定義してデータベースにテーブルを用意します。もちろん、テーブルやビューなどを、要求や仕様に応じて作成しておきます。
-    </p>
-    <br clear="left"/>
-
-    <h3>データベースの情報を記述した「定義ファイル」をPHPファイルとして作成します</h3>
-
-    <p><img src="../images/step2.png" style="float: left"/>定義ファイルの作成のポイントは以下の通りです。</p>
-    <ul>
-        <li>[2-A]テーブル名やキーフィールド名など、データベース情報を記述します。</li>
-        <li>[2-B]データベースの接続情報を記述します。</li>
-        <li>[2-C]IM_Entry関数をコールします。</li>
-    </ul>
-    <br clear="left"/>
-
-    <h3>ユーザインタフェースとなるHTMLファイル（ページファイル）を作成します</h3>
-
-    <p><img src="../images/step3.png" style="float: left"/>HTMLページを通常とおりに作成をします。このとき、たとえば表なら、TBODYタグ要素の内容がデータベースのレコードの数だけ繰り返します。
-    </p>
-    <ul>
-        <li>[3-A]ヘッダ部で定義ファイルをscriptタグで読み込みます。</li>
-        <li>[3-B]タグのclass属性に、「IM[テーブル名@フィールド名]」などの形式で、どのテーブルのどのフィールド値を取り込むのかを指定します。</li>
-        <li>
-            [3-C]INTERMediator.construct関数を呼び出す事で、3-Bで指定した内容に応じてタグの値や属性値にデータベースの値が挿入されます。bodyタグのonload属性で指定すれば、ページを表示したときにデータベースの値を取り出してページに設定します。
-        </li>
-    </ul>
-    <br clear="left"/>
-
-    <h3>データベースの内容を取り込んだページが表示されます</h3>
-
-    <p><img src="../images/step4.png" style="float: left"/>Webブラウザでページファイルを開きます。ファイルに記述された設定をもとに自動的にデータベースの内容がページに表示されます。
-    </p>
-    <ul>
-        <li>[4-A]inputタグにデータベースの値が設定されてます。この値をページ内で変更すれば、データベースに書き戻されます。</li>
-        <li>[4-B]1対多の関係にあるテーブルが複数の行に展開されています。</li>
-        <li>[4-C]別のフィールドの値に応じてポップアップメニューの選択肢が違うといった展開も可能です。</li>
-        <li>[4-D]繰り返されたレコードに対しての削除や、繰り返しレコードを追加するボタンを設けることも可能です。</li>
-        <li>[4-E]ナビゲーションバーを表示して、次や前のレコードに移動したり、レコードの追加や削除の機能を利用できます。</li>
-    </ul>
-    <br clear="left"/>
-</div>
-</article>
+<body data-page-title="summary">
+    <div class="container">
+        <div class="page-title">
+            <h1>INTER-Mediatorの動作概要</h1>
+        </div>
+        <article>
+            <section class="clearfix">
+                <h1>最初に行うことは、データベースを用意することです</h1>
+                <div class="left-box">
+                    <img src="../images/step1.png" alt="イメージ" title="最初に行うことは、データベースを用意することです">
+                </div>
+                <p>スキーマ等を定義してデータベースにテーブルを用意します。もちろん、テーブルやビューなどを、要求や仕様に応じて作成しておきます。</p>
+            </section>
+            <section class="clearfix">
+                <h1>データベースの情報を記述した「定義ファイル」をPHPファイルとして作成します</h1>
+                <div class="left-box">
+                    <img src="../images/step2.png" alt="イメージ" title="データベースの情報を記述した「定義ファイル」をPHPファイルとして作成します">
+                </div>
+                <p>定義ファイルの作成のポイントは以下の通りです。</p>
+                <ul>
+                    <li>[2-A]テーブル名やキーフィールド名など、データベース情報を記述します。</li>
+                    <li>[2-B]データベースの接続情報を記述します。</li>
+                    <li>[2-C]IM_Entry関数をコールします。</li>
+                </ul>
+            </section>
+            <section class="clearfix">
+                <h1>ユーザインタフェースとなるHTMLファイル（ページファイル）を作成します</h1>
+                <div class="left-box">
+                    <img src="../images/step3.png" alt="イメージ" title="ユーザインタフェースとなるHTMLファイル（ページファイル）を作成します">
+                </div>
+                <p>HTMLページを通常とおりに作成をします。このとき、たとえば表なら、TBODYタグ要素の内容がデータベースのレコードの数だけ繰り返します。</p>
+                <ul>
+                    <li>[3-A]ヘッダ部で定義ファイルをscriptタグで読み込みます。</li>
+                    <li>[3-B]タグのclass属性に、「IM[テーブル名@フィールド名]」などの形式で、どのテーブルのどのフィールド値を取り込むのかを指定します。</li>
+                    <li>[3-C]INTERMediator.construct関数を呼び出す事で、3-Bで指定した内容に応じてタグの値や属性値にデータベースの値が挿入されます。bodyタグのonload属性で指定すれば、ページを表示したときにデータベースの値を取り出してページに設定します。</li>
+                </ul>
+            </section>
+            <section class="clearfix">
+                <h1>データベースの内容を取り込んだページが表示されます</h1>
+                <div class="left-box">
+                    <img src="../images/step4.png" alt="イメージ" title="データベースの内容を取り込んだページが表示されます">
+                </div>
+                <p>Webブラウザでページファイルを開きます。ファイルに記述された設定をもとに自動的にデータベースの内容がページに表示されます。</p>
+                <ul>
+                    <li>[4-A]inputタグにデータベースの値が設定されてます。この値をページ内で変更すれば、データベースに書き戻されます。</li>
+                    <li>[4-B]1対多の関係にあるテーブルが複数の行に展開されています。</li>
+                    <li>[4-C]別のフィールドの値に応じてポップアップメニューの選択肢が違うといった展開も可能です。</li>
+                    <li>[4-D]繰り返されたレコードに対しての削除や、繰り返しレコードを追加するボタンを設けることも可能です。</li>
+                    <li>[4-E]ナビゲーションバーを表示して、次や前のレコードに移動したり、レコードの追加や削除の機能を利用できます。</li>
+                </ul>
+            </section>
+        </article>
+    </div>
+</body>
 </html>
