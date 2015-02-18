@@ -19,6 +19,9 @@ class PageFragments extends DB_UseSharedObjects
     function doAfterGetFromDB($dataSourceName, $result)
     {
         $lang = $this->dbSettings->getCriteriaValue("language");
+        if ($lang !== 'ja') {
+            $lang = 'en';
+        }
         if ($dataSourceName == "pagebuilder") {
             return array(
                 array(
@@ -34,14 +37,26 @@ class PageFragments extends DB_UseSharedObjects
             $dom->recover = true;
             $dom->strictErrorChecking = false;
             libxml_use_internal_errors(true);
-            $dom->loadHTML(mb_convert_encoding(file_get_contents("../{$lang}/news.html"), 'HTML-ENTITIES', 'UTF-8'));
-            $result = $dom->getElementsByTagName("div");
+            $handle = curl_init();
+            curl_setopt($handle, CURLOPT_HEADER, 0);
+            curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
+            if ($lang === 'en') {
+                curl_setopt($handle, CURLOPT_URL, 'http://inter-mediator.com/en/news.html');
+            } else {
+                curl_setopt($handle, CURLOPT_URL, 'http://inter-mediator.com/ja/news.html');
+            }
+            $response = curl_exec($handle);
+            $response = str_replace('<!DOCTYPE html>', '', $response);
+            curl_close($handle);
+            $dom->loadHTML($response);
+            libxml_clear_errors();
+            $result = $dom->getElementsByTagName('li');
             for ($i = 0; $i < $result->length; $i++) {
                 $node = $result->item($i);
                 $newDom = new DOMDocument;
-                if ($node->textContent != "\n" && strpos($node->getAttribute("class"), "top3") !== false) {
+                if ($node->textContent != "\n" && strpos($node->getAttribute('class'), 'top3') !== false) {
                     $newDom->appendChild($newDom->importNode($node, true));
-                    $newsList[] = array("newsitem" => $newDom->saveHTML());
+                    $newsList[] = array('newsitem' => $newDom->saveHTML());
                     $this->resultCount++;
                 }
             }
