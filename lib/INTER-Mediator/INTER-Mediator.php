@@ -1,6 +1,6 @@
 <?php
 /*
-* INTER-Mediator Ver.4.7 Released 2015-01-25
+* INTER-Mediator Ver.5.0 Released 2015-02-20
 *
 *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *
@@ -269,30 +269,6 @@ function getRelativePath()
         . implode('/', array_slice($imDirectory, $i));
     return $relPath;
 }
-
-/**
- * Generate the instance of the message class associated with browser's language.
- * @return object Generated instance of the message class.
- */
-//function getErrorMessageClass()
-//{
-//    $currentDir = dirname(__FILE__);
-//    $lang = getLocaleFromBrowser($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-//    $candClassName = 'MessageStrings_' . $lang;
-//    if (!file_exists($currentDir . DIRECTORY_SEPARATOR . $candClassName . '.php')) {
-//        if (strpos($lang, '_') !== false) {
-//            $lang = substr($lang, 0, strpos($lang, '_'));
-//            $candClassName = 'MessageStrings_' . $lang;
-//            if (!file_exists($currentDir . DIRECTORY_SEPARATOR . $candClassName . '.php')) {
-//                $candClassName = 'MessageStrings';
-//            }
-//        }
-//    }
-//    $c = null;
-//    require_once($candClassName . '.php');
-//    eval("\$c = new {$candClassName}();");
-//    return $c->getMessages();
-//}
 
 /**
  * Set the locale with parameter, for UNIX and Windows OS.

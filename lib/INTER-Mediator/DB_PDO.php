@@ -1,6 +1,6 @@
 <?php
 /*
-* INTER-Mediator Ver.4.7 Released 2015-01-25
+* INTER-Mediator Ver.5.0 Released 2015-02-20
 *
 *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *
@@ -499,11 +499,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
                 }
             }
         }
-
-//        if (isset($tableInfo['authentication'])) {
-//            $this->logger->setDebugMessage("#####".var_export($tableInfo['authentication'],true));
-//        }
-
         $keywordAuth = ($currentOperation == "select") ? "load" : $currentOperation;
         if (isset($tableInfo['authentication'])
             && (isset($tableInfo['authentication']['all']) || isset($tableInfo['authentication'][$keywordAuth]))
@@ -657,7 +652,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         }
 
         $skipParam = 0;
-        if (isset($tableInfo['paging']) and $tableInfo['paging'] == true) {
+        if (isset($tableInfo['paging']) and $tableInfo['paging'] === true) {
             $skipParam = $this->dbSettings->getStart();
         }
         $fields = '*';
@@ -765,10 +760,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             $value = $fieldValues[$counter];
             $counter++;
             $convertedValue = (is_array($value)) ? implode("\n", $value) : $value;
-
-            //    $this->logger->setDebugMessage(" ###### " . "{$tableName}{$this->settings->getSeparator()}{$field}");
             $filedInForm = "{$tableName}{$this->dbSettings->getSeparator()}{$field}";
-
             $convertedValue = $this->formatter->formatterToDB($filedInForm, $convertedValue);
             $setClause[] = "{$field}=?";
             $setParameter[] = $convertedValue;
@@ -1077,10 +1069,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             $this->logger->setDebugMessage("[authSupportStoreChallenge] {$sql}");
             return true;
         }
-//        $sql = "insert {$hashTable} set user_id={$uid},clienthost="
-//            . $this->link->quote($clientId)
-//            . ",hash=" . $this->link->quote($challenge)
-//            . ",expired=" . $this->link->quote($currentDTFormat);
         $sql = "INSERT INTO {$hashTable} (user_id, clienthost, hash, expired) "
             . "VALUES ({$uid},{$this->link->quote($clientId)},"
             . "{$this->link->quote($challenge)},{$this->link->quote($currentDTFormat)})";
@@ -1147,8 +1135,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
      */
     function authSupportRetrieveChallenge($uid, $clientId, $isDelete = true)
     {
-//        $this->logger->setDebugMessage("[authSupportRetrieveChallenge] username={$username}.");
-
         $hashTable = $this->dbSettings->getHashTable();
         if ($hashTable == null) {
             return false;
@@ -1166,9 +1152,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             $this->errorMessageStore('Select:' . $sql);
             return false;
         }
-
-//        $this->logger->setDebugMessage("[authSupportRetrieveChallenge] sql={$sql}.");
-
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $expiredDT = new DateTime($row['expired']);
             $hashValue = $row['hash'];
@@ -1191,7 +1174,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             if ($seconds > $this->dbSettings->getExpiringSeconds()) { // Judge timeout.
                 return false;
             }
-//            $this->logger->setDebugMessage("[authSupportRetrieveChallenge] return={$hashValue}.");
             return $hashValue;
         }
         return false;

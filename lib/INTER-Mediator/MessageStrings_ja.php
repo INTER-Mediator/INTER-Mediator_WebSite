@@ -1,6 +1,6 @@
 <?php
 /*
-* INTER-Mediator Ver.4.7 Released 2015-01-25
+* INTER-Mediator Ver.5.0 Released 2015-02-20
 *
 *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *
@@ -96,5 +96,3 @@ class MessageStrings_ja
         3102 => 'ドラッグしたファイル: ',
     );
 }
-
-?>

@@ -1,6 +1,6 @@
 <?php
 /*
-* INTER-Mediator Ver.4.7 Released 2015-01-25
+* INTER-Mediator Ver.5.0 Released 2015-02-20
 *
 *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *
@@ -876,7 +876,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
                             $oneRecordArray[$portalKey][$field] = $this->formatter->formatterFromDB(
                                 "{$dataSourceName}{$this->dbSettings->getSeparator()}$field", $portalValue);
                         }
-                        if ($existsRelated == false) {
+                        if ($existsRelated === false) {
                             $oneRecordArray = array();
                             $oneRecordArray[0][$this->getDefaultKey()] = $recId; // parent record id
                         }
@@ -904,7 +904,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
                         $returnArray[] = $portalArray;
                     }
                 }
-                if ($existsRelated == false) {
+                if ($existsRelated === false) {
                     $this->mainTableCount = 0;
                 } else {
                     $this->mainTableCount = count($returnArray);
@@ -1582,12 +1582,6 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         return false;
     }
 
-//    function authSupportGetSalt($username)
-//    {
-//        $hashedpw = $this->authSupportRetrieveHashedPassword($username);
-//        return substr($hashedpw, -8);
-//    }
-//
     public function authSupportCreateUser($username, $hashedpassword)
     {
         if ($this->authSupportRetrieveHashedPassword($username) !== false) {
@@ -2000,7 +1994,6 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         }
         $recordSet = array();
         foreach ($result['data'] as $key => $row) {
-        //foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $oneRecord = array();
             foreach ($row as $field => $value) {
                 $oneRecord[$field] = $value[0];
