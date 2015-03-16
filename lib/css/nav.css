@@ -102,7 +102,7 @@
     margin-left: auto;
 }
 .align-right ul {
-    margin-left: -147px; /* 190px - 40px */
+    margin-left: -190px; /* 230px - 40px */
 }
 #fpNavbar > ul > li.mobile-nav.dropdown.align-right > ul > li.dropdown > ul {
     margin-top: 0;
@@ -122,6 +122,9 @@
 /* Dropdown
 --------------------------------------------------------- */
 
+li.dropdown {
+    position: relative;
+}
 .fp-navbar .dropdown > a:after {
     content: '';
     position: absolute;
@@ -175,7 +178,7 @@
 }
 #fpNavbar .dropdown ul {
     height: auto;
-    width: 180px;
+    width: 230px;
     border-radius: 0 0 5px 5px;
 }
 #fpNavbar .dropdown ul li:last-child {
@@ -222,7 +225,7 @@
 #fpNavbar > ul > li.mobile-nav.dropdown.align-right > ul > li,
 #fpNavbar > ul > li.mobile-nav.dropdown.align-right > ul > li.dropdown > a,
 #fpNavbar > ul > li.mobile-nav.dropdown.align-right > ul > li.dropdown > ul > li > a {
-    line-height: 35px;
+    line-height: 44px;
 }
 
 /* Responsive
@@ -246,5 +249,14 @@
     #fpNavbar ul li.dropdown a,
     #fpNavbar ul li.dropdown span {
         padding-right: 5px;
+    }
+    #fpNavbar .dropdown ul {
+        width: 190px;
+    }
+    .align-right ul {
+        margin-left: -150px; /* 190px - 40px */
+    }
+    .page-title {
+        padding-bottom: 10px;
     }
 }
