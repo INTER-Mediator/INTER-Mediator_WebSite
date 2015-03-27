@@ -251,6 +251,9 @@ nav li.mobile-nav a:first-child span {
         min-width: 320px;
         padding: 0;
     }
+    .fp-navbar {
+        justify-content: space-around;
+    }
     .pc-nav {
         display: none;
     }
