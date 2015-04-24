@@ -1,0 +1,166 @@
+<?php
+/*
+* INTER-Mediator Ver.5.1-dev Released 2015-04-24
+*
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+*
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+*   INTER-Mediator is supplied under MIT License.
+*/
+
+interface DB_Interface
+{
+    public function getFromDB($dataSourceName);
+    public function countQueryResult($dataSourceName);
+    public function setToDB($dataSourceName);
+    public function newToDB($dataSourceName, $bypassAuth);
+    public function deleteFromDB($dataSourceName);
+    public function getFieldInfo($dataSourceName);
+    public function setupConnection();
+    public static function defaultKey();   // For PHP 5.3 or above
+    public function getDefaultKey();   // For PHP 5.2
+    public function isPossibleOperator($operator);
+    public function isPossibleOrderSpecifier($specifier);
+    public function requireUpdatedRecord($value);
+    public function updatedRecord();
+    public function isContainingFieldName($fname, $fieldnames);
+    public function isNullAcceptable();
+    public function softDeleteActivate($field, $value);
+}
+
+interface DB_Interface_Registering
+{
+    public function isExistRequiredTable();
+    public function queriedEntity();
+    public function queriedCondition();
+    public function queriedPrimaryKeys();
+    public function register($clientId, $entity, $condition, $pkArray);
+    public function unregister($clientId, $tableKeys);
+    public function matchInRegisterd($clientId, $entity, $pkArray);
+    public function appendIntoRegisterd($clientId, $entity, $pkArray);
+    public function removeFromRegisterd($clientId, $entity, $pkArray);
+}
+
+
+interface Auth_Interface_DB					// with using table for authentication/authorization
+{
+    function authSupportStoreChallenge($uid, $challenge, $clientId);	// issuedhash
+    function authSupportRemoveOutdatedChallenges();							// issuedhash
+    function authSupportRetrieveChallenge($uid, $clientId, $isDelete = true);	// issuedhash
+    function authSupportCheckMediaToken($uid);								// issuedhash
+    function authSupportRetrieveHashedPassword($username);					// authuser
+    function authSupportCreateUser($username, $hashedpassword);				// authuser
+    function authSupportChangePassword($username, $hashednewpassword);		// authuser
+    function authSupportCheckMediaPrivilege($tableName, $userField, $user, $keyField, $keyValue);	// (any table)
+    function authSupportGetUserIdFromEmail($email);							// authuser
+    function authSupportGetUserIdFromUsername($username);					// authuser
+    function authSupportGetUsernameFromUserId($userid);						// authuser
+    function authSupportGetGroupNameFromGroupId($groupid);					// authgroup
+    function authSupportGetGroupsOfUser($user);								// authcor
+    function authSupportUnifyUsernameAndEmail($username);					// authuser
+    function authSupportStoreIssuedHashForResetPassword($userid, $clienthost, $hash);	// issuedhash
+    function authSupportCheckIssuedHashForResetPassword($userid, $randdata, $hash);		// issuedhash
+}
+
+interface Auth_Interface_Communication
+{
+    // The followings are used in DB_Proxy::processingRequest.
+    function generateClientId($prefix);
+    function generateChallenge();
+    function saveChallenge($username, $challenge, $clientId);
+    function checkAuthorization($username, $hashedvalue, $clientId);
+    function checkChallenge($challenge, $clientId);
+    function checkMediaToken($user, $token);
+    function addUser($username, $password);
+    function authSupportGetSalt($username);
+    function generateSalt();    // Use inside addUser
+    function changePassword($username, $newpassword);
+}
+
+interface Auth_Interface_CommonDB
+{
+    function getFieldForAuthorization($operation);
+    function getTargetForAuthorization($operation);
+    function getAuthorizedUsers($operation = null);
+    function getAuthorizedGroups($operation = null);
+}
+
+/**
+ * Interface for DB_Proxy
+ */
+interface DB_Proxy_Interface extends DB_Interface, Auth_Interface_Communication {
+    function initialize($datasource, $options, $dbspec, $debug, $target = null);
+    function processingRequest($options, $access = null);
+    function finishCommunication();
+}
+
+/**
+ * Interface for DB_PDO, DB_FileMaker_FX
+ */
+interface DB_Access_Interface extends DB_Interface, Auth_Interface_DB {}
+
+interface Extending_Interface_BeforeGet
+{
+    function doBeforeGetFromDB($dataSourceName);
+}
+interface Extending_Interface_AfterGet
+{
+    function doAfterGetFromDB($dataSourceName, $result);
+}
+interface Extending_Interface_AfterGet_WithNavigation
+{
+    function doAfterGetFromDB($dataSourceName, $result);
+    function countQueryResult($dataSourceName);
+}
+interface Extending_Interface_BeforeSet
+{
+    function doBeforeSetToDB($dataSourceName);
+}
+interface Extending_Interface_AfterSet
+{
+    function doAfterSetToDB($dataSourceName, $result);
+}
+interface Extending_Interface_BeforeNew
+{
+    function doBeforeNewToDB($dataSourceName);
+}
+interface Extending_Interface_AfterNew
+{
+    function doAfterNewToDB($dataSourceName, $result);
+}
+interface Extending_Interface_BeforeDelete
+{
+    function doBeforeDeleteFromDB($dataSourceName);
+}
+interface Extending_Interface_AfterDelete
+{
+    function doAfterDeleteFromDB($dataSourceName, $result);
+}
+
+interface DB_Interface_Previous
+{
+    // Data Access Object pattern.
+    /**
+     * @param $dataSourceName
+     * @return
+     */
+    function getFromDB($dataSourceName);
+
+    /**
+     * @param $dataSourceName
+     * @return
+     */
+    function setToDB($dataSourceName);
+
+    /**
+     * @param $dataSourceName
+     * @return
+     */
+    function newToDB($dataSourceName);
+
+    /**
+     * @param $dataSourceName
+     * @return
+     */
+    function deleteFromDB($dataSourceName);
+}
