@@ -2,7 +2,12 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <link href="../default.css" rel="stylesheet" media="screen"/>
+    <link rel="shortcut icon" href="im-icon.png" type="image/png"/>
+    <link rel="icon" href="im-icon.png" type="image/png"/>
+    <title>INTER-Mediator勉強会2015-#2：アンケート</title>
+    <script type="text/javascript" src="survey.php"></script>
     <style>
     .exp {
 	    margin: 0;
@@ -17,15 +22,18 @@
     }
     TEXTAREA	{
 	    width: 95%;
-	    height: 200px;
+	    height: 120px;
+    }
+    P	{
+	    margin-left: 12px;
     }
     </style>
 </head>
-<body>
+<body onload="INTERMediator.construct(true);">
 <h1>INTER-Mediator勉強会2015-#2：アンケート</h1>
 <div data-im-control="postonly">
 <p>2015/4/11に新大阪で行われたハンズオン主体の勉強会参加者向けに、事後のアンケートを取らせていただきます。ご協力のほど、よろしくお願いします。</p>
-<div style="background-color: red; color: white; font-size: 135%">現在、アンケートを作成中です。アンケート項目の確認用にページを公開しますが、アンケートに答えていただいても残すことはできません。アンケートができるようになればおしらせしますので、それまでしばらくお待ち下さい。</div>
+<!-- <div style="background-color: red; color: white; font-size: 135%">現在、アンケートを作成中です。アンケート項目の確認用にページを公開しますが、アンケートに答えていただいても残すことはできません。アンケートができるようになればおしらせしますので、それまでしばらくお待ち下さい。</div> -->
 <p>お名前：<input type="text" data-im="survey@name"/><span class="exp">本名でなくてもかまいません。投稿の識別のために、何か入力をお願いします。</span></p>
 <h2>受講者プロフィール</h2>
 <p><span class="qnum">1</span>FileMakerに対するスキル：
@@ -109,9 +117,11 @@
 <p><span class="qnum">16</span>INTER-Mediatorを利用したWebページ作成の方法で理解できなかったことはなんですか：<br><textarea data-im="survey@Q16"></textarea></p>
 <p><span class="qnum">17</span>勉強会の前に知りたかったことは何でしょうか：<br><textarea data-im="survey@Q17"></textarea></p>
 <p><span class="qnum">18</span>勉強会に参加したことで生じた疑問は何でしょうか：<br><textarea data-im="survey@Q18"></textarea></p>
+<p><span class="qnum">19</span>INTER-Mediatorを利用して作成してみたいアプリケーション、あるいは作成する予定のアプリケーションはありますか？：<br><textarea data-im="survey@Q19"></textarea></p>
 <h2>自由記述欄</h2>
-<p><span class="qnum">19</span>アンケートで聞かれていないことで、フィードバックがありましたら、お書きください：<br><textarea data-im="survey@Q19"></textarea></p>
+<p><span class="qnum">20</span>アンケートで聞かれていないことで、フィードバックがありましたら、お書きください：<br><textarea data-im="survey@Q20"></textarea></p>
 <p>ありがとうございました！</p>
+<p><button data-im-control="post">送信する</button></p>
 </div>
 </body>
 </html>
