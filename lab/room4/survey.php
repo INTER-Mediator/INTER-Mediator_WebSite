@@ -16,7 +16,7 @@ IM_Entry(
             'post-dismiss-message' => 'ありがとうございました',
             'validation' => array(
                 array(
-                    'field' => 'Q1',
+                    'field' => 'name',
                     'rule' => "value != ''",
                     'message' => '何か入力してください',
                     'notify' => 'inline'
