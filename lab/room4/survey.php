@@ -12,6 +12,7 @@ IM_Entry(
         array(
             'name' => 'survey',
             'key' => 'id',
+            'post-reconstruct' => true,
             'post-dismiss-message' => 'ありがとうございました',
             'validation' => array(
                 array(
