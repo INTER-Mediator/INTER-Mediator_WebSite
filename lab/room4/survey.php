@@ -10,8 +10,7 @@ require_once('INTER-Mediator/INTER-Mediator.php');
 IM_Entry(
     array(
         array(
-            'name' => 'surveyinput',
-            'table' => 'survey',
+            'name' => 'survey',
             'key' => 'id',
             'post-dismiss-message' => 'ありがとうございました',
             'validation' => array(
@@ -26,6 +25,7 @@ IM_Entry(
         array(
             'name' => 'surveylist',
             'view' => 'survey',
+            'table' => 'survey',
             'key' => 'id',
             'records' => 10,
             'maxrecords' => 10,
