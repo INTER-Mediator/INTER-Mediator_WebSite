@@ -30,9 +30,7 @@ IM_Entry(
             'records' => 10,
             'maxrecords' => 10,
             'paging' => true,
-            'sort' => array(
-                array('field'=>'Q2', 'direction' => 'DESC')
-            ),
+            'repeat-control' => 'confirm-delete',
             'query' => array(
                 //      array('field' => 'Q2', 'operator'=>'>', 'value' => '43')
             )
