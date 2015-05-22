@@ -1,7 +1,7 @@
 <?php
 
 /*
-* INTER-Mediator Ver.5.0 Released 2015-02-20
+* INTER-Mediator Ver.5.1 Released 2015-05-22
 *
 *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *

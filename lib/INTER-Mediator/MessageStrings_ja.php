@@ -1,34 +1,20 @@
 <?php
-/*
-* INTER-Mediator Ver.5.0 Released 2015-02-20
-*
-*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
-*
-*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
-*   INTER-Mediator is supplied under MIT License.
-*/
+/**
+ * INTER-Mediator Ver.5.1 Released 2015-05-22
+ *
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
+ *
+ * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
 
-
-class MessageStrings_ja
+class MessageStrings_ja extends MessageStrings
 {
 
-    function getMessages()
-    {
-        return $this->messages;
-    }
-
-    function getMessageAs($num, $appending)
-    {
-        $msg = $this->messages[$num];
-        $index = 1;
-        foreach ($appending as $keyword)    {
-            $msg = str_replace("@{$index}@", $keyword, $msg);
-            $index++;
-        }
-        return $msg;
-    }
-
-    private $messages = array(
+    public $messages = array(
         1 => 'レコード番号',
         2 => '更新',
         3 => 'レコード追加',
@@ -81,6 +67,7 @@ class MessageStrings_ja
         1037 => "循環参照を検出しました。",
         1038 => "Pusherの利用に関して、サーバー側の設定は行われていますが、クライアントライブラリの読み込みが行われていません。",
         1039 => "Pusherの利用に関して、クライアントライブラリは読み込まれていますが、サーバー側の設定は行われていません。",
+        1040 => "コンテキスト「@1@」のフィールド「@２@」はテーブルには存在しません。",
         2001 => '認証エラー!',
         2002 => 'ユーザ名:',
         2003 => 'パスワード:',

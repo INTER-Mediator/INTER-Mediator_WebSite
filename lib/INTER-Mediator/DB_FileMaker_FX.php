@@ -1,24 +1,15 @@
 <?php
-/*
-* INTER-Mediator Ver.5.0 Released 2015-02-20
-*
-*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
-*
-*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
-*   INTER-Mediator is supplied under MIT License.
-*/
-
-$currentEr = error_reporting();
-error_reporting(0);
-require_once('lib/FX/FX.php');
-require_once('lib/FX/datasource_classes/RetrieveFM7Data.class.php');
-if (error_get_last() !== null) {
-// If FX.php isn't installed in valid directories, it shows error message and finishes.
-    echo 'INTER-Mediator Error: Data Access Class "FileMaker_FX" requires FX.php on any right directory.';
-    var_dump(error_get_last());
-    return;
-}
-error_reporting($currentEr);
+/**
+ * INTER-Mediator Ver.5.1 Released 2015-05-22
+ *
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
+ *
+ * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
 
 class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
 {
@@ -348,16 +339,32 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
 
     private function setupFX_Impl($layoutName, $recordCount, $user, $password)
     {
-        $fx = new FX(
+        $fxPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'FX';
+        $fxFiles = array(
+            'FX.php',
+            'datasource_classes' . DIRECTORY_SEPARATOR . 'RetrieveFM7Data.class.php',
+        );
+        foreach ($fxFiles as $fxFile) {
+            $path = $fxPath . DIRECTORY_SEPARATOR . $fxFile;
+            if (is_file($path) && is_readable($path)) {
+                require_once($path);
+            } else {
+                // If FX.php isn't installed in valid directories, it shows error message and finishes.
+                throw new Exception('Data Access Class "FileMaker_FX" of INTER-Mediator requires ' . 
+                    basename($fxFile) . ' on any right directory.');
+            }
+        }
+
+        $fxObj = new FX(
             $this->dbSettings->getDbSpecServer(),
             $this->dbSettings->getDbSpecPort(),
             $this->dbSettings->getDbSpecDataType(),
             $this->dbSettings->getDbSpecProtocol()
         );
-        $fx->setCharacterEncoding('UTF-8');
-        $fx->setDBUserPass($user, $password);
-        $fx->setDBData($this->dbSettings->getDbSpecDatabase(), $layoutName, $recordCount);
-        return $fx;
+        $fxObj->setCharacterEncoding('UTF-8');
+        $fxObj->setDBUserPass($user, $password);
+        $fxObj->setDBData($this->dbSettings->getDbSpecDatabase(), $layoutName, $recordCount);
+        return $fxObj;
     }
 
     private function stringWithoutCredential($str)
@@ -783,30 +790,32 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
                                         $relatedset['@attributes']['table'] . '::-recid' => $relatedrecord['@attributes']['record-id']
                                     );
                                     $multiFields = true;
-                                    foreach ($relatedrecord['field'] as $relatedfield) {
-                                        if (!isset($relatedfield['@attributes'])) {
-                                            $relatedfield = $relatedrecord['field'];
-                                            $multiFields = false;
-                                        }
-                                        $relatedFieldName = $relatedfield['@attributes']['name'];
-                                        $relatedFieldValue = '';
-                                        if (isset($relatedfield['data']) && !is_null($relatedfield['data'])) {
-                                            $relatedFieldValue = $this->formatter->formatterFromDB(
-                                                "{$dataSourceName}{$this->dbSettings->getSeparator()}{$relatedFieldName}", 
-                                                $relatedfield['data']
+                                    if ($relatedrecord['field']) {
+                                        foreach ($relatedrecord['field'] as $relatedfield) {
+                                            if (!isset($relatedfield['@attributes'])) {
+                                                $relatedfield = $relatedrecord['field'];
+                                                $multiFields = false;
+                                            }
+                                            $relatedFieldName = $relatedfield['@attributes']['name'];
+                                            $relatedFieldValue = '';
+                                            if (isset($relatedfield['data']) && !is_null($relatedfield['data'])) {
+                                                $relatedFieldValue = $this->formatter->formatterFromDB(
+                                                    "{$dataSourceName}{$this->dbSettings->getSeparator()}{$relatedFieldName}",
+                                                    $relatedfield['data']
+                                                );
+                                            }
+                                            $relatedArray += array(
+                                                $relatedFieldName => $relatedFieldValue
                                             );
+                                            if ($multiFields === false) {
+                                                break;
+                                            }
                                         }
-                                        $relatedArray += array(
-                                            $relatedFieldName => $relatedFieldValue
-                                        );
-                                        if ($multiFields === false) {
-                                            break;
+                                        if (isset($relatedsetArray[$j]) && !is_null($relatedsetArray[$j])) {
+                                            $relatedsetArray[$j] += $relatedArray;
+                                        } else {
+                                            $relatedsetArray[$j] = $relatedArray;
                                         }
-                                    }
-                                    if (isset($relatedsetArray[$j]) && !is_null($relatedsetArray[$j])) {
-                                        $relatedsetArray[$j] += $relatedArray;
-                                    } else {
-                                        $relatedsetArray[$j] = $relatedArray;
                                     }
                                     $j++;
                                 }

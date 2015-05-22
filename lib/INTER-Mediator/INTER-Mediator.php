@@ -1,12 +1,15 @@
 <?php
-/*
-* INTER-Mediator Ver.5.0 Released 2015-02-20
-*
-*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
-*
-*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
-*   INTER-Mediator is supplied under MIT License.
-*/
+/**
+ * INTER-Mediator Ver.5.1 Released 2015-05-22
+ *
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
+ *
+ * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
 
 if (function_exists('mb_internal_encoding')) {
     mb_internal_encoding('UTF-8');
@@ -114,10 +117,12 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
     } else {
         $dbInstance = new DB_Proxy();
         $dbInstance->initialize($datasource, $options, $dbspecification, $debug);
-        $dbInstance->processingRequest($options);
-        $dbInstance->finishCommunication(false);
-        if ($_SERVER['HTTP_X_REQUESTED_WITH'] !== 'XMLHttpRequest') {
-            die(json_encode(array('stat' => "Invalid Request Error.")));
+        if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+            $dbInstance->processingRequest($options);
+            $dbInstance->finishCommunication(false);
+        } else {
+            $dbInstance->addOutputData('debugMessages', 'Invalid Request Error.');
+            $dbInstance->addOutputData('errorMessages', array('Invalid Request Error.'));
         }
         $dbInstance->exportOutputDataAsJSON();
     }
@@ -130,7 +135,8 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
  */
 function loadClass($className)
 {
-    if ((include_once $className . '.php') === false) {
+    if (strpos($className, 'PHPUnit_') === false &&
+        (include_once $className . '.php') === false) {
         $errorGenerator = new GenerateJSCode();
         if (strpos($className, "MessageStrings_") !== 0) {
             $errorGenerator->generateErrorMessageJS("The class '{$className}' is not defined.");
