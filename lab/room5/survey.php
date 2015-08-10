@@ -33,7 +33,7 @@ IM_Entry(
             'paging' => true,
             'repeat-control' => 'confirm-delete',
             'query' => array(
-                //      array('field' => 'Q2', 'operator'=>'>', 'value' => '43')
+                array('field' => 'Q30', 'operator'=>'=', 'value' => 'A')
             )
         ),
     ),
