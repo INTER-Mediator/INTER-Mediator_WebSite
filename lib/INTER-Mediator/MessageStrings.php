@@ -1,6 +1,6 @@
 <?php
 /**
- * INTER-Mediator Ver.5.2 Released 2015-08-24
+ * INTER-Mediator Ver.5.1 Released 2015-05-22
  *
  *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
  *
@@ -44,8 +44,6 @@ class MessageStrings
         11 => "",
         12 => 'Detail',
         13 => 'Show List',
-        14 => 'Copy',
-        15 => 'Copy Record',
         1001 => "Other people might be updated.\n\nInitially=@1@\nCurrent=@2@\nDatabase=@3@\n\nYou can overwrite with your data if you select OK.",
         1002 => "Can't determine the Table Name: @1@",
         1003 => "No information to update: field=@1@",
@@ -86,7 +84,6 @@ class MessageStrings
         1038 => "Preparing the Pusher, although the settings in the server side is available, the client library isn't included.",
         1039 => "Preparing the Pusher, although the client library is included, the settings in the server side is not available.",
         1040 => "The field '@2@' in the context '@1@' does not exist in the table.",
-        1041 => "Are you sure to copy this record?",
         2001 => 'Authentication Error!',
         2002 => 'User:',
         2003 => 'Password:',
@@ -98,8 +95,6 @@ class MessageStrings
         2009 => 'Succeed to change your password. Login with the new password.',
         2010 => 'Failure to change your password. Maybe the old password is not correct.',
         2011 => 'User(Mail Assress):',
-        2012 => 'Retry to login. You should clarify the user and the password.',
-        2013 => 'You should input user and/or password.',
         3101 => 'Drag Here.',
         3102 => 'Dragged File: ',
     );

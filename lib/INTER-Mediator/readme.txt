@@ -32,4 +32,3 @@ Thanks for nice works.
 
 * tiny-sha1 (https://code.google.com/p/tiny-sha1/)
 
-==========================================

@@ -1,6 +1,6 @@
 <?php
 /*
-* INTER-Mediator Ver.5.2 Released 2015-08-24
+* INTER-Mediator Ver.5.1 Released 2015-05-22
 *
 *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *
@@ -53,7 +53,7 @@ class DB_TextFile extends DB_AuthCommon implements DB_Access_Interface
             $sortArray = $this->getSortClause();
             $sortKey = isset($sortArray[0]) ? $sortArray[0]["field"] : null;
             $sortDirection = isset($sortArray[0]) ? $sortArray[0]["direction"] : null;
-            $queryArray = $this->getWhereClause('read');
+            $queryArray = $this->getWhereClause('load');
 
             $crlfPosition = strpos($fileContent, "\r\n");
             $crlfPosition = $crlfPosition === false ? 999999 : $crlfPosition;
@@ -249,7 +249,7 @@ class DB_TextFile extends DB_AuthCommon implements DB_Access_Interface
         // TODO: Implement authSupportRetrieveHashedPassword() method.
     }
 
-    function authSupportCreateUser($username, $hashedpassword, $isLDAP = false, $ldapPassword = null)
+    function authSupportCreateUser($username, $hashedpassword)
     {
         // TODO: Implement authSupportCreateUser() method.
     }
@@ -361,15 +361,5 @@ class DB_TextFile extends DB_AuthCommon implements DB_Access_Interface
     public function newToDB($dataSourceName, $bypassAuth)
     {
         // TODO: Implement newToDB() method.
-    }
-
-    public function softDeleteActivate($field, $value)
-    {
-        // TODO: Implement softDeleteActivate() method.
-    }
-
-    public function copyInDB($dataSourceName)
-    {
-        // TODO: Implement copyInDB() method.
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * INTER-Mediator Ver.5.2 Released 2015-08-24
+ * INTER-Mediator Ver.5.1 Released 2015-05-22
  *
  *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
  *
@@ -74,9 +74,7 @@ class FileUploader
         foreach ($_FILES as $fn => $fileInfo) {
         }
 
-        $util = new IMUtil();
-        $filePathInfo = pathinfo($util->removeNull(basename($fileInfo['name'])));
-
+        $filePathInfo = pathinfo(str_replace('\0', '', basename($fileInfo['name'])));
         if ($useContainer === FALSE) {
             $fileRoot = $options['media-root-dir'];
             if (substr($fileRoot, strlen($fileRoot) - 1, 1) != '/') {
@@ -123,7 +121,7 @@ class FileUploader
                 $filePath = $tmpDir . DIRECTORY_SEPARATOR . $fileName;
             }
         }
-        $result = move_uploaded_file($util->removeNull($fileInfo['tmp_name']), $filePath);
+        $result = move_uploaded_file($fileInfo['tmp_name'], $filePath);
         if (!$result) {
             if (isset($_POST["_im_redirect"])) {
                 header("Location: {$_POST["_im_redirect"]}");
@@ -212,7 +210,7 @@ class FileUploader
                         $values[] = $filePartialPath;
                         $relatedContext->dbSettings->setTargetFields($fields);
                         $relatedContext->dbSettings->setValue($values);
-                        $relatedContext->processingRequest($options, "create", true);
+                        $relatedContext->processingRequest($options, "new", true);
                     //    $relatedContext->finishCommunication(true);
                     //    $relatedContext->exportOutputDataAsJSON();
                     }

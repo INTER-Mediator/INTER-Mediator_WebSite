@@ -1,7 +1,6 @@
 <?php
-
 /*
-* INTER-Mediator Ver.5.2 Released 2015-08-24
+* INTER-Mediator Ver.5.1 Released 2015-05-22
 *
 *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *
@@ -12,57 +11,38 @@
 abstract class DB_AuthCommon extends DB_UseSharedObjects implements Auth_Interface_CommonDB
 {
 
-    private function getOperationSeries($operation)    {
-        $operations = array();
-        if (($operation === 'select') || ($operation === 'load') || ($operation === 'read')) {
-            $operations = array('read', 'select', 'load');
-        } else if (($operation === 'update') || ($operation === 'edit')) {
-            $operations = array('update', 'edit');
-        } else if (($operation === 'create') || ($operation === 'new')) {
-            $operations = array('create', 'new');
-        } else if ($operation === 'delete') {
-            $operations = array('delete');
-        }
-        return $operations;
-    }
-
     function getFieldForAuthorization($operation)
     {
-        $operations = $this->getOperationSeries($operation);
+        $operation = ($operation == 'select') ? 'load' : $operation;
+
         $tableInfo = $this->dbSettings->getDataSourceTargetArray();
         $authInfoField = null;
         if (isset($tableInfo['authentication']['all']['field'])) {
             $authInfoField = $tableInfo['authentication']['all']['field'];
         }
-        foreach ($operations as $op) {
-            if (isset($tableInfo['authentication'][$op]['field'])) {
-                $authInfoField = $tableInfo['authentication'][$op]['field'];
-                break;
-            }
+        if (isset($tableInfo['authentication'][$operation]['field'])) {
+            $authInfoField = $tableInfo['authentication'][$operation]['field'];
         }
         return $authInfoField;
     }
 
     function getTargetForAuthorization($operation)
     {
-        $operations = $this->getOperationSeries($operation);
         $tableInfo = $this->dbSettings->getDataSourceTargetArray();
         $authInfoTarget = null;
         if (isset($tableInfo['authentication']['all']['target'])) {
             $authInfoTarget = $tableInfo['authentication']['all']['target'];
         }
-        foreach ($operations as $op) {
-            if (isset($tableInfo['authentication'][$op]['field'])) {
-                $authInfoTarget = $tableInfo['authentication'][$op]['field'];
-                break;
-            }
+        if (isset($tableInfo['authentication'][$operation]['target'])) {
+            $authInfoTarget = $tableInfo['authentication'][$operation]['target'];
         }
         return $authInfoTarget;
     }
 
     function getAuthorizedUsers($operation = null)
     {
-        $operations = $this->getOperationSeries($operation);
+        $operation = ($operation == 'select') ? 'load' : $operation;
+
         $tableInfo = $this->dbSettings->getDataSourceTargetArray();
         $usersArray = array();
         if ($this->dbSettings->getAuthenticationItem('user')) {
@@ -71,18 +51,16 @@ abstract class DB_AuthCommon extends DB_UseSharedObjects implements Auth_Interfa
         if (isset($tableInfo['authentication']['all']['user'])) {
             $usersArray = array_merge($usersArray, $tableInfo['authentication']['all']['user']);
         }
-        foreach ($operations as $op) {
-            if (isset($tableInfo['authentication'][$op]['user'])) {
-                $usersArray = array_merge($usersArray, $tableInfo['authentication'][$op]['user']);
-                break;
-            }
+        if (isset($tableInfo['authentication'][$operation]['user'])) {
+            $usersArray = array_merge($usersArray, $tableInfo['authentication'][$operation]['user']);
         }
         return $usersArray;
     }
 
     function getAuthorizedGroups($operation = null)
     {
-        $operations = $this->getOperationSeries($operation);
+        $operation = ($operation == 'select') ? 'load' : $operation;
+
         $tableInfo = $this->dbSettings->getDataSourceTargetArray();
         $groupsArray = array();
         if ($this->dbSettings->getAuthenticationItem('group')) {
@@ -91,11 +69,8 @@ abstract class DB_AuthCommon extends DB_UseSharedObjects implements Auth_Interfa
         if (isset($tableInfo['authentication']['all']['group'])) {
             $groupsArray = array_merge($groupsArray, $tableInfo['authentication']['all']['group']);
         }
-        foreach ($operations as $op) {
-            if (isset($tableInfo['authentication'][$op]['group'])) {
-                $groupsArray = array_merge($groupsArray, $tableInfo['authentication'][$op]['group']);
-                break;
-            }
+        if (isset($tableInfo['authentication'][$operation]['group'])) {
+            $groupsArray = array_merge($groupsArray, $tableInfo['authentication'][$operation]['group']);
         }
         return $groupsArray;
     }

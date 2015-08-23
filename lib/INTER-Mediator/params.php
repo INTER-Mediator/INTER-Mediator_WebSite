@@ -1,15 +1,12 @@
 <?php
-/**
- * INTER-Mediator Ver.5.2 Released 2015-08-24
- *
- *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
- *
- *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
- *   INTER-Mediator is supplied under MIT License.
- *
- * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
+/*
+* INTER-Mediator Ver.5.1 Released 2015-05-22
+*
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+*
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+*   INTER-Mediator is supplied under MIT License.
+*/
 
 /*
  * common settings for DB_FileMaker_FX and DB_PDO:
@@ -34,19 +31,18 @@ $dbOption = array();
 /* Browser Compatibility Check:
  */
 $browserCompatibility = array(
-    'Edge' => '12+',
-    // Edge/12.0(Microsoft Edge 20)
+    'Chrome' => '1+',
+    'FireFox' => '2+',
+    'msie' => '8+',
+    'Opera' => '1+',
+    'Safari' => '4+',
+//    'Safari'=>array('Mac'=>'4+','Win'=>'4+'), // Sample for dividing with OS
     'Trident' => '4+',
     // Trident/4.0(Internet Explorer 8)
     // Trident/5.0(Internet Explorer 9)
     // Trident/6.0(Internet Explorer 10)
     // Trident/7.0(Internet Explorer 11)
     // Before IE 7, 'Trident' token doesn't exist.
-    'Chrome' => '1+',
-    'Firefox' => '2+',
-    'Safari' => '4+',
-    //'Safari'=>array('Mac'=>'4+','Win'=>'4+'), // Sample for dividing with OS
-    'Opera' => '1+',
 );
 /*
  * The list of User Agents, it's a wonderful site!
@@ -55,6 +51,10 @@ $browserCompatibility = array(
 
 /* This statement set debug to false forcely. */
 $prohibitDebugMode = false;
+$prohibitSetCondition = true;
+$prohibitSetOrder = true;
+$prohibitSetWriteCriticalFields = true;
+//$prohibitIgnoreCondition = true;
 
 /*
 Command to generate the following RSA key:
@@ -117,11 +117,3 @@ $pusherParameters = array(
     'secret' => '',
 );
 */
-
-/* LDAP Support */
-// $ldapServer = "ldap://homeserver.msyk.net";
-// $ldapPort = 389;
-// $ldapBase = "dc=homeserver,dc=msyk,dc=net";
-// $ldapContainer = "cn=users";
-// $ldapAccountKey = "uid";
-//$ldapExpiringSeconds = 1800;

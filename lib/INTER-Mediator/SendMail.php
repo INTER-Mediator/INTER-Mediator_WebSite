@@ -1,6 +1,6 @@
 <?php
 /*
-* INTER-Mediator Ver.5.2 Released 2015-08-24
+* INTER-Mediator Ver.5.1 Released 2015-05-22
 *
 *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *
@@ -49,37 +49,19 @@ class SendMail
         }
 
         if (isset($sendMailParam['to-constant'])) {
-            $items = explode(",", $sendMailParam['to-constant']);
-            foreach($items as $item) {
-                $ome->appendToField(trim($item));
-            }
+            $ome->setToField($sendMailParam['to-constant']);
         } else if (isset($result[0]) && isset($sendMailParam['to']) && isset($result[0][$sendMailParam['to']])) {
-            $items = explode(",", $result[0][$sendMailParam['to']]);
-            foreach($items as $item) {
-                $ome->appendToField(trim($item));
-            }
+            $ome->setToField($result[0][$sendMailParam['to']]);
         }
         if (isset($sendMailParam['cc-constant'])) {
-            $items = explode(",", $sendMailParam['cc-constant']);
-            foreach($items as $item) {
-                $ome->appendCcField(trim($item));
-            }
+            $ome->setToField($sendMailParam['cc-constant']);
         } else if (isset($result[0]) && isset($sendMailParam['cc']) && isset($result[0][$sendMailParam['cc']])) {
-            $items = explode(",", $result[0][$sendMailParam['cc']]);
-            foreach($items as $item) {
-                $ome->appendCcField(trim($item));
-            }
+            $ome->setCcField($result[0][$sendMailParam['cc']]);
         }
         if (isset($sendMailParam['bcc-constant'])) {
-            $items = explode(",", $sendMailParam['bcc-constant']);
-            foreach($items as $item) {
-                $ome->appendBccField(trim($item));
-            }
+            $ome->setToField($sendMailParam['bcc-constant']);
         } else if (isset($result[0]) && isset($sendMailParam['bcc']) && isset($result[0][$sendMailParam['bcc']])) {
-            $items = explode(",", $result[0][$sendMailParam['bcc']]);
-            foreach($items as $item) {
-                $ome->appendBccField(trim($item));
-            }
+            $ome->setBccField($result[0][$sendMailParam['bcc']]);
         }
         if (isset($sendMailParam['from-constant'])) {
             $ome->setFromField($sendMailParam['from-constant']);

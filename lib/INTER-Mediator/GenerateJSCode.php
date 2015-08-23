@@ -1,7 +1,6 @@
 <?php
-
 /**
- * INTER-Mediator Ver.5.2 Released 2015-08-24
+ * INTER-Mediator Ver.5.1 Released 2015-05-22
  *
  *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
  *
@@ -11,6 +10,7 @@
  * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 class GenerateJSCode
 {
     public function __construct()
@@ -123,18 +123,13 @@ class GenerateJSCode
             $pathToMySelf = $callURL;
         } else if (isset($scriptPathPrefix) || isset($scriptPathSuffix)) {
             $pathToMySelf = (isset($scriptPathPrefix) ? $scriptPathPrefix : '')
-                . filter_input(INPUT_SERVER, 'SCRIPT_NAME')
-                . (isset($scriptPathSufix) ? $scriptPathSuffix : '');
+                . $_SERVER['SCRIPT_NAME'] . (isset($scriptPathSufix) ? $scriptPathSuffix : '');
         } else {
-            $pathToMySelf = filter_input(INPUT_SERVER, 'SCRIPT_NAME');
+            $pathToMySelf = $_SERVER['SCRIPT_NAME'];
         }
-
-        $pathToIMRootDir = mb_ereg_replace("^" . filter_input(INPUT_SERVER, 'DOCUMENT_ROOT'), "", (dirname(__FILE__)));
 
         $this->generateAssignJS(
             "INTERMediatorOnPage.getEntryPath", "function(){return {$q}{$pathToMySelf}{$q};}");
-        $this->generateAssignJS(
-            "INTERMediatorOnPage.getIMRootPath", "function(){return {$q}{$pathToIMRootDir}{$q};}");
         $this->generateAssignJS(
             "INTERMediatorOnPage.getDataSources", "function(){return ",
             arrayToJSExcluding($datasource, '', array('password')), ";}");
@@ -161,9 +156,6 @@ class GenerateJSCode
                 $langCountry = explode(';', $oneLanguage);
                 if (strlen($langCountry[0]) > 0) {
                     $clientLang = explode('-', $langCountry[0]);
-                    if ($clientLang[0] === 'en') {
-                        break;
-                    }
                     $messageClass = "MessageStrings_$clientLang[0]";
                     if (file_exists("$currentDir$messageClass.php")) {
                         $messageClass = new $messageClass();
@@ -183,21 +175,11 @@ class GenerateJSCode
         if (isset($options['browser-compatibility'])) {
             $browserCompatibility = $options['browser-compatibility'];
         }
-        foreach ($browserCompatibility as $browser => $browserInfo) {
-            if (strtolower($browser) !== $browser) {
-                $browserCompatibility[strtolower($browser)] = $browserCompatibility[$browser];
-                unset($browserCompatibility[$browser]);
-            }
-        }
         $this->generateAssignJS(
             "INTERMediatorOnPage.browserCompatibility",
             "function(){return ", arrayToJS($browserCompatibility, ''), ";}");
 
-        $remoteAddr = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
-        if (is_null($remoteAddr) || $remoteAddr === FALSE) {
-            $remoteAddr = '0.0.0.0';
-        }
-        $clientIdSeed = time() + $remoteAddr + mt_rand();
+        $clientIdSeed = time() + $_SERVER['REMOTE_ADDR'] + mt_rand();
         $randomSecret = mt_rand();
         $clientId = hash_hmac('sha256', $clientIdSeed, $randomSecret);
 
@@ -246,18 +228,14 @@ class GenerateJSCode
         $this->generateAssignJS(
             "INTERMediatorOnPage.authRequiredContext", arrayToJS($requireAuthenticationContext, ''));
 
-        $ldap = new LDAPAuth(); // for PHP 5.2, 5.3
-        $this->generateAssignJS(
-            "INTERMediatorOnPage.isLDAP", $ldap->isActive ? "true" : "false");
         $this->generateAssignJS(
             "INTERMediatorOnPage.isNativeAuth",
-            (isset($options['authentication'])
-                    && isset($options['authentication']['user'])
-                    && ($options['authentication']['user'][0] === 'database_native')) ? "true" : "false");
+            (isset($options['authentication']) && isset($options['authentication']['user'])
+                && ($options['authentication']['user'][0] === 'database_native')) ? "true" : "false");
         $this->generateAssignJS(
             "INTERMediatorOnPage.authStoring",
             $q, (isset($options['authentication']) && isset($options['authentication']['storing'])) ?
-            $options['authentication']['storing'] : 'cookie', $q);
+                $options['authentication']['storing'] : 'cookie', $q);
         $this->generateAssignJS(
             "INTERMediatorOnPage.authExpired",
             (isset($options['authentication']) && isset($options['authentication']['authexpired'])) ?

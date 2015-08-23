@@ -1,6 +1,6 @@
 <?php
 /*
-* INTER-Mediator Ver.5.2 Released 2015-08-24
+* INTER-Mediator Ver.5.1 Released 2015-05-22
 *
 *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *
@@ -110,27 +110,14 @@ class DefinitionChecker
                 $closeParen = strpos(')', $endPoint);
                 $possibleString = substr($endPoint, $openParen + 1, $closeParen - $openParen - 1);
                 $possibleValues = explode("|", $possibleString);
-                $possibleWilds = array();
-                foreach ($possibleString as $str)   {
-                    if (strpos($str, '*') !== false)    {
-                        $possibleWilds[] = $str;
-                    }
-                }
                 if (in_array($items, $possibleValues)) {
                     $judge = true;
                 } else {
-                    foreach ($possibleWilds as $str)   {
-                        if (preg_match ($str, $items))    {
-                            $judge = true;
-                            break;
-                        }
-                    }
-                }
-                if (! $judge) {
                     $this->message = "$currentPath should be define as string within [$possibleString]. ";
                 }
             }
             if ($judge) {
+
             }
         }
     }
@@ -238,8 +225,8 @@ class DefinitionChecker
                     'value' => 'scalar'
                 )
             ),
-            'repeat-control' => 'string(insert|delete|confirm-insert|confirm-delete|copy|copy-*)',
-            'navi-control' => 'string(master|detail|master-hide|detail-top|detail-bottom|detail-update|detail-top-update|detail-bottom-update)',
+            'repeat-control' => 'string(insert|delete|confirm-insert|confirm-delete)',
+            'navi-control' => 'string(master|detail|master-hide|detail-top|detail-bottom)',
             'validation' => array(
                 '*' => array(
                     'field' => 'string',
@@ -252,14 +239,14 @@ class DefinitionChecker
             'post-enclosure' => 'string',
             'script' => array(
                 '*' => array(
-                    'db-operation' => 'string(load|read|update|new|create|delete)',
+                    'db-operation' => 'string(load|update|new|delete)',
                     'situation' => 'string(pre|presort|post)',
                     'definition' => 'string'
                 )
             ),
             'global' => array(
                 '*' => array(
-                    'db-operation' => 'string(load|read|update|new|create|delete)',
+                    'db-operation' => 'string(load|update|new|delete)',
                     'field' => 'string',
                     'value' => 'scalar'
                 )
@@ -278,12 +265,6 @@ class DefinitionChecker
                     'target' => 'string(table|field-user|field-group)',
                     'field' => 'string'
                 ),
-                'read' => array(
-                    'user' => 'array',
-                    'group' => 'array',
-                    'target' => 'string(table|field-user|field-group)',
-                    'field' => 'string'
-                ),
                 'update' => array(
                     'user' => 'array',
                     'group' => 'array',
@@ -291,12 +272,6 @@ class DefinitionChecker
                     'field' => 'string'
                 ),
                 'new' => array(
-                    'user' => 'array',
-                    'group' => 'array',
-                    'target' => 'string(table|field-user|field-group)',
-                    'field' => 'string'
-                ),
-                'create' => array(
                     'user' => 'array',
                     'group' => 'array',
                     'target' => 'string(table|field-user|field-group)',
@@ -331,7 +306,6 @@ class DefinitionChecker
                 '*' => array(
                     'field' => 'string',
                     'context' => 'string',
-                    'container' => 'boolean',
                 )
             ),
             'calculation' => array(
@@ -339,13 +313,6 @@ class DefinitionChecker
                     'field' => 'string',
                     'expression' => 'string',
                 )
-            ),
-            'button-names' => array(
-                'insert' => 'string',
-                'delete' => 'string',
-                'navi-detail' => 'string',
-                'navi-back' => 'string',
-                'copy' => 'string',
             ),
             'send-mail' => array(
                 'load' => array(
@@ -366,61 +333,7 @@ class DefinitionChecker
                     'f-option' => 'boolean',
                     'body-wrap' => 'integer',
                 ),
-                'read' => array(
-                    'from' => 'string',
-                    'to' => 'string',
-                    'cc' => 'string',
-                    'bcc' => 'string',
-                    'subject' => 'string',
-                    'body' => 'string',
-                    'from-constant' => 'string',
-                    'to-constant' => 'string',
-                    'cc-constant' => 'string',
-                    'bcc-constant' => 'string',
-                    'subject-constant' => 'string',
-                    'body-constant' => 'string',
-                    'body-template' => 'string',
-                    'body-fields' => 'string',
-                    'f-option' => 'boolean',
-                    'body-wrap' => 'integer',
-                ),
                 'new' => array(
-                    'from' => 'string',
-                    'to' => 'string',
-                    'cc' => 'string',
-                    'bcc' => 'string',
-                    'subject' => 'string',
-                    'body' => 'string',
-                    'from-constant' => 'string',
-                    'to-constant' => 'string',
-                    'cc-constant' => 'string',
-                    'bcc-constant' => 'string',
-                    'subject-constant' => 'string',
-                    'body-constant' => 'string',
-                    'body-template' => 'string',
-                    'body-fields' => 'string',
-                    'f-option' => 'boolean',
-                    'body-wrap' => 'integer',
-                ),
-                'create' => array(
-                    'from' => 'string',
-                    'to' => 'string',
-                    'cc' => 'string',
-                    'bcc' => 'string',
-                    'subject' => 'string',
-                    'body' => 'string',
-                    'from-constant' => 'string',
-                    'to-constant' => 'string',
-                    'cc-constant' => 'string',
-                    'bcc-constant' => 'string',
-                    'subject-constant' => 'string',
-                    'body-constant' => 'string',
-                    'body-template' => 'string',
-                    'body-fields' => 'string',
-                    'f-option' => 'boolean',
-                    'body-wrap' => 'integer',
-                ),
-                'edit' => array(
                     'from' => 'string',
                     'to' => 'string',
                     'cc' => 'string',
@@ -457,6 +370,7 @@ class DefinitionChecker
                     'body-wrap' => 'integer',
                 ),
             )
+
         ),
     );
 

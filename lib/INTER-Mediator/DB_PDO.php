@@ -1,6 +1,6 @@
 <?php
 /**
- * INTER-Mediator Ver.5.2 Released 2015-08-24
+ * INTER-Mediator Ver.5.1 Released 2015-05-22
  *
  *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
  *
@@ -24,7 +24,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
      * @var int
      */
     private $mainTableCount = 0;
-    private $mainTableTotalCount = 0;
     /**
      * @var null
      */
@@ -100,7 +99,8 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         if (!$this->setupConnection()) { //Establish the connection
             return false;
         }
-        $currentDTFormat = $this->currentDTString();
+        $currentDT = new DateTime();
+        $currentDTFormat = $currentDT->format('Y-m-d H:i:s');
         $sql = "INSERT INTO {$regTable} (clientid,entity,conditions,registereddt) VALUES("
             . implode(',', array(
                 $this->link->quote($clientId),
@@ -333,9 +333,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
                 $this->link->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
             }
         } catch (PDOException $ex) {
-            $this->logger->setErrorMessage('Connection Error: ' . $ex->getMessage() .
-                ", DSN=" . $this->dbSettings->getDbSpecDSN() .
-                ", User=" . $this->dbSettings->getDbSpecUser());
+            $this->logger->setErrorMessage('Connection Error: ' . $ex->getMessage());
             return false;
         }
         $this->isAlreadySetup = true;
@@ -350,7 +348,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         try {
             $this->link = new PDO($dsnString);
         } catch (PDOException $ex) {
-            $this->logger->setErrorMessage('Connection Error: ' . $ex->getMessage() . ", DSN=" . $dsnString);
+            $this->logger->setErrorMessage('Connection Error: ' . $ex->getMessage());
             return false;
         }
         $this->isAlreadySetup = true;
@@ -507,8 +505,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
                 }
             }
         }
-        $keywordAuth = ($currentOperation == "select") ? "read" : $currentOperation;
-        $keywordAuth = ($currentOperation == "load") ? "read" : $currentOperation;
+        $keywordAuth = ($currentOperation == "select") ? "load" : $currentOperation;
         if (isset($tableInfo['authentication'])
             && (isset($tableInfo['authentication']['all']) || isset($tableInfo['authentication'][$keywordAuth]))
         ) {
@@ -546,10 +543,10 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
                 }
             }
         }
-        if (!is_null($this->softDeleteField) && !is_null($this->softDeleteValue)) {
+        if (! is_null($this->softDeleteField) && ! is_null($this->softDeleteValue)) {
             $dfEsc = $this->quotedFieldName($this->softDeleteField);
             $dvEsc = $this->link->quote($this->softDeleteValue);
-            if (strlen($queryClause) > 0) {
+            if (strlen($queryClause) > 0)   {
                 $queryClause = "($queryClause) AND ($dfEsc <> $dvEsc OR $dfEsc IS NULL)";
             } else {
                 $queryClause = "($dfEsc <> $dvEsc OR $dfEsc IS NULL)";
@@ -600,7 +597,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
     {
         $this->fieldInfo = null;
         $this->mainTableCount = 0;
-        $this->mainTableTotalCount = 0;
         $tableInfo = $this->dbSettings->getDataSourceTargetArray();
         $tableName = $this->dbSettings->getEntityForRetrieve();
         $signedUser = $this->authSupportUnifyUsernameAndEmail($this->dbSettings->getCurrentUser());
@@ -610,7 +606,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         }
         if (isset($tableInfo['script'])) {
             foreach ($tableInfo['script'] as $condition) {
-                if ($condition['db-operation'] == 'load' || $condition['db-operation'] == 'read') {
+                if ($condition['db-operation'] == 'load') {
                     if ($condition['situation'] == 'pre') {
                         $sql = $condition['definition'];
                         $this->logger->setDebugMessage($sql);
@@ -625,7 +621,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
 
         $viewOrTableName = isset($tableInfo['view']) ? $tableInfo['view'] : $tableName;
 
-        $queryClause = $this->getWhereClause('read', true, true, $signedUser);
+        $queryClause = $this->getWhereClause('load', true, true, $signedUser);
         if ($queryClause != '') {
             $queryClause = "WHERE {$queryClause}";
         }
@@ -644,34 +640,21 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         }
         $this->mainTableCount = $result->fetchColumn(0);
 
-        // Count all records
-        $sql = "SELECT count(*) FROM {$viewOrTableName}";
-        $this->logger->setDebugMessage($sql);
-        $result = $this->link->query($sql);
-        if ($result === false) {
-            $this->errorMessageStore('Select:' . $sql);
-            return array();
-        }
-        $this->mainTableTotalCount = $result->fetchColumn(0);
-
         // Create SQL
         $limitParam = 100000000;
-        if (isset($tableInfo['maxrecords'])) {
-            if (intval($tableInfo['maxrecords']) < $this->dbSettings->getRecordCount()) {
-                if (intval($tableInfo['maxrecords']) < intval($tableInfo['records'])) {
-                    $limitParam = intval($tableInfo['records']);
-                } else {
-                    $limitParam = intval($tableInfo['maxrecords']);
-                }
-            } else {
-                $limitParam = $this->dbSettings->getRecordCount();
-            }
-        } else if (isset($tableInfo['records'])) {
-            if (intval($tableInfo['records']) < $this->dbSettings->getRecordCount()) {
-                $limitParam = intval($tableInfo['records']);
-            } else {
-                $limitParam = $this->dbSettings->getRecordCount();
-            }
+        if ($this->dbSettings->getRecordCount() > 0) {
+            $limitParam = $this->dbSettings->getRecordCount();
+        }
+        if (isset($tableInfo['records'])) {
+            $limitParam = $tableInfo['records'];
+        } elseif (isset($tableInfo['maxrecords'])) {
+            $limitParam = $tableInfo['maxrecords'];
+        }
+        if (isset($tableInfo['maxrecords'])
+            && intval($tableInfo['maxrecords']) >= $this->dbSettings->getRecordCount()
+            && $this->dbSettings->getRecordCount() > 0
+        ) {
+            $limitParam = $this->dbSettings->getRecordCount();
         }
 
         $skipParam = 0;
@@ -714,7 +697,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
 
         if (isset($tableInfo['script'])) {
             foreach ($tableInfo['script'] as $condition) {
-                if ($condition['db-operation'] == 'load' || $condition['db-operation'] == 'read') {
+                if ($condition['db-operation'] == 'load') {
                     if ($condition['situation'] == 'post') {
                         $sql = $condition['definition'];
                         $this->logger->setDebugMessage($sql);
@@ -742,18 +725,9 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
      * @param $dataSourceName
      * @return int
      */
-    public function countQueryResult($dataSourceName)
+    function countQueryResult($dataSourceName)
     {
         return $this->mainTableCount;
-    }
-
-    /**
-     * @param $dataSourceName
-     * @return int
-     */
-    public function getTotalCount($dataSourceName)
-    {
-        return $this->mainTableTotalCount;
     }
 
     /**
@@ -821,7 +795,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         }
 
         if ($this->isRequiredUpdated) {
-            $sql = "SELECT * FROM {$this->dbSettings->getEntityForRetrieve()} {$queryClause}";
+            $sql = "SELECT * FROM {$tableName} {$queryClause}";
             $result = $this->link->query($sql);
             $this->logger->setDebugMessage($sql);
             if ($result === false) {
@@ -886,9 +860,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         }
         if (isset($tableInfo['script'])) {
             foreach ($tableInfo['script'] as $condition) {
-                if (($condition['db-operation'] == 'new' || $condition['db-operation'] == 'create')
-                    && $condition['situation'] == 'pre'
-                ) {
+                if ($condition['db-operation'] == 'new' && $condition['situation'] == 'pre') {
                     $sql = $condition['definition'];
                     $this->logger->setDebugMessage($sql);
                     $result = $this->link->query($sql);
@@ -915,17 +887,15 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             foreach ($tableInfo['default-values'] as $itemDef) {
                 $field = $itemDef['field'];
                 $value = $itemDef['value'];
-                if (!in_array($field, $setColumnNames)) {
-                    $filedInForm = "{$tableName}{$this->dbSettings->getSeparator()}{$field}";
-                    $convertedValue = (is_array($value)) ? implode("\n", $value) : $value;
-                    $setValues[] = $this->link->quote($this->formatter->formatterToDB($filedInForm, $convertedValue));
-                    $setColumnNames[] = $field;
-                }
+                $filedInForm = "{$tableName}{$this->dbSettings->getSeparator()}{$field}";
+                $convertedValue = (is_array($value)) ? implode("\n", $value) : $value;
+                $setValues[] = $this->link->quote($this->formatter->formatterToDB($filedInForm, $convertedValue));
+                $setColumnNames[] = $field;
             }
         }
         if (!$bypassAuth && isset($tableInfo['authentication'])) {
-            $authInfoField = $this->getFieldForAuthorization("create");
-            $authInfoTarget = $this->getTargetForAuthorization("create");
+            $authInfoField = $this->getFieldForAuthorization("new");
+            $authInfoTarget = $this->getTargetForAuthorization("new");
             if ($authInfoTarget == 'field-user') {
                 $setColumnNames[] = $authInfoField;
                 $setValues[] = $this->link->quote(
@@ -987,9 +957,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
 
         if (isset($tableInfo['script'])) {
             foreach ($tableInfo['script'] as $condition) {
-                if (($condition['db-operation'] == 'new' || $condition['db-operation'] == 'create')
-                    && $condition['situation'] == 'post'
-                ) {
+                if ($condition['db-operation'] == 'new' && $condition['situation'] == 'post') {
                     $sql = $condition['definition'];
                     $this->logger->setDebugMessage($sql);
                     $result = $this->link->query($sql);
@@ -1013,6 +981,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         $tableInfo = $this->dbSettings->getDataSourceTargetArray();
         $tableName = $this->dbSettings->getEntityForUpdate();
         $signedUser = $this->authSupportUnifyUsernameAndEmail($this->dbSettings->getCurrentUser());
+
 
         if (!$this->setupConnection()) { //Establish the connection
             return false;
@@ -1061,212 +1030,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         return true;
     }
 
-    function copyInDB($dataSourceName)
-    {
-        $this->fieldInfo = null;
-        $tableInfo = $this->dbSettings->getDataSourceTargetArray();
-        $tableName = $this->dbSettings->getEntityForUpdate();
-        $signedUser = $this->authSupportUnifyUsernameAndEmail($this->dbSettings->getCurrentUser());
-
-        if (!$this->setupConnection()) { //Establish the connection
-            return false;
-        }
-
-        if (isset($tableInfo['script'])) {
-            foreach ($tableInfo['script'] as $condition) {
-                if ($condition['db-operation'] == 'copy' && $condition['situation'] == 'pre') {
-                    $sql = $condition['definition'];
-                    $this->logger->setDebugMessage($sql);
-                    $result = $this->link->query($sql);
-                    if (!$result) {
-                        $this->errorMessageStore('Pre-script:' . $sql);
-                        return false;
-                    }
-                }
-            }
-        }
-        //======
-        $queryClause = $this->getWhereClause('delete', false, true, $signedUser);
-        if ($queryClause == '') {
-            $this->errorMessageStore('Don\'t copy with no ciriteria.');
-            return false;
-        }
-        $lastKeyValue = $this->copyRecords($tableInfo, $queryClause, null, null);
-        $this->queriedPrimaryKeys = array($lastKeyValue);
-        $this->queriedEntity = $tableName;
-        //======
-        $assocArray = $this->dbSettings->getAssociated();
-        if ($assocArray) {
-            foreach ($assocArray as $assocInfo) {
-                $assocContextDef = $this->dbSettings->getDataSource($assocInfo['name']);
-                $queryClause = $this->quotedFieldName($assocInfo["field"]) . "=" .
-                    $this->link->quote($assocInfo["value"]);
-                $this->copyRecords($assocContextDef, $queryClause, $assocInfo["field"], $lastKeyValue);
-            }
-        }
-        //======
-        if ($this->isRequiredUpdated) {
-            $sql = "SELECT * FROM " . $tableName
-                . " WHERE " . $tableInfo['key'] . "=" . $this->link->quote($lastKeyValue);
-            $result = $this->link->query($sql);
-            $this->logger->setDebugMessage($sql);
-            if ($result === false) {
-                $this->errorMessageStore('Select:' . $sql);
-            } else {
-                $sqlResult = array();
-                $isFirstRow = true;
-                foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                    $rowArray = array();
-                    foreach ($row as $field => $val) {
-                        if ($isFirstRow) {
-                            $this->fieldInfo[] = $field;
-                        }
-                        $filedInForm = "{$tableName}{$this->dbSettings->getSeparator()}{$field}";
-                        $rowArray[$field] = $this->formatter->formatterFromDB($filedInForm, $val);
-                    }
-                    $sqlResult[] = $rowArray;
-                    $isFirstRow = false;
-                }
-                $this->updatedRecord = $sqlResult;
-            }
-        }
-        if (isset($tableInfo['script'])) {
-            foreach ($tableInfo['script'] as $condition) {
-                if ($condition['db-operation'] == 'copy' && $condition['situation'] == 'post') {
-                    $sql = $condition['definition'];
-                    $this->logger->setDebugMessage($sql);
-                    $result = $this->link->query($sql);
-                    if (!$result) {
-                        $this->errorMessageStore('Post-script:' . $sql);
-                        return false;
-                    }
-                }
-            }
-        }
-        return $lastKeyValue;
-    }
-
-    private function copyRecords($tableInfo, $queryClause, $assocField, $assocValue)
-    {
-        $tableName = isset($tableInfo["table"]) ? $tableInfo["table"] : $tableInfo["name"];
-        if (strpos($this->dbSettings->getDbSpecDSN(), 'mysql:') === 0) {
-            $sql = "show columns from {$tableName}";
-            $this->logger->setDebugMessage($sql);
-            $result = $this->link->query($sql);
-            if (!$result) {
-                $this->errorMessageStore('Show Columns Error:' . $sql);
-                return false;
-            }
-            $fieldArray = array();
-            $listArray = array();
-            foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                if ($tableInfo['key'] === $row['Field'] || !is_null($row['Default'])) {
-
-                } else if ($assocField === $row['Field']) {
-                    $fieldArray[] = $this->quotedFieldName($row['Field']);
-                    $listArray[] = $this->link->quote($assocValue);
-                } else {
-                    $fieldArray[] = $this->quotedFieldName($row['Field']);
-                    $listArray[] = $this->quotedFieldName($row['Field']);
-                }
-            }
-            $fieldList = implode(',', $fieldArray);
-            $listList = implode(',', $listArray);
-        } else if (strpos($this->dbSettings->getDbSpecDSN(), 'pgsql:') === 0) {
-            /*
-# select table_catalog,table_schema,table_name,column_name,column_default from information_schema.columns where table_name='person';
- table_catalog | table_schema | table_name | column_name |                column_default
----------------+--------------+------------+-------------+----------------------------------------------
- test_db       | im_sample    | person     | id          | nextval('im_sample.person_id_seq'::regclass)
- test_db       | im_sample    | person     | name        |
- test_db       | im_sample    | person     | address     |
- test_db       | im_sample    | person     | mail        |
- test_db       | im_sample    | person     | category    |
- test_db       | im_sample    | person     | checking    |
- test_db       | im_sample    | person     | location    |
- test_db       | im_sample    | person     | memo        |
-             */
-            if (strpos($tableName, ".") !== false) {
-                $tName = substr($tableName, strpos($tableName, ".") + 1);
-                $schemaName = substr($tableName, 0, strpos($tableName, "."));
-                $sql = "SELECT column_name, column_default FROM information_schema.columns "
-                    . "WHERE table_schema=" . $this->link->quote($schemaName)
-                    . " AND table_name=" . $this->link->quote($tName);
-            } else {
-                $sql = "SELECT column_name, column_default FROM information_schema.columns "
-                    . "WHERE table_name=" . $this->link->quote($tableName);
-            }
-            $this->logger->setDebugMessage($sql);
-            $result = $this->link->query($sql);
-            if (!$result) {
-                $this->errorMessageStore('Show Columns Error:' . $sql);
-                return false;
-            }
-            $fieldArray = array();
-            $listArray = array();
-            foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                if ($tableInfo['key'] === $row['column_name'] || !is_null($row['column_default'])) {
-
-                } else if ($assocField === $row['column_name']) {
-                    $fieldArray[] = $this->quotedFieldName($row['column_name']);
-                    $listArray[] = $this->link->quote($assocValue);
-                } else {
-                    $fieldArray[] = $this->quotedFieldName($row['column_name']);
-                    $listArray[] = $this->quotedFieldName($row['column_name']);
-                }
-            }
-            $fieldList = implode(',', $fieldArray);
-            $listList = implode(',', $listArray);
-        } else if (strpos($this->dbSettings->getDbSpecDSN(), 'sqlite:') === 0) {
-            /*
-            sqlite> PRAGMA table_info(person);
-            cid         name        type        notnull     dflt_value  pk
-            ----------  ----------  ----------  ----------  ----------  ----------
-            0           id          INTEGER     0                       1
-            1           name        TEXT        0                       0
-            2           address     TEXT        0                       0
-            3           mail        TEXT        0                       0
-            4           category    INTEGER     0                       0
-            5           checking    INTEGER     0                       0
-            6           location    INTEGER     0                       0
-            7           memo        TEXT        0                       0
-             */
-            $sql = "PRAGMA table_info({$tableName})";
-            $this->logger->setDebugMessage($sql);
-            $result = $this->link->query($sql);
-            if (!$result) {
-                $this->errorMessageStore('PRAGMA table_info Error:' . $sql);
-                return false;
-            }
-            $fieldArray = array();
-            $listArray = array();
-            foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                if ($tableInfo['key'] === $row['name'] || !is_null($row['dflt_value'])) {
-
-                } else if ($assocField === $row['name']) {
-                    $fieldArray[] = $this->quotedFieldName($row['name']);
-                    $listArray[] = $this->link->quote($assocValue);
-                } else {
-                    $fieldArray[] = $this->quotedFieldName($row['name']);
-                    $listArray[] = $this->quotedFieldName($row['name']);
-                }
-            }
-            $fieldList = implode(',', $fieldArray);
-            $listList = implode(',', $listArray);
-
-        }
-        //======
-        $sql = "INSERT INTO {$tableName} ({$fieldList}) SELECT {$listList} FROM {$tableName} WHERE {$queryClause}";
-        $this->logger->setDebugMessage($sql);
-        $result = $this->link->query($sql);
-        if (!$result) {
-            $this->errorMessageStore('INSERT Error:' . $sql);
-            return false;
-        }
-        $seqObject = isset($tableInfo['sequence']) ? $tableInfo['sequence'] : $tableName;
-        return $this->link->lastInsertId($seqObject);
-    }
-
     /**
      * @param $username
      * @param $challenge
@@ -1296,7 +1059,10 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             return false;
         }
         $this->logger->setDebugMessage("[authSupportStoreChallenge] {$sql}");
-        $currentDTFormat = $this->currentDTString();
+
+        $currentDT = new DateTime();
+        $currentDTFormat = $currentDT->format('Y-m-d H:i:s');
+
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $sql = "UPDATE {$hashTable} SET hash=" . $this->link->quote($challenge)
                 . ",expired=" . $this->link->quote($currentDTFormat)
@@ -1349,8 +1115,14 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             return false;
         }
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $expiredDT = new DateTime($row['expired']);
             $hashValue = $row['hash'];
-            $seconds = $this->secondsFromNow($row['expired']);
+            // For 5.3
+//            $intervalDT = $expiredDT->diff(new DateTime(), true);
+//            $seconds = (($intervalDT->days * 24 + $intervalDT->h) * 60 + $intervalDT->i) * 60 + $intervalDT->s;
+            // For 5.2
+            $currentDT = new DateTime();
+            $seconds = $currentDT->format("U") - $expiredDT->format("U");
             if ($seconds > $this->dbSettings->getExpiringSeconds()) { // Judge timeout.
                 return false;
             }
@@ -1379,15 +1151,15 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         if (!$this->setupConnection()) { //Establish the connection
             return false;
         }
-        $sql = "SELECT id,hash,expired FROM {$hashTable}"
-            . " WHERE user_id={$uid} AND clienthost=" . $this->link->quote($clientId)
-            . " ORDER BY expired DESC";
+        $sql = "SELECT id,hash,expired FROM {$hashTable} "
+            . "WHERE user_id={$uid} AND clienthost=" . $this->link->quote($clientId) . " ORDER BY expired DESC";
         $result = $this->link->query($sql);
         if ($result === false) {
             $this->errorMessageStore('Select:' . $sql);
             return false;
         }
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $expiredDT = new DateTime($row['expired']);
             $hashValue = $row['hash'];
             $recordId = $row['id'];
             if ($isDelete) {
@@ -1398,7 +1170,13 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
                     return false;
                 }
             }
-            $seconds = $this->secondsFromNow($row['expired']);
+            // For 5.3
+//            $intervalDT = $expiredDT->diff(new DateTime(), true);
+//            $seconds = (($intervalDT->days * 24 + $intervalDT->h) * 60 + $intervalDT->i) * 60 + $intervalDT->s;
+            // For 5.2
+            $currentDT = new DateTime();
+            $seconds = $currentDT->format("U") - $expiredDT->format("U");
+            // End of version blanching.
             if ($seconds > $this->dbSettings->getExpiringSeconds()) { // Judge timeout.
                 return false;
             }
@@ -1422,7 +1200,16 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         if (!$this->setupConnection()) { //Establish the connection
             return false;
         }
-        $currentDTStr = $this->link->quote($this->currentDTString($this->dbSettings->getExpiringSeconds()));
+
+        $currentDT = new DateTime();
+        // sub method and DateInterval class work on over 5.3
+        //    $currentDT->sub(new DateInterval("PT" . $this->dbSettings->getExpiringSeconds() . "S"));
+//        $currentDTStr = $this->link->quote($currentDT->format('Y-m-d H:i:s'));
+
+        // For 5.2
+        $timeValue = $currentDT->format("U");
+        $currentDTStr = $this->link->quote(date('Y-m-d H:i:s', $timeValue - $this->dbSettings->getExpiringSeconds()));
+        // End of for 5.2
         $sql = "delete from {$hashTable} where expired < {$currentDTStr}";
         $this->logger->setDebugMessage($sql);
         $result = $this->link->query($sql);
@@ -1431,31 +1218,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             return false;
         }
         return true;
-    }
-
-    private function currentDTString($addSeconds = 0)
-    {
-//        $currentDT = new DateTime();
-//        $timeValue = $currentDT->format("U");
-//        $currentDTStr = $this->link->quote($currentDT->format('Y-m-d H:i:s'));
-
-        // For 5.2
-        $timeValue = time();
-        $currentDTStr = date('Y-m-d H:i:s', $timeValue - $addSeconds);
-        // End of for 5.2
-        return $currentDTStr;
-    }
-
-    private function secondsFromNow($dtStr)
-    {
-//        $currentDT = new DateTime();
-//        $anotherDT = new DateTime($dtStr);
-//        $timeValue = $currentDT->format("U") - $anotherDT->format("U");
-
-        // For 5.2
-        $timeValue = time() - strtotime($dtStr);
-        // End of for 5.2
-        return $timeValue;
     }
 
     /**
@@ -1489,93 +1251,39 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         return false;
     }
 
+//    function authSupportGetSalt($username)
+//    {
+//        $hashedpw = $this->authSupportRetrieveHashedPassword($username);
+//        return substr($hashedpw, -8);
+//    }
+//
     /**
      * @param $username
      * @param $hashedpassword
-     * @param $isLDAP
      * @return bool
      *
      * Using 'authuser'
      */
-    function authSupportCreateUser($username, $hashedpassword, $isLDAP = false, $ldapPassword = null)
+    function authSupportCreateUser($username, $hashedpassword)
     {
+        if ($this->authSupportRetrieveHashedPassword($username) !== false) {
+            $this->logger->setErrorMessage('User Already exist: ' . $username);
+            return false;
+        }
+        if (!$this->setupConnection()) { //Establish the connection
+            return false;
+        }
         $userTable = $this->dbSettings->getUserTable();
-        if ($isLDAP !== true) {
-            if ($this->authSupportRetrieveHashedPassword($username) !== false) {
-                $this->logger->setErrorMessage('User Already exist: ' . $username);
-                return false;
-            }
-            if (!$this->setupConnection()) { //Establish the connection
-                return false;
-            }
-            $sql = "INSERT INTO {$userTable} (username, hashedpasswd) "
-                . "VALUES ({$this->link->quote($username)}, {$this->link->quote($hashedpassword)})";
-            $this->logger->setDebugMessage($sql);
-            $result = $this->link->query($sql);
-            if ($result === false) {
-                $this->errorMessageStore('Insert:' . $sql);
-                return false;
-            }
-        } else {
-            $user_id = -1;
-            $timeUp = false;
-            $hpw = null;
-            if (!$this->setupConnection()) { //Establish the connection
-                return false;
-            }
-
-            $sql = "SELECT * FROM {$userTable} WHERE username=" . $this->link->quote($username);
-            $this->logger->setDebugMessage($sql);
-            $result = $this->link->query($sql);
-            if ($result === false) {
-                $this->errorMessageStore('Select:' . $sql);
-                return false;
-            }
-            foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                if (isset($row['limitdt']) && !is_null($row['limitdt'])) {
-                    if (time() - strtotime($row['limitdt']) > $this->dbSettings->getLDAPExpiringSeconds()) {
-                        $timeUp = true;
-                        $hpw = $row['hashedpasswd'];
-                    }
-                }
-                $user_id = $row['id'];
-            }
-            $currentDTFormat = $this->currentDTString();
-            if ($user_id > 0) {
-                $setClause = "limitdt=" . $this->link->quote($currentDTFormat);
-                if ($timeUp) {
-                    $hexSalt = substr($hpw, -8, 8);
-                    $prevPwHash = sha1($ldapPassword . hex2bin($hexSalt)) . $hexSalt;
-                    if ($prevPwHash != $hpw) {
-                        $setClause .= ",hashedpasswd=" . $this->link->quote($hashedpassword);
-                    }
-                }
-                $sql = "UPDATE {$userTable} SET {$setClause} WHERE id=" . $user_id;
-                $this->logger->setDebugMessage($sql);
-                $result = $this->link->query($sql);
-                if ($result === false) {
-                    $this->errorMessageStore('Update:' . $sql);
-                    return false;
-                }
-                if ($timeUp) {
-                    //    $setClause .= ",hashedpasswd=" . $this->link->quote($hashedpassword);
-                    $this->logger->setDebugMessage("LDAP cached account time over.");
-                    return false;
-                }
-            } else {
-                $sql = "INSERT INTO {$userTable} (username, hashedpasswd,limitdt) VALUES "
-                    . "({$this->link->quote($username)},"
-                    . " {$this->link->quote($hashedpassword)}, "
-                    . " {$this->link->quote($currentDTFormat)})";
-                $this->logger->setDebugMessage($sql);
-                $result = $this->link->query($sql);
-                if ($result === false) {
-                    $this->errorMessageStore('Insert:' . $sql);
-                    return false;
-                }
-            }
+        $sql = "INSERT INTO {$userTable} (username, hashedpasswd) "
+            . "VALUES ({$this->link->quote($username)}, {$this->link->quote($hashedpassword)})";
+        $this->logger->setDebugMessage($sql);
+        $result = $this->link->query($sql);
+        if ($result === false) {
+            $this->errorMessageStore('Insert:' . $sql);
+            return false;
         }
         return true;
+
     }
 
     /**
@@ -1615,8 +1323,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
      */
     function authSupportGetUserIdFromUsername($username)
     {
-        $this->logger->setDebugMessage("[authSupportGetUserIdFromUsername]username={$username}", 2);
-
         $userTable = $this->dbSettings->getUserTable();
         if ($userTable == null) {
             return false;
@@ -1628,7 +1334,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         if (!$this->setupConnection()) { //Establish the connection
             return false;
         }
-        $sql = "SELECT * FROM {$userTable} WHERE username=" . $this->link->quote($username);
+        $sql = "SELECT id FROM {$userTable} WHERE username=" . $this->link->quote($username);
         $this->logger->setDebugMessage($sql);
         $result = $this->link->query($sql);
         if ($result === false) {
@@ -1636,11 +1342,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             return false;
         }
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            if (isset($row['limitdt']) && !is_null($row['limitdt'])) {
-                if (time() - strtotime($row['limitdt']) > $this->dbSettings->getLDAPExpiringSeconds()) {
-                    return -1;
-                }
-            }
             return $row['id'];
         }
         return false;
@@ -1709,18 +1410,15 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
     /**
      * @var
      */
-    private
-        $candidateGroups;
+    private $candidateGroups;
     /**
      * @var
      */
-    private
-        $belongGroups;
+    private $belongGroups;
     /**
      * @var
      */
-    private
-        $firstLevel;
+    private $firstLevel;
 
     /**
      * @param $groupid
@@ -1728,8 +1426,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
      *
      * Using 'authcor'
      */
-    private
-    function resolveGroup($groupid)
+    private function resolveGroup($groupid)
     {
         $corrTable = $this->dbSettings->getCorrTable();
 
@@ -1835,7 +1532,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         if (!$this->setupConnection()) { //Establish the connection
             return false;
         }
-        $sql = "SELECT username FROM {$userTable} WHERE id=" . $this->link->quote($userid);
+        $sql = "SELECT id FROM {$userTable} WHERE id=" . $this->link->quote($userid);
         $this->logger->setDebugMessage($sql);
         $result = $this->link->query($sql);
         if ($result === false) {
@@ -1903,7 +1600,8 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         if (!$this->setupConnection()) { //Establish the connection
             return false;
         }
-        $currentDTFormat = $this->currentDTString();
+        $currentDT = new DateTime();
+        $currentDTFormat = $currentDT->format('Y-m-d H:i:s');
         $sql = "INSERT INTO {$hashTable} (hash,expired,clienthost,user_id) VALUES("
             . implode(',', array($this->link->quote($hash), $this->link->quote($currentDTFormat),
                 $this->link->quote($clienthost), $this->link->quote($userid))) . ')';
@@ -1945,7 +1643,14 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         }
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $hashValue = $row['hash'];
-            if ($this->secondsFromNow($row['expired']) > 3600) {
+            $expiredDT = $row['expired'];
+
+            $expired = strptime($expiredDT, "%Y-%m-%d %H:%M:%S");
+            $expiredValue = mktime($expired['tm_hour'], $expired['tm_min'], $expired['tm_sec'],
+                $expired['tm_mon'] + 1, $expired['tm_mday'], $expired['tm_year'] + 1900);
+            $currentDT = new DateTime();
+            $timeValue = $currentDT->format("U");
+            if ($timeValue > $expiredValue + 3600) {
                 return false;
             }
             if ($hash == $hashValue) {
@@ -1964,7 +1669,15 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         if (!$this->setupConnection()) { //Establish the connection
             return false;
         }
-        $currentDTFormat = $this->currentDTString();
+        // For PHP 5.3
+//        $currentDT = new DateTime();
+//        $currentDT->add(new DateInterval('P1H'));
+//        $currentDTFormat = $currentDT->format('Y-m-d H:i:s');
+
+        // For PHP 5.2
+        $currentDT = time() + 3600;
+        $currentDTFormat = date('Y-m-d H:i:s', $currentDT);
+
         $sql = "INSERT INTO {$hashTable} (hash,expired,user_id) VALUES(" . implode(',', array(
                 $this->link->quote($hash),
                 $this->link->quote($currentDTFormat),
@@ -1988,7 +1701,15 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         if (!$this->setupConnection()) { //Establish the connection
             return false;
         }
-        $currentDTFormat = $this->currentDTString();
+        // For PHP 5.3
+//        $currentDT = new DateTime();
+//        $currentDT->add(new DateInterval('P1H'));
+//        $currentDTFormat = $currentDT->format('Y-m-d H:i:s');
+
+        // For PHP 5.2
+        $currentDT = time();
+        $currentDTFormat = date('Y-m-d H:i:s', $currentDT);
+
         $sql = "SELECT user_id FROM {$hashTable} WHERE hash = " . $this->link->quote($hash) .
             " AND clienthost IS NULL AND expired > " . $this->link->quote($currentDTFormat);
         $this->logger->setDebugMessage($sql);
@@ -2027,8 +1748,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         return false;
     }
 
-    public
-    function isPossibleOperator($operator)
+    public function isPossibleOperator($operator)
     {
         //for MySQL
         if (strpos($this->dbSettings->getDbSpecDSN(), 'mysql:') === 0) {
@@ -2141,8 +1861,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
 
     }
 
-    public
-    function isPossibleOrderSpecifier($specifier)
+    public function isPossibleOrderSpecifier($specifier)
     {
         /* for MySQL */
         if (strpos($this->dbSettings->getDbSpecDSN(), 'mysql:') === 0) {
@@ -2168,16 +1887,8 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         }
     }
 
-    public
-    function normalizedCondition($condition)
+    public function normalizedCondition($condition)
     {
-        if (!isset($condition['field'])) {
-            $condition['field'] = '';
-        }
-        if (!isset($condition['value'])) {
-            $condition['value'] = '';
-        }
-
         if ($condition['operator'] == 'match*') {
             return array(
                 'field' => $condition['field'],
@@ -2212,8 +1923,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         }
     }
 
-    private
-    function quotedFieldName($fieldName)
+    private function quotedFieldName($fieldName)
     {
         if (strpos($this->dbSettings->getDbSpecDSN(), 'mysql:') === 0) { /* for MySQL */
             return "`{$fieldName}`";
@@ -2231,20 +1941,17 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         }
     }
 
-    public
-    function isContainingFieldName($fname, $fieldnames)
+    public function isContainingFieldName($fname, $fieldnames)
     {
         return in_array($fname, $fieldnames);
     }
 
-    public
-    function isNullAcceptable()
+    public function isNullAcceptable()
     {
         return true;
     }
 
-    public
-    function queryForTest($table, $conditions = null)
+    public function queryForTest($table, $conditions = null)
     {
         if ($table == null) {
             $this->errorMessageStore("The table doesn't specified.");
@@ -2283,8 +1990,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         return $recordSet;
     }
 
-    public
-    function deleteForTest($table, $conditions = null)
+    public function deleteForTest($table, $conditions = null)
     {
         if ($table == null) {
             $this->errorMessageStore("The table doesn't specified.");

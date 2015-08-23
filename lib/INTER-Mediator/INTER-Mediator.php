@@ -1,6 +1,6 @@
 <?php
 /**
- * INTER-Mediator Ver.5.2 Released 2015-08-24
+ * INTER-Mediator Ver.5.1 Released 2015-05-22
  *
  *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
  *
@@ -135,8 +135,7 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
  */
 function loadClass($className)
 {
-    if (strpos($className, 'PHPUnit_') === false && $className !== 'PHP_Invoker' &&
-        strpos($className, 'PHPExcel_') === false &&
+    if (strpos($className, 'PHPUnit_') === false &&
         (include_once $className . '.php') === false) {
         $errorGenerator = new GenerateJSCode();
         if (strpos($className, "MessageStrings_") !== 0) {
@@ -265,6 +264,7 @@ function getRelativePath()
 {
     $caller = explode(DIRECTORY_SEPARATOR, dirname($_SERVER['SCRIPT_FILENAME']));
     $imDirectory = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
+    $commonPath = '';
     $shorterLength = min(count($caller), count($imDirectory));
     for ($i = 0; $i < $shorterLength; $i++) {
         if ($caller[$i] != $imDirectory[$i]) {
