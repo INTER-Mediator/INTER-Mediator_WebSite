@@ -75,6 +75,11 @@ class PageFragments extends DB_UseSharedObjects
         return 0;
     }
 
+    function getTotalCount($dataSourceName)
+    {
+        $this->countQueryResult($dataSourceName);
+    }
+
     function fileContents($filename)
     {
         $dom = new DOMDocument;
@@ -94,4 +99,3 @@ class PageFragments extends DB_UseSharedObjects
         return $newDom->saveHTML();
     }
 }
-
