@@ -1,6 +1,6 @@
 <?php
 /**
- * INTER-Mediator Ver.5.1 Released 2015-05-22
+ * INTER-Mediator Ver.5.2 Released 2015-08-24
  *
  *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
  *
@@ -22,6 +22,11 @@ class DB_Null extends DB_UseSharedObjects implements DB_Access_Interface
     }
 
     public function countQueryResult($dataSourceName)
+    {
+        return 0;
+    }
+
+    public function getTotalCount($dataSourceName)
     {
         return 0;
     }
@@ -116,7 +121,7 @@ class DB_Null extends DB_UseSharedObjects implements DB_Access_Interface
         return null;
     }
 
-    function authSupportCreateUser($username, $hashedpassword)
+    function authSupportCreateUser($username, $hashedpassword, $isLDAP = false, $ldapPassword = null)
     {
         return null;
     }
@@ -174,5 +179,10 @@ class DB_Null extends DB_UseSharedObjects implements DB_Access_Interface
     public function softDeleteActivate($field, $value)
     {
         return null;
+    }
+
+    public function copyInDB($dataSourceName)
+    {
+        // TODO: Implement copyInDB() method.
     }
 }

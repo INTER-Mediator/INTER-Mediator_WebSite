@@ -1,6 +1,7 @@
 <?php
+
 /*
-* INTER-Mediator Ver.5.1 Released 2015-05-22
+* INTER-Mediator Ver.5.2 Released 2015-08-24
 *
 *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
 *
@@ -44,6 +45,7 @@ class DB_Settings
     private $requireAuthentication = false;
 
     private $smtpConfiguration = null;
+    private $associated = null;
     /**
      * @var
      */
@@ -56,12 +58,59 @@ class DB_Settings
     public $pusherKey = null;
     public $pusherSecret = null;
     public $pusherChannel = "_im_pusher_default_channel";
+
+    private $params_ldapServer;
+    private $params_ldapPort;
+    private $params_ldapBase;
+    private $params_ldapContainer;
+    private $params_ldapAccountKey;
+    private $params_ldapExpiringSeconds;
+
+    function __construct()
+    {
+        $currentDir = dirname(__FILE__) . DIRECTORY_SEPARATOR;
+        $currentDirParam = $currentDir . 'params.php';
+        $parentDirParam = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'params.php';
+        if (file_exists($parentDirParam)) {
+            include($parentDirParam);
+        } else if (file_exists($currentDirParam)) {
+            include($currentDirParam);
+        }
+        $this->params_ldapServer = isset($ldapServer) ? $ldapServer : null;
+        $this->params_ldapPort = isset($ldapPort) ? $ldapPort : null;
+        $this->params_ldapBase = isset($ldapBase) ? $ldapBase : null;
+        $this->params_ldapContainer = isset($ldapContainer) ? $ldapContainer : null;
+        $this->params_ldapAccountKey = isset($ldapAccountKey) ? $ldapAccountKey : null;
+        $this->params_ldapExpiringSeconds = isset($ldapExpiringSeconds) ? $ldapExpiringSeconds : 600;
+    }
+
+    public function getLDAPSettings()
+    {
+        return array(
+            $this->params_ldapServer,
+            $this->params_ldapPort,
+            $this->params_ldapBase,
+            $this->params_ldapContainer,
+            $this->params_ldapAccountKey,
+        );
+    }
+
+    public function addAssociated($name, $field, $value)
+    {
+        if (!$this->associated) {
+            $this->associated = array();
+        }
+        $this->associated[] = array("name" => $name, "field" => $field, "value" => $value);
+    }
+
+    public function getAssociated()
+    {
+        return $this->associated;
+    }
+
     /**
      * @param string $dataSourceName
      */
-
-
-
     public function setSmtpConfiguration($config)
     {
         $this->smtpConfiguration = $config;
@@ -216,7 +265,7 @@ class DB_Settings
     }
 
 
-     /**
+    /**
      * @param boolean $primaryKeyOnly
      */
     public function setPrimaryKeyOnly($primaryKeyOnly)
@@ -393,12 +442,22 @@ class DB_Settings
         if (isset($this->authentication[$key])) {
             return $this->authentication[$key];
         }
-        switch($key)    {
-            case 'user-table':          return 'authuser';      break;
-            case 'group-table':         return 'authgroup';     break;
-            case 'corresponding-table': return 'authcor';       break;
-            case 'challenge-table':     return 'issuedhash';    break;
-            case 'authexpired':         return 3600 * 8;        break;
+        switch ($key) {
+            case 'user-table':
+                return 'authuser';
+                break;
+            case 'group-table':
+                return 'authgroup';
+                break;
+            case 'corresponding-table':
+                return 'authcor';
+                break;
+            case 'challenge-table':
+                return 'issuedhash';
+                break;
+            case 'authexpired':
+                return 3600 * 8;
+                break;
         }
         return null;
     }
@@ -426,6 +485,11 @@ class DB_Settings
     function getExpiringSeconds()
     {
         return $this->getAuthenticationItem('authexpired');
+    }
+
+    function getLDAPExpiringSeconds()
+    {
+        return $this->params_ldapExpiringSeconds;
     }
 
     function setCurrentUser($str)
@@ -619,7 +683,7 @@ class DB_Settings
     /* get the information for the 'name'. */
     function getDataSourceTargetArray($isAssociative = false)
     {
-        if ($this->dataSource == null)  {
+        if ($this->dataSource == null) {
             return null;
         }
         if ($this->targetDataSource == null) {

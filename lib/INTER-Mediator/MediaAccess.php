@@ -1,12 +1,15 @@
 <?php
-/*
-* INTER-Mediator Ver.5.1 Released 2015-05-22
-*
-*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
-*
-*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
-*   INTER-Mediator is supplied under MIT License.
-*/
+/**
+ * INTER-Mediator Ver.5.2 Released 2015-08-24
+ *
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
+ *
+ * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
 
 class MediaAccess
 {
@@ -40,7 +43,8 @@ class MediaAccess
              * If the FileMaker's object field is storing a PDF, the $file could be "http://server:16000/...
              * style URL. In case of an image, $file is just the path info as like above.
              */
-            $file = str_replace('\0', '', $file);
+            $util = new IMUtil();
+            $file = $util->removeNull($file);
             if (strpos($file, '../') !== false) {
                 return;
             }
@@ -197,7 +201,9 @@ class MediaAccess
         $dbProxyInstance->dbSettings->setTargetName($options['media-context']);
         $context = $dbProxyInstance->dbSettings->getDataSourceTargetArray();
         if (isset($context['authentication'])
-            && (isset($context['authentication']['all']) || isset($context['authentication']['load']))
+            && (isset($context['authentication']['all'])
+                || isset($context['authentication']['load'])
+                || isset($context['authentication']['read']))
         ) {
             $realm = isset($context['authentication']['realm']) ? "_{$context['authentication']['realm']}" : '';
             $cookieNameUser = "_im_username{$realm}";
@@ -209,8 +215,15 @@ class MediaAccess
             if (!$dbProxyInstance->checkMediaToken($_COOKIE[$cookieNameUser], $_COOKIE[$cookieNameToken])) {
                 $this->exitAsError(401);
             }
-            $authInfoField = $dbProxyInstance->dbClass->getFieldForAuthorization("load");
-            $authInfoTarget = $dbProxyInstance->dbClass->getTargetForAuthorization("load");
+            if (isset($context['authentication']['load'])){
+                $authInfoField = $dbProxyInstance->dbClass->getFieldForAuthorization("load");
+                $authInfoTarget = $dbProxyInstance->dbClass->getTargetForAuthorization("load");
+            }
+            else if (isset($context['authentication']['read'])){
+                $authInfoField = $dbProxyInstance->dbClass->getFieldForAuthorization("read");
+                $authInfoTarget = $dbProxyInstance->dbClass->getTargetForAuthorization("read");
+            }
+
             if ($authInfoTarget == 'field-user') {
                 $endOfPath = strpos($target, "?");
                 $endOfPath = ($endOfPath === false) ? strlen($target) : $endOfPath;
@@ -241,8 +254,14 @@ class MediaAccess
             } else if ($authInfoTarget == 'field-group') {
                 //
             } else {
-                $authorizedUsers = $dbProxyInstance->dbClass->getAuthorizedUsers("load");
-                $authorizedGroups = $dbProxyInstance->dbClass->getAuthorizedGroups("load");
+                if (isset($context['authentication']['load'])){
+                    $authorizedUsers = $dbProxyInstance->dbClass->getAuthorizedUsers("load");
+                    $authorizedGroups = $dbProxyInstance->dbClass->getAuthorizedGroups("load");
+                }
+                else if (isset($context['authentication']['read'])){
+                    $authorizedUsers = $dbProxyInstance->dbClass->getAuthorizedUsers("read");
+                    $authorizedGroups = $dbProxyInstance->dbClass->getAuthorizedGroups("read");
+                }
                 if (count($authorizedGroups) == 0 && count($authorizedUsers) == 0)   {
                     return;
                 }
