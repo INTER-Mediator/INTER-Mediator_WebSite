@@ -294,6 +294,12 @@ video {
     .summary {
         line-height: 1.6em
     }
+    .local-nav {
+        overflow: scroll;
+    }
+    .local-nav li {
+        display: inline-table;
+    }
     .local-nav li a {
         margin: 7px 1px 6px;
     }
