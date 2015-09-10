@@ -119,6 +119,7 @@ p {
     border-bottom: 1px solid #efefef
 }
 .local-nav ul {
+    position: relative;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
@@ -134,6 +135,27 @@ p {
     margin: 7px 3px 6px;
     padding: 2px 10px 0;
     font-size: 14px;
+}
+.nav-arrow {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0;
+    height: 23px;
+    width: 20px;
+    padding: 8px 0;
+    font-size: 14px;
+    text-align: center;
+    background-color: #fff;
+    cursor: pointer;
+    opacity: 0.85;
+    z-index: 100;
+}
+.nav-arrow-right {
+    right: 0;
+}
+.nav-arrow-left {
+    left: 0;
 }
 
 /* Hero unit
