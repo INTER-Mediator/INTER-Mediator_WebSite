@@ -58,8 +58,8 @@
                 <p>『INTER-Mediator Training Course』はINTER-Mediatorの開発手法を効率的にしっかり学習したい方に向けた、自習用のテキストと演習用実行環境のセットです。Webサーバー機能、MySQLデータベースのエンジン、MySQLおよびFileMakerのサンプルデータベース、FileMakerサーバーへの接続機能など、一式を全てまとめてあります。</p>
 			<h3>効率的な学習のための素材</h3>
 			<p>INTER-Mediatorはオープンソースなので情報は基本的に公開しています。したがって、ソースコードを解読すれば全てを習得可能ですが、困難な道のりです。そこで、INTER-Mediatorの学習を効率的に行いたい方向けに最適な、本コースを用意しました。本コースでは、データベース連動のWebページを構築する手法を解説するとともに、INTER-Mediator-ServerのVMを利用しながら実際のシステムを動作させながら演習を進められるよう整備しました。開発作業を実地検証できるため、より深く学習できます。演習を終えて自分なりの開発に発展させたいとき、このVMを使うことで、本番通りのテストが行えます。</p>
-			<h3>現在執筆中で2015年内に完成予定</h3>
-			<p>本コースは皆さんにできるだけ早く学習を始めていただけるよう、既に販売開始していますが、2015年9月末の段階でChapter 6までをご提供しています。Chapter 9の最終章までを2015年内にお届けするよう準備を進めています。このページの最後に目次を掲載しています。完成後も、INTER-Mediatorの進化に応じて改定を進めます。</p>
+			<h3>現在執筆中で近々完成予定</h3>
+			<p>本コースは皆さんにできるだけ早く学習を始めていただけるよう、既に販売開始していますが、2015年11月末の段階でChapter 7までをご提供しています。Chapter 9の最終章までを2016年の早いうちにお届けするよう準備を進めています。このページの最後に目次を掲載しています。完成後も、INTER-Mediatorの進化に応じて改定を進めます。</p>
 			<h3>電子出版物として提供</h3>
                 <p>本コースは、日本語で記述されたePub形式の電子出版物です。OS X/iPadの「iBooks」でのレイアウトを確認しながら制作を行いました。他のePubビューアでも読めるはずです。演習には、PCないしはMacがあれば、一連の素材はダウンロードして入手していただけます。なお、FileMakerをご利用の場合は、ソフトウェアのライセンスは読者自身でご用意ください。</p>
                 <p class="picture"><img src="/images/shot2141.png"/></p>
@@ -285,18 +285,43 @@
 <div class="link_to_h3">ドライバーオブジェクト内で行うこと</div>
 <div class="link_to_h3">ドライバーのサンプルで利用したAPI</div>
 <div class="link_to_h3">このセクションのまとめ</div>
-<hr/><p style="text-align: center">2015年9月10日現在、ここまで執筆済み</p><hr/>
 <div class="link_to_h1">Chapter 7　セキュリティと認証・アクセス権</div>
 <div class="link_to_h2">7-1　Webアプリケーションセキュリティの前提</div>
-<div class="link_to_h2">7-2　データベースアカウントへのアクセス権設定</div>
-<div class="link_to_h2">7-3　コンテキストにおけるアクセス制御</div>
-<div class="link_to_h2">7-4　クロスサイトスクリプト攻撃（XSS）とinnerHTML</div>
-<div class="link_to_h2">7-5　ユーザー認証を行う仕組み</div>
-<div class="link_to_h2">7-6　定義ファイルでの認証の設定</div>
-<div class="link_to_h2">7-7　レコード単位のアクセス権とメディアのアクセス権</div>
-<div class="link_to_h2">7-8　カスタマイズとユーザー管理</div>
-<div class="link_to_h2">7-9　ログインパネルとそのカスタマイズ</div>
-<div class="link_to_h2">7-10　ユーザー管理とパスワードのリセット</div>
+<div class="link_to_h3">INTER-Mediatorを稼働するサーバーの前提条件</div>
+<div class="link_to_h3">INTER-Mediatorを利用するネットワークの前提条件</div>
+<div class="link_to_h3">ブラウザーのセキュリティ</div>
+<div class="link_to_h3" sign="cssinnerhtml">クロスサイトスクリプト攻撃（XSS）とinnerHTML</div>
+<div class="link_to_h3">データベースアカウントへのアクセス権設定</div>
+<div class="link_to_h3">セクションのまとめ</div>
+<div class="link_to_h2" sign="prepareauth">7-2　ユーザー認証とアクセス権適用を行う仕組み</div>
+<div class="link_to_h3">認証とアクセス権</div>
+<div class="link_to_h3">アカウントとグループ</div>
+<div class="link_to_h3">ユーザーのテーブル</div>
+<div class="link_to_h3">グループのテーブル</div>
+<div class="link_to_h3">ハッシュ値用テーブルの内容</div>
+<div class="link_to_h3">その他の手法</div>
+<div class="link_to_h3"><span class="exsign">演習</span>ユーザー管理の簡易アプリケーションを使ってみる</div>
+<div class="link_to_h3">セクションのまとめ</div>
+<div class="link_to_h2">7-3　認証とアクセス権の設定</div>
+<div class="link_to_h3">認証に関する設定を行う場所</div>
+<div class="link_to_h3">設定例による認証の設定</div>
+<div class="link_to_h3">ログインの継続方法と設定</div>
+<div class="link_to_h3">認証の動作の設定</div>
+<div class="link_to_h3">ネイティブ認証について</div>
+<div class="link_to_h3">ログインパネルとカスタマイズ</div>
+<div class="link_to_h3">パスワードのリセット</div>
+<div class="link_to_h3"><span class="exsign">演習</span>認証の実現とパスワード変更</div>
+<div class="link_to_h3">このセクションのまとめ</div>
+<div class="link_to_h2">7-4　コンテキストにおけるアクセス制御</div>
+<div class="link_to_h3">設定例によるアクセス権の設定</div>
+<div class="link_to_h3"><span class="exsign">演習</span>コンテキストにアクセス権を設定する</div>
+<div class="link_to_h3">このセクションのまとめ</div>
+<div class="link_to_h2">7-5　レコード単位のアクセス権とメディアデータのアクセス権</div>
+<div class="link_to_h3">レコード単位のアクセス権</div>
+<div class="link_to_h3">データベース外のファイルに対して認証アクセスする</div>
+<div class="link_to_h3"><span class="exsign">演習</span>レコード単位のアクセス権を設定する</div>
+<div class="link_to_h3">このセクションのまとめ</div>
+<hr/><p style="text-align: center">2015年11月30日現在、ここまで執筆済み</p><hr/>
 <div class="link_to_h1">Chapter 8　サーバーサイドでのプログラミング</div>
 <div class="link_to_h2">8-1　定義ファイルの設定内容と外部での設定</div>
 <div class="link_to_h3">設定ファイルparams.php</div>
