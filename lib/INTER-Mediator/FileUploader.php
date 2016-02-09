@@ -1,15 +1,13 @@
 <?php
 /**
- * INTER-Mediator
- * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * This project started at the end of 2009 by Masayuki Nii msyk@msyk.net.
+ * INTER-Mediator Ver.5.2 Released 2015-08-24
  *
- * INTER-Mediator is supplied under MIT License.
- * Please see the full license for details:
- * https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/License.txt
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
  *
  * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * @link          https://inter-mediator.com/
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
@@ -43,22 +41,9 @@ class FileUploader
           }
         }
 
-        $url = NULL;
-        if (isset($_POST['_im_redirect'])) {
-            $url = $this->getRedirectUrl($_POST['_im_redirect']);
-            if (is_null($url)) {
-                header("HTTP/1.1 500 Internal Server Error");
-                $dbProxyInstance->logger->setErrorMessage('Header may not contain more than a single header, new line detected.');
-                $dbProxyInstance->processingRequest($options, 'noop');
-                $dbProxyInstance->finishCommunication();
-                $dbProxyInstance->exportOutputDataAsJSON();
-                return;
-            }
-        }
-
         if (!isset($options['media-root-dir']) && $useContainer === FALSE) {
-            if (!is_null($url)) {
-                header('Location: ' . $url);
+            if (isset($_POST["_im_redirect"])) {
+                header("Location: {$_POST["_im_redirect"]}");
             } else {
                 $dbProxyInstance->logger->setErrorMessage("'media-root-dir' isn't specified");
                 $dbProxyInstance->processingRequest($options, "noop");
@@ -76,8 +61,8 @@ class FileUploader
         }
 
         if (count($_FILES) < 1) {
-            if (!is_null($url)) {
-                header('Location: ' . $url);
+            if (isset($_POST["_im_redirect"])) {
+                header("Location: {$_POST["_im_redirect"]}");
             } else {
                 $dbProxyInstance->logger->setErrorMessage("No file wasn't uploaded.");
                 $dbProxyInstance->processingRequest($options, "noop");
@@ -140,8 +125,8 @@ class FileUploader
         }
         $result = move_uploaded_file($util->removeNull($fileInfo['tmp_name']), $filePath);
         if (!$result) {
-            if (!is_null($url)) {
-                header('Location: ' . $url);
+            if (isset($_POST["_im_redirect"])) {
+                header("Location: {$_POST["_im_redirect"]}");
             } else {
                 $dbProxyInstance->logger->setErrorMessage("Fail to move the uploaded file in the media folder.");
                 $dbProxyInstance->processingRequest($options, "noop");
@@ -247,8 +232,8 @@ class FileUploader
         }
         $dbProxyInstance->finishCommunication();
         $dbProxyInstance->exportOutputDataAsJSON();
-        if (!is_null($url)) {
-            header('Location: ' . $url);
+        if (isset($_POST["_im_redirect"])) {
+            header("Location: {$_POST["_im_redirect"]}");
         }
     }
 
@@ -270,54 +255,5 @@ class FileUploader
             echo $progress  . " %";
             echo "</div></div></div></body></html>";
         }
-    }
-
-    protected function getRedirectUrl($url)
-    {
-        if (strpos(strtolower($url), '%0a') !== false || strpos(strtolower($url), '%0d') !== false) {
-            return NULL;
-        }
-
-        if (strpos($url, 'http://' . php_uname('n') . '/') === 0 ||
-            strpos($url, 'https://' . php_uname('n') . '/') === 0) {
-            return $url;
-        }
-
-        if (isset($_SERVER['SERVER_ADDR']) &&
-            strpos($url, 'http://' . $_SERVER['SERVER_ADDR'] . '/') === 0) {
-            return $url;
-        }
-
-        $params = IMUtil::getFromParamsPHPFile(array('webServerName'), true);
-        $webServerName = $params['webServerName'];
-        if (!is_null($webServerName)) {
-            if (is_array($webServerName)) {
-                foreach ($webServerName as $name) {
-                    if ($this->checkRedirectUrl($url, $name) === TRUE) {
-                        return $url;
-                    }
-                }
-            } else {
-                if ($this->checkRedirectUrl($url, $webServerName) === TRUE) {
-                    return $url;
-                }
-            }
-        }
-
-        return NULL;
-    }
-
-    protected function checkRedirectUrl($url, $webServerName)
-    {
-        if (strpos($url, 'http://') === 0 || strpos($url, 'https://') === 0) {
-            $parsedUrl = parse_url($url);
-            
-            $util = new IMUtil();
-            if ($util->checkHost($parsedUrl['host'], $webServerName)) {
-                return TRUE;
-            }
-        }
-
-        return FALSE;
     }
 }

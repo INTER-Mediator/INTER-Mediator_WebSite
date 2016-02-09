@@ -1,15 +1,13 @@
 <?php
 /**
- * INTER-Mediator
- * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * This project started at the end of 2009 by Masayuki Nii msyk@msyk.net.
+ * INTER-Mediator Ver.5.2 Released 2015-08-24
  *
- * INTER-Mediator is supplied under MIT License.
- * Please see the full license for details:
- * https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/License.txt
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
  *
  * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * @link          https://inter-mediator.com/
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
@@ -72,7 +70,7 @@ class MediaAccess
                 header("Content-Disposition: {$this->disposition}; filename={$dq}" . urlencode($fileName) . $dq);
                 header('X-XSS-Protection: 1; mode=block');
                 header('X-Frame-Options: SAMEORIGIN');
-                $this->outputImage($content);
+                echo $content;
             } else if (stripos($target, 'http://') === 0 || stripos($target, 'https://') === 0) { // http or https
                 if (intval(get_cfg_var('allow_url_fopen')) === 1) {
                     $content = file_get_contents($target);
@@ -98,8 +96,8 @@ class MediaAccess
                     . str_replace("+", "%20", urlencode($fileName)) . $dq);
                 header('X-XSS-Protection: 1; mode=block');
                 header('X-Frame-Options: SAMEORIGIN');
-                $this->outputImage($content);
-            } else if (stripos($target, 'class://') === 0) { // class
+                echo $content;
+            } else { // class
                 $noscheme = substr($target, 8);
                 $className = substr($noscheme, 0, strpos($noscheme, "/"));
                 $processingObject = new $className();
@@ -290,15 +288,14 @@ class MediaAccess
                     $fieldComponents = explode('=', $decodedComponent);
                     $keyField = $fieldComponents[0];
                     $keyValue = $fieldComponents[1];
-                    $dbProxyInstance->dbSettings->addExtraCriteria($keyField, "=", $keyValue);
-                } else {
-                    $contextName = $pathComponents[$index];
+                    $contextName = $pathComponents[$index - 1];
                 }
             }
             if ($indexKeying == -1) {
-            //    $this->exitAsError(401);
+                $this->exitAsError(401);
             }
-            $this->contextRecord = $dbProxyInstance->getFromDB($contextName);
+            $dbProxyInstance->dbSettings->addExtraCriteria($keyField, "=", $keyValue);
+            $this->contextRecord = $dbProxyInstance->dbClass->getFromDB($contextName);
         }
     }
 
@@ -338,70 +335,6 @@ class MediaAccess
                 break;
         }
         return $type;
-    }
-
-    private function outputImage($content)
-    {
-        $rotate = false;
-        if (function_exists('exif_imagetype') && function_exists('imagejpeg') &&
-            strlen($content) > 0) {
-            $tmpDir = ini_get('upload_tmp_dir');
-            if ($tmpDir === '') {
-                $tmpDir = sys_get_temp_dir();
-            }
-            $temp = 'IM_TEMP_' . base64_encode(randomString(12)) . '.jpg';
-            if (mb_substr($tmpDir, 1) === DIRECTORY_SEPARATOR) {
-                $tempPath = $tmpDir . $temp;
-            } else {
-                $tempPath = $tmpDir . DIRECTORY_SEPARATOR . $temp;
-            }
-
-            $fp = fopen($tempPath, 'w');
-            if ($fp !== false) {
-                fwrite($fp, $content);
-                fclose($fp);
-
-                $imageType = image_type_to_mime_type(exif_imagetype($tempPath));
-                if ($imageType === 'image/jpeg') {
-                    $image = imagecreatefromstring($content);
-                    if ($image !== false) {
-                        $exif = exif_read_data($tempPath);
-                        if($exif !== false && !empty($exif['Orientation'])) {
-                            switch($exif['Orientation']) {
-                                case 3:
-                                    $content = imagerotate($image, 180, 0);
-                                    $rotate = true;
-                                    break;
-                                case 6:
-                                    $content = imagerotate($image, -90, 0);
-                                    $rotate = true;
-                                    break;
-                                case 8:
-                                    $content = imagerotate($image, 90, 0);
-                                    $rotate = true;
-                                    break;
-                            }
-                        }
-                    }
-                    if ($rotate === true) {
-                        header('Content-Type: image/jpeg');
-                        ob_start();
-                        imagejpeg($content);
-                        $size = ob_get_length();
-                        header('Content-Length: ' . $size);
-                        header('X-XSS-Protection: 1; mode=block');
-                        header('X-Frame-Options: SAMEORIGIN');
-                        ob_end_flush();
-                    }
-                    imagedestroy($image);
-                }
-                unlink($tempPath);
-            }
-        }
-
-        if ($rotate === false) {
-            echo $content;
-        }
     }
 
 }

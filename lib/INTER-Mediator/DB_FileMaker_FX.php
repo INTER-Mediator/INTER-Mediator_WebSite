@@ -1,18 +1,16 @@
 <?php
-
 /**
- * INTER-Mediator
- * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * This project started at the end of 2009 by Masayuki Nii msyk@msyk.net.
+ * INTER-Mediator Ver.5.2 Released 2015-08-24
  *
- * INTER-Mediator is supplied under MIT License.
- * Please see the full license for details:
- * https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/License.txt
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
  *
  * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * @link          https://inter-mediator.com/
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
 {
     private $fx = null;
@@ -76,11 +74,6 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
     public function updatedRecord()
     {
         return $this->updatedRecord;
-    }
-
-    public function setUpdatedRecord($field, $value, $index = 0)
-    {
-        $this->updatedRecord[$index][$field] = $value;
     }
 
     public function softDeleteActivate($field, $value)
@@ -162,7 +155,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         $this->fx->AddDBParam('clientid', $clientId, 'eq');
         if ($tableKeys) {
             $subCriteria = array();
-            foreach ($tableKeys as $regId) {
+            foreach ($tableKeys as $regId)   {
                 $this->fx->AddDBParam('id', $regId, 'eq');
             }
         }
@@ -573,7 +566,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
                             if (!$this->isPossibleOperator($foreignOperator)) {
                                 throw new Exception("Invalid Operator.: {$condition['operator']}");
                             }
-                            if ($useOrOperation) {
+                            if ($useOrOperation)    {
                                 throw new Exception("Condition Incompatible.: The OR operation and foreign key can't set both on the query. This is the limitation of the Custom Web of FileMaker Server.");
                             }
                             $this->fx->AddDBParam($foreignField, $formattedValue, $foreignOperator);
@@ -585,19 +578,23 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         }
 
         if (isset($context['authentication'])
-            && ((isset($context['authentication']['all'])
-                || isset($context['authentication']["read"])
-                || isset($context['authentication']["select"])
-                || isset($context['authentication']["load"])))
+            && (isset($context['authentication']['all'])
+                || isset($context['authentication']['load'])
+                || isset($context['authentication']['read']))
         ) {
             $authFailure = FALSE;
-            $authInfoField = $this->getFieldForAuthorization("read");
-            $authInfoTarget = $this->getTargetForAuthorization("read");
+            if (isset($context['authentication']['load'])) {
+                $authInfoField = $this->getFieldForAuthorization("load");
+                $authInfoTarget = $this->getTargetForAuthorization("load");
+            } else if (isset($context['authentication']['read'])) {
+                $authInfoField = $this->getFieldForAuthorization("read");
+                $authInfoTarget = $this->getTargetForAuthorization("read");
+            }
             if ($authInfoTarget == 'field-user') {
                 if (strlen($this->dbSettings->getCurrentUser()) == 0) {
                     $authFailure = true;
                 } else {
-                    if ($useOrOperation) {
+                    if ($useOrOperation)    {
                         throw new Exception("Condition Incompatible.: The authorization for each record and OR operation can't set both on the query. This is the limitation of the Custom Web of FileMaker Server.");
                     }
                     $signedUser = $this->authSupportUnifyUsernameAndEmail($this->dbSettings->getCurrentUser());
@@ -609,24 +606,24 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
                 if (strlen($this->dbSettings->getCurrentUser()) == 0 || count($belongGroups) == 0) {
                     $authFailure = true;
                 } else {
-                    if ($useOrOperation) {
+                    if ($useOrOperation)    {
                         throw new Exception("Condition Incompatible.: The authorization for each record and OR operation can't set both on the query. This is the limitation of the Custom Web of FileMaker Server.");
                     }
                     $this->fx->AddDBParam($authInfoField, $belongGroups[0], "eq");
                     $hasFindParams = true;
                 }
-//            } else {
-//                if ($this->dbSettings->isDBNative()) {
-//                } else {
-//                    $authorizedUsers = $this->getAuthorizedUsers("load");
-//                    $authorizedGroups = $this->getAuthorizedGroups("load");
-//                    $belongGroups = $this->authSupportGetGroupsOfUser($this->dbSettings->getCurrentUser());
-//                    if (!in_array($this->dbSettings->getCurrentUser(), $authorizedUsers)
-//                        && count(array_intersect($belongGroups, $authorizedGroups)) == 0
-//                    ) {
-//                        $authFailure = true;
-//                    }
-//                }
+            } else {
+                if ($this->dbSettings->isDBNative()) {
+                } else {
+                    $authorizedUsers = $this->getAuthorizedUsers("load");
+                    $authorizedGroups = $this->getAuthorizedGroups("load");
+                    $belongGroups = $this->authSupportGetGroupsOfUser($this->dbSettings->getCurrentUser());
+                    if (!in_array($this->dbSettings->getCurrentUser(), $authorizedUsers)
+                        && count(array_intersect($belongGroups, $authorizedGroups)) == 0
+                    ) {
+                        $authFailure = true;
+                    }
+                }
             }
             if ($authFailure) {
                 $this->logger->setErrorMessage("Authorization Error.");
@@ -634,8 +631,8 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
             }
         }
 
-        if (!is_null($this->softDeleteField) && !is_null($this->softDeleteValue)) {
-            if ($useOrOperation) {
+        if (! is_null($this->softDeleteField) && ! is_null($this->softDeleteValue)) {
+            if ($useOrOperation)    {
                 throw new Exception("Condition Incompatible.: The soft-delete record and OR operation can't set both on the query. This is the limitation of the Custom Web of FileMaker Server.");
             }
             $this->fx->AddDBParam($this->softDeleteField, $this->softDeleteValue, "neq");
@@ -742,7 +739,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
                     $this->dbSettings->setRequireAuthentication(true);
                 }
                 $errorMessage = 'Failed loading XML' . "\n";
-                foreach (libxml_get_errors() as $error) {
+                foreach(libxml_get_errors() as $error) {
                     $errorMessage .= $error->message;
                 }
                 $this->logger->setErrorMessage($errorMessage);
@@ -752,7 +749,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
             $i = 0;
             $dataArray = array();
             if (isset($data['resultset']['record']) && isset($data['resultset']['@attributes'])) {
-                foreach ($data['resultset']['record'] as $record) {
+                foreach($data['resultset']['record'] as $record) {
                     if (intval($data['resultset']['@attributes']['fetch-size']) == 1) {
                         $record = $data['resultset']['record'];
                     }
@@ -784,8 +781,8 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
                         }
                         if (!$usePortal) {
                             $dataArray = $dataArray + array(
-                                    $fieldName => $fieldValue
-                                );
+                                $fieldName => $fieldValue
+                            );
                         }
                         if ($multiFields === false) {
                             break;
@@ -802,14 +799,11 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
                             if (isset($relatedset['record'])) {
                                 foreach ($relatedset['record'] as $relatedrecord) {
                                     $relatedArray = array('-recid' => $record['@attributes']['record-id']);
-                                    if (isset($relatedset['@attributes']) && isset($relatedrecord['@attributes'])) {
-                                        $relatedArray += array(
-                                            $relatedset['@attributes']['table'] . '::-recid'
-                                            => $relatedrecord['@attributes']['record-id']
-                                        );
-                                    }
+                                    $relatedArray += array(
+                                        $relatedset['@attributes']['table'] . '::-recid' => $relatedrecord['@attributes']['record-id']
+                                    );
                                     $multiFields = true;
-                                    if (isset($relatedrecord['field'])) {
+                                    if ($relatedrecord['field']) {
                                         foreach ($relatedrecord['field'] as $relatedfield) {
                                             if (!isset($relatedfield['@attributes'])) {
                                                 $relatedfield = $relatedrecord['field'];
@@ -1027,8 +1021,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
             }
         }
         if (isset($tableInfo['authentication'])
-            && (isset($tableInfo['authentication']['all'])
-                || isset($tableInfo['authentication']['update']))
+            && (isset($tableInfo['authentication']['all']) || isset($tableInfo['authentication']['update']))
         ) {
             $authFailure = FALSE;
             $authInfoField = $this->getFieldForAuthorization("update");
@@ -1214,9 +1207,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
             }
         }
         if (!$bypassAuth && isset($context['authentication'])
-            && (isset($context['authentication']['all'])
-                || isset($context['authentication']['new'])
-                || isset($context['authentication']['create']))
+            && (isset($context['authentication']['all']) || isset($context['authentication']['new']))
         ) {
             $authInfoField = $this->getFieldForAuthorization("create");
             $authInfoTarget = $this->getTargetForAuthorization("create");
@@ -1244,14 +1235,14 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         }
         if (isset($context['global'])) {
             foreach ($context['global'] as $condition) {
-                if ($condition['db-operation'] == 'new' || $condition['db-operation'] == 'create') {
+                if ($condition['db-operation'] == 'new'||$condition['db-operation'] == 'create') {
                     $this->fx->SetFMGlobal($condition['field'], $condition['value']);
                 }
             }
         }
         if (isset($context['script'])) {
             foreach ($context['script'] as $condition) {
-                if ($condition['db-operation'] == 'new' || $condition['db-operation'] == 'create') {
+                if ($condition['db-operation'] == 'new'||$condition['db-operation'] == 'create') {
                     if ($condition['situation'] == 'pre') {
                         $this->fx->PerformFMScriptPrefind($condition['definition']);
                     } else if ($condition['situation'] == 'presort') {
@@ -1328,8 +1319,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
             $this->fx->AddDBParam($value['field'], $value['value'], $value['operator']);
         }
         if (isset($context['authentication'])
-            && (isset($context['authentication']['all'])
-                || isset($context['authentication']['delete']))
+            && (isset($context['authentication']['all']) || isset($context['authentication']['delete']))
         ) {
             $authFailure = FALSE;
             $authInfoField = $this->getFieldForAuthorization("delete");
@@ -1439,12 +1429,11 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         return true;
     }
 
-    function copyInDB($dataSourceName)
-    {
+    function copyInDB($dataSourceName)  {
         $this->errorMessage[] = "Copy operation is not implemented so far.";
     }
 
-    public function authSupportStoreChallenge($uid, $challenge, $clientId)
+     public function authSupportStoreChallenge($uid, $challenge, $clientId)
     {
         $hashTable = $this->dbSettings->getHashTable();
         if ($hashTable == null) {
@@ -1600,7 +1589,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         }
 
         $this->setupFXforDB($userTable, 1);
-        $this->fx->AddDBParam('username', str_replace("@", "\\@", $username), 'eq');
+        $this->fx->AddDBParam('username', $username, 'eq');
         $result = $this->fx->DoFxAction('perform_find', TRUE, TRUE, 'full');
         $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
         if ((!is_array($result) || $result['foundCount'] < 1) && $this->dbSettings->getEmailAsAccount()) {
@@ -1646,7 +1635,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         }
 
         $this->setupFXforDB($userTable, 1);
-        $this->fx->AddDBParam('username', str_replace("@", "\\@", $username), 'eq');
+        $this->fx->AddDBParam('username', $username, 'eq');
         $result = $this->fx->DoFxAction('perform_find', TRUE, TRUE, 'full');
         if ((!is_array($result) || count($result['data']) < 1) && $this->dbSettings->getEmailAsAccount()) {
             $this->setupFXforDB($userTable, 1);
@@ -1687,7 +1676,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         $username = $this->authSupportUnifyUsernameAndEmail($username);
 
         $this->setupFXforDB_Alt($userTable, 1);
-        $this->fxAlt->AddDBParam('username', str_replace("@", "\\@", $username), "eq");
+        $this->fxAlt->AddDBParam('username', $username, "eq");
         $result = $this->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
         if (!is_array($result)) {
             $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
@@ -1760,7 +1749,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         }
 
         $this->setupFXforDB_Alt($userTable, 55555);
-        $this->fxAlt->AddDBParam('username', str_replace("@", "\\@", $username), "eq");
+        $this->fxAlt->AddDBParam('username', $username, "eq");
         $this->fxAlt->AddDBParam('email', str_replace("@", "\\@", $username), "eq");
         $this->fxAlt->SetLogicalOR();
         $result = $this->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
@@ -1788,9 +1777,9 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
             return null;
         }
 
-        $this->setupFXforDB_Alt($groupTable, 1);
-        $this->fxAlt->AddDBParam('id', $groupid);
-        $result = $this->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $this->setupFXforDB($groupTable, 1);
+        $this->fx->AddDBParam('id', $groupid);
+        $result = $this->fx->DoFxAction('perform_find', TRUE, TRUE, 'full');
         if (!is_array($result)) {
             $this->logger->setDebugMessage(get_class($result) . ': ' . $result->toString());
             return false;
@@ -1829,15 +1818,15 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
 
     private function resolveGroup($groupid)
     {
-        $this->setupFXforDB_Alt($this->dbSettings->getCorrTable(), 1);
+        $this->setupFXforDB($this->dbSettings->getCorrTable(), 1);
         if ($this->firstLevel) {
-            $this->fxAlt->AddDBParam('user_id', $groupid);
+            $this->fx->AddDBParam('user_id', $groupid);
             $this->firstLevel = false;
         } else {
-            $this->fxAlt->AddDBParam('group_id', $groupid);
+            $this->fx->AddDBParam('group_id', $groupid);
             $this->belongGroups[] = $groupid;
         }
-        $result = $this->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $result = $this->fx->DoFxAction('perform_find', TRUE, TRUE, 'full');
         if (!is_array($result)) {
             $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
@@ -1928,83 +1917,6 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         return false;
     }
 
-    public function authSupportUserEnrollmentStart($userid, $hash)
-    {
-        $hashTable = $this->dbSettings->getHashTable();
-        if ($hashTable == null) {
-            return false;
-        }
-        $this->setupFXforAuth($hashTable, 1);
-        $this->fxAuth->AddDBParam("hash", $hash);
-        $this->fxAuth->AddDBParam("expired", $this->currentDTString());
-        $this->fxAuth->AddDBParam("user_id", $userid);
-        $result = $this->fxAuth->DoFxAction('new', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
-            return false;
-        }
-        $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
-        return true;
-    }
-
-    public function authSupportUserEnrollmentActivateUser($hash, $password)
-    {
-        $hashTable = $this->dbSettings->getHashTable();
-        $userTable = $this->dbSettings->getUserTable();
-        if ($hashTable == null || $userTable == null) {
-            return false;
-        }
-        $this->setupFXforAuth($hashTable, 1);
-        $this->fxAuth->AddDBParam("hash", $hash, "eq");
-        $this->fxAuth->AddDBParam("clienthost", "", "eq");
-        $this->fxAuth->AddDBParam("expired", $this->currentDTString(3600), "gt");
-        $result = $this->fxAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
-            return false;
-        }
-        $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
-        foreach ($result['data'] as $key => $row) {
-            $userID = $row['user_id'][0];
-            $this->setupFXforDB_Alt($userTable, 1);
-            $this->fxAlt->AddDBParam('id', $userID);
-            $resultUser = $this->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
-            if (!is_array($resultUser)) {
-                $this->logger->setDebugMessage(get_class($resultUser) . ': ' . $resultUser->toString());
-                return false;
-            }
-            $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
-            foreach ($resultUser['data'] as $ukey => $urow) {
-                $recId = substr($ukey, 0, strpos($ukey, '.'));
-                $this->setupFXforDB_Alt($userTable, 1);
-                $this->fxAlt->SetRecordID($recId);
-                $this->fxAlt->AddDBParam('hashedpasswd', $password);
-                $result = $this->fxAlt->DoFxAction('update', TRUE, TRUE, 'full');
-                if (!is_array($result)) {
-                    $this->logger->setDebugMessage(get_class($result) . ': ' . $result->toString());
-                    return false;
-                }
-                $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
-                return $userID;
-            }
-        }
-        return false;
-    }
-
-    private
-    function currentDTString($addSeconds = 0)
-    {
-//        $currentDT = new DateTime();
-//        $timeValue = $currentDT->format("U");
-//        $currentDTStr = $this->link->quote($currentDT->format('m/d/Y H:i:s'));
-
-        // For 5.2
-        $timeValue = time();
-        $currentDTStr = date('m/d/Y H:i:s', $timeValue - $addSeconds);
-        // End of for 5.2
-        return $currentDTStr;
-    }
-
     public function isPossibleOperator($operator)
     {
         return !(FALSE === array_search(strtoupper($operator), array(
@@ -2027,8 +1939,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         }
 
         if (($condition['field'] === '-recid' && $condition['operator'] === 'undefined') ||
-            ($condition['operator'] === '=')
-        ) {
+                ($condition['operator'] === '=')) {
             return array(
                 'field' => $condition['field'],
                 'operator' => 'eq',
@@ -2163,10 +2074,4 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
     {
         // TODO: Implement removeOutdatedChallenges() method.
     }
-
-    public function isSupportAggregation()
-    {
-        return false;
-    }
-
 }

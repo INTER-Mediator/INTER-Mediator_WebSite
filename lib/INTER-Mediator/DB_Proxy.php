@@ -1,16 +1,14 @@
 <?php
 
 /**
- * INTER-Mediator
- * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * This project started at the end of 2009 by Masayuki Nii msyk@msyk.net.
+ * INTER-Mediator Ver.5.2 Released 2015-08-24
  *
- * INTER-Mediator is supplied under MIT License.
- * Please see the full license for details:
- * https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/License.txt
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
  *
  * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * @link          https://inter-mediator.com/
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
@@ -313,11 +311,11 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
             }
             if ($this->userExpanded !== null && method_exists($this->userExpanded, "doAfterNewToDB")) {
                 $this->logger->setDebugMessage("The method 'doAfterNewToDB' of the class '{$className}' is calling.", 2);
-                $result = $this->userExpanded->doAfterNewToDB($dataSourceName, $this->dbClass->updatedRecord());
+                $result = $this->userExpanded->doAfterNewToDB($dataSourceName, $result);
             }
             if ($this->userExpanded !== null && method_exists($this->userExpanded, "doAfterCreateToDB")) {
                 $this->logger->setDebugMessage("The method 'doAfterCreateToDB' of the class '{$className}' is calling.", 2);
-                $result = $this->userExpanded->doAfterCreateToDB($dataSourceName, $this->dbClass->updatedRecord());
+                $result = $this->userExpanded->doAfterCreateToDB($dataSourceName, $result);
             }
             if ($this->dbSettings->notifyServer && $this->clientPusherAvailable) {
                 try {
@@ -500,7 +498,6 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
         $currentDir = dirname(__FILE__) . DIRECTORY_SEPARATOR;
         $currentDirParam = $currentDir . 'params.php';
         $parentDirParam = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'params.php';
-
         if (file_exists($parentDirParam)) {
             include($parentDirParam);
         } else if (file_exists($currentDirParam)) {
@@ -575,7 +572,6 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
             }
         }
 
-        /* Setup Database Class's Object */
         require_once("{$dbClassName}.php");
         $this->dbClass = new $dbClassName();
         if ($this->dbClass == null) {
@@ -590,14 +586,6 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
         }
         $this->logger->setDebugMessage("The class '{$dbClassName}' was instanciated.", 2);
 
-        $this->dbSettings->setAggregationSelect(
-            isset($context['aggregation-select']) ? $context['aggregation-select'] : null);
-        $this->dbSettings->setAggregationFrom(
-            isset($context['aggregation-from']) ? $context['aggregation-from'] : null);
-        $this->dbSettings->setAggregationGroupBy(
-            isset($context['aggregation-group-by']) ? $context['aggregation-group-by'] : null);
-
-        /* Authentication and Authorization Judgement */
         $challengeDSN = null;
         if (isset($options['authentication']) && isset($options['authentication']['issuedhash-dsn'])) {
             $challengeDSN = $options['authentication']['issuedhash-dsn'];
@@ -686,7 +674,7 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
                 break;
             }
             $util = new IMUtil();
-            $value = $util->removeNull(filter_var($_POST["value_{$i}"]));
+            $value = $util->removeNull(filter_input(INPUT_POST, "value_{$i}"));
             $this->dbSettings->addValue(get_magic_quotes_gpc() ? stripslashes($value) : $value);
         }
         if (isset($options['authentication']) && isset($options['authentication']['email-as-username'])) {
@@ -699,10 +687,6 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
                 break;
             }
             $this->dbSettings->addAssociated($_POST["assoc{$i}"], $_POST["asfield{$i}"], $_POST["asvalue{$i}"]);
-        }
-
-        if (isset($options['smtp'])) {
-            $this->dbSettings->setSmtpConfiguration($options['smtp']);
         }
     }
 
@@ -732,7 +716,6 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
         $this->outputOfProcessing = array();
         $currentDir = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
-        // Message Class Detection
         $messageClass = null;
         if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
             $clientLangArray = explode(',', $_SERVER["HTTP_ACCEPT_LANGUAGE"]);
@@ -753,41 +736,27 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
             $messageClass = new MessageStrings();
         }
 
-        /* Aggregation Judgement */
-        $isSelect = $this->dbSettings->getAggregationSelect();
-        $isFrom = $this->dbSettings->getAggregationFrom();
-        $isGroupBy = $this->dbSettings->getAggregationGroupBy();
-        $isDBSupport = $this->dbClass->isSupportAggregation();
-        if (!$isDBSupport && ($isSelect || $isFrom || $isGroupBy)) {
-            $this->logger->setErrorMessage($messageClass->getMessageAs(1042));
-            $access = "do nothing";
-        } else if ($isDBSupport && (($isSelect && !$isFrom) || (!$isSelect && $isFrom))) {
-            $this->logger->setErrorMessage($messageClass->getMessageAs(1043));
-            $access = "do nothing";
-        } else if ($isDBSupport && $isSelect && $isFrom
-            && in_array($access, array("update", "new", "create", "delete", "copy"))
-        ) {
-            $this->logger->setErrorMessage($messageClass->getMessageAs(1044));
-            $access = "do nothing";
-        }
-
-        // Authentication and Authorization
         $tableInfo = $this->dbSettings->getDataSourceTargetArray();
         $access = is_null($access) ? $_POST['access'] : $access;
-        $access = (($access == "select") || ($access == "load")) ? "read" : $access;
         $clientId = isset($_POST['clientid']) ? $_POST['clientid'] :
             (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "Non-browser-client");
         $this->paramAuthUser = isset($_POST['authuser']) ? $_POST['authuser'] : "";
         $paramResponse = isset($_POST['response']) ? $_POST['response'] : "";
         $paramCryptResponse = isset($_POST['cresponse']) ? $_POST['cresponse'] : "";
 
+        if (isset($options['smtp'])) {
+            $this->dbSettings->setSmtpConfiguration($options['smtp']);
+        }
+
         $this->dbSettings->setRequireAuthentication(false);
         $this->dbSettings->setRequireAuthorization(false);
         $this->dbSettings->setDBNative(false);
+        $keywordAuth = ($access == "select") ? "read" : $access;
+        $keywordAuth = ($access == "load") ? "read" : $access;
         if (isset($options['authentication'])
             || $access == 'challenge' || $access == 'changepassword'
             || (isset($tableInfo['authentication'])
-                && (isset($tableInfo['authentication']['all']) || isset($tableInfo['authentication'][$access])))
+                && (isset($tableInfo['authentication']['all']) || isset($tableInfo['authentication'][$keywordAuth])))
         ) {
             $this->dbSettings->setRequireAuthorization(true);
             $this->dbSettings->setDBNative(false);
@@ -826,10 +795,9 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
                     $authorizedGroups = $this->dbClass->getAuthorizedGroups($access);
                     $authorizedUsers = $this->dbClass->getAuthorizedUsers($access);
 
-                    $this->logger->setDebugMessage(str_replace("\n", "",
-                            "contextName={$access}/access={$this->dbSettings->getTargetName()}/"
-                            . "authorizedUsers=" . var_export($authorizedUsers, true)
-                            . "/authorizedGroups=" . var_export($authorizedGroups, true))
+                    $this->logger->setDebugMessage(
+                        "authorizedUsers=" . var_export($authorizedUsers, true)
+                        . "/authorizedGroups=" . var_export($authorizedGroups, true)
                         , 2);
                     if ((count($authorizedUsers) == 0 && count($authorizedGroups) == 0)) {
                         $noAuthorization = false;
@@ -860,7 +828,6 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
                         $authSucceed = true;
                     } else {
                         $ldap = new LDAPAuth();
-                        $ldap->setLogger($this->logger);
                         if ($ldap->isActive) {
                             list($password, $challenge) = $this->decrypting($paramCryptResponse);
                             if ($ldap->bindCheck($signedUser, $password)) {
@@ -1011,13 +978,6 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
         }
     }
 
-    public function getDatabaseResult() {
-        if (isset($this->outputOfProcessing['dbresult']))   {
-            return $this->outputOfProcessing['dbresult'];
-        }
-        return null;
-    }
-
     /* Authentication support */
     function decrypting($paramCryptResponse)
     {
@@ -1093,15 +1053,6 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
     {
         $salt = $this->generateSalt();
         return sha1($pw . $salt) . bin2hex($salt);
-    }
-
-    function generateCredential($digit)
-    {
-        $password = '';
-        for ($i = 0; $i < $digit; $i++) {
-            $password .= chr(rand(32, 127));
-        }
-        return $this->convertHashedPassword($password);
     }
 
     /**
@@ -1292,13 +1243,12 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
     function userEnrollmentActivateUser($challenge, $password)
     {
         $userInfo = null;
-        $result = $this->authDbClass->authSupportUserEnrollmentActivateUser(
-            $challenge, $this->convertHashedPassword($password));
-//        if ($userID !== false) {
-//            $hashednewpassword = $this->convertHashedPassword($password);
-//            $userInfo = authSupportUserEnrollmentCheckHash($userID, $hashednewpassword);
-//        }
-        return $result;
+        $userID = $this->authDbClass->authSupportUserEnrollmentActivateUser($challenge);
+        if ($userID !== false) {
+            $hashednewpassword = $this->convertHashedPassword($password);
+            $userInfo = authSupportUserEnrollmentCheckHash($userID, $hashednewpassword);
+        }
+        return $userInfo;
     }
 
     public function setupConnection()
@@ -1329,10 +1279,5 @@ class DB_Proxy extends DB_UseSharedObjects implements DB_Proxy_Interface
     public function softDeleteActivate($field, $value)
     {
 
-    }
-
-    public function isSupportAggregation()
-    {
-        // TODO: Implement isSupportAggregation() method.
     }
 }

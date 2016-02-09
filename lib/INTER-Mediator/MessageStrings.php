@@ -1,15 +1,13 @@
 <?php
 /**
- * INTER-Mediator
- * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * This project started at the end of 2009 by Masayuki Nii msyk@msyk.net.
+ * INTER-Mediator Ver.5.2 Released 2015-08-24
  *
- * INTER-Mediator is supplied under MIT License.
- * Please see the full license for details:
- * https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/License.txt
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
  *
  * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * @link          https://inter-mediator.com/
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
@@ -52,13 +50,13 @@ class MessageStrings
         1002 => "Can't determine the Table Name: @1@",
         1003 => "No information to update: field=@1@",
         1004 => "Connection Error in db_query=@1@/@2@",
-        1005 => "On calling db_query, Required parameter 'name' doesn't specified",
-        1006 => "On calling db_query, Required parameter 'table' doesn't specified",
-        1007 => "On calling db_update, Required parameter 'name' doesn't specified",
-        1008 => "On calling db_update, Required parameter 'conditions' doesn't specified",
-        1009 => "On calling db_update, Required parameter 'operator' doesn't specified",
-        1010 => "On calling db_update, Required parameter 'value' doesn't specified",
-        1011 => "On calling db_update, Required parameter 'dataset' doesn't specified",
+        1005 => "On calling db_query, Requred parameter 'name' doesn't specified",
+        1006 => "On calling db_query, Requred parameter 'table' doesn't specified",
+        1007 => "On calling db_update, Requred parameter 'name' doesn't specified",
+        1008 => "On calling db_update, Requred parameter 'conditions' doesn't specified",
+        1009 => "On calling db_update, Requred parameter 'operator' doesn't specified",
+        1010 => "On calling db_update, Requred parameter 'value' doesn't specified",
+        1011 => "On calling db_update, Requred parameter 'dataset' doesn't specified",
         1012 => "Query Access: ",
         1013 => "Update Access: ",
         1014 => "Connection Error in db_update=@1@/@2@",
@@ -66,9 +64,9 @@ class MessageStrings
         1016 => "Connection Error in db_createRecord=@1@/@2@",
         1017 => "Delete Access: ",
         1018 => "Create Record Access: ",
-        1019 => "On calling db_delete, Required parameter 'name' doesn't specified",
-        1020 => "On calling db_delete, Required parameter 'conditions' doesn't specified",
-        1021 => "On calling db_createRecord, Required parameter 'name' doesn't specified",
+        1019 => "On calling db_delete, Requred parameter 'name' doesn't specified",
+        1020 => "On calling db_delete, Requred parameter 'conditions' doesn't specified",
+        1021 => "On calling db_createRecord, Requred parameter 'name' doesn't specified",
         1022 => 'Using Unsupported Browser (Try not to use the compatibility mode of Internet Explorer)',
         1023 => '[This site uses INTER-Mediator.]',
         1024 => 'Multiple records are going to be updated. The key field might be wrong. Are you sure?',
@@ -76,44 +74,32 @@ class MessageStrings
         1026 => 'Are you sure to create record?',
         1027 => "Get Challenge: ",
         1028 => "Connection Error in get_challenge=@1@/@2@",
-        1029 => "Change Password Access: ",
+        1029 => "Change Passowrd Access: ",
         1030 => "Connection Error on changing password=@1@/@2@",
         1031 => "Change File Uploading: ",
         1032 => "Connection Error on uploading file=@1@/@2@",
         1033 => "The field name specified in the page file doesn't exist [folder=@1@]",
         1034 => "Other people might be updated.\n\n@1@\n\nYou can overwrite with your data if you select OK.",
         1035 => "field=@1@, initial value=@2@, current value=@3@\n",
-        1036 => "field=@1@, expression=@2@ happens a parse error.",
+        1036 => "field=@1@, expression=@2@ happends a parse error.",
         1037 => "A cyclic referencing is detected.",
         1038 => "Preparing the Pusher, although the settings in the server side is available, the client library isn't included.",
         1039 => "Preparing the Pusher, although the client library is included, the settings in the server side is not available.",
         1040 => "The field '@2@' in the context '@1@' does not exist in the table.",
         1041 => "Are you sure to copy this record?",
-        1042 => "The database class doesn't support aggregation-select/from/group-by.",
-        1043 => "Both aggregation-select and aggregation-from are required. One of them doesn't exist in the context definition.",
-        1044 => "The context having aggregation-select/from/group-by is read-only.",
-        1045 => "The 'key' is required in the context definition if writing operations apply to the context '@1@'.",
         2001 => 'Authentication Error!',
         2002 => 'User:',
         2003 => 'Password:',
-        2004 => 'Login',
+        2004 => 'Log In',
         2005 => 'Change Password',
         2006 => 'New Password:',
         2007 => 'Missing any of Username, old and new password.',
         2008 => 'Failure to get a challenge from server.',
         2009 => 'Succeed to change your password. Login with the new password.',
         2010 => 'Failure to change your password. Maybe the old password is not correct.',
-        2011 => 'User(Mail Address):',
+        2011 => 'User(Mail Assress):',
         2012 => 'Retry to login. You should clarify the user and the password.',
         2013 => 'You should input user and/or password.',
-        2014 => 'OAuth Login',
-        2015 => 'Any alphabets have to contain in new password.',
-        2016 => 'Any numbers have to contain in new password.',
-        2017 => 'Any upper case alphabets have to contain in new password.',
-        2018 => 'Any lower case alphabets have to contain in new password.',
-        2019 => 'Any punctuations have to contain in new password.',
-        2020 => 'New password have to differ from the user name.',
-        2021 => 'New password have to contain more than @1@ characters.',
         3101 => 'Drag Here.',
         3102 => 'Dragged File: ',
     );

@@ -1,17 +1,12 @@
 <?php
-/**
- * INTER-Mediator
- * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * This project started at the end of 2009 by Masayuki Nii msyk@msyk.net.
- *
- * INTER-Mediator is supplied under MIT License.
- * Please see the full license for details:
- * https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/License.txt
- *
- * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * @link          https://inter-mediator.com/
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
+/*
+* INTER-Mediator Ver.5.2 Released 2015-08-24
+*
+*   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+*
+*   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+*   INTER-Mediator is supplied under MIT License.
+*/
 
 require_once('DataConverter_NumberBase.php');
 
@@ -19,7 +14,6 @@ class DataConverter_Number extends DataConverter_NumberBase
 {
 
     private $d = null;
-    private $isZeroNoString = false;
 
     /**
      *
@@ -29,19 +23,11 @@ class DataConverter_Number extends DataConverter_NumberBase
     function __construct($digits = 0)
     {
         parent::__construct();
-        if ($digits === true)    {
-            $this->isZeroNoString = true;
-            $this->d = 0;
-        } else {
-            $this->d = $digits;
-        }
+        $this->d = $digits;
     }
 
     function converterFromDBtoUser($str)
     {
-        if ($this->isZeroNoString && (double)$str == 0)  {
-            return "";
-        }
-        return number_format((double)$str, (int)($this->d), $this->decimalMark, $this->thSepMark);
+         return number_format((double)$str, (int)($this->d), $this->decimalMark, $this->thSepMark);
     }
 }

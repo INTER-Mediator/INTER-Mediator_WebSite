@@ -1,15 +1,13 @@
 <?php
 /**
- * INTER-Mediator
- * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * This project started at the end of 2009 by Masayuki Nii msyk@msyk.net.
+ * INTER-Mediator Ver.5.2 Released 2015-08-24
  *
- * INTER-Mediator is supplied under MIT License.
- * Please see the full license for details:
- * https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/License.txt
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
  *
  * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * @link          https://inter-mediator.com/
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
@@ -64,11 +62,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
     public function updatedRecord()
     {
         return $this->updatedRecord;
-    }
-
-    public function setUpdatedRecord($field, $value, $index = 0)
-    {
-        $this->updatedRecord[$index][$field] = $value;
     }
 
     public function softDeleteActivate($field, $value)
@@ -514,11 +507,10 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
                 }
             }
         }
-        $keywordAuth = (($currentOperation == "load") || ($currentOperation == "select"))
-            ? "read" : $currentOperation;
+        $keywordAuth = ($currentOperation == "select") ? "read" : $currentOperation;
+        $keywordAuth = ($currentOperation == "load") ? "read" : $currentOperation;
         if (isset($tableInfo['authentication'])
-            && ((isset($tableInfo['authentication']['all'])
-                || isset($tableInfo['authentication'][$keywordAuth])))
+            && (isset($tableInfo['authentication']['all']) || isset($tableInfo['authentication'][$keywordAuth]))
         ) {
             $authInfoField = $this->getFieldForAuthorization($keywordAuth);
             $authInfoTarget = $this->getTargetForAuthorization($keywordAuth);
@@ -631,6 +623,8 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             }
         }
 
+        $viewOrTableName = isset($tableInfo['view']) ? $tableInfo['view'] : $tableName;
+
         $queryClause = $this->getWhereClause('read', true, true, $signedUser);
         if ($queryClause != '') {
             $queryClause = "WHERE {$queryClause}";
@@ -640,32 +634,26 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             $sortClause = "ORDER BY {$sortClause}";
         }
 
-        $isAggregate = ($this->dbSettings->getAggregationSelect() != null);
-
-        $viewOrTableName = $isAggregate ? $this->dbSettings->getAggregationFrom()
-            : (isset($tableInfo['view']) ? $tableInfo['view'] : $tableName);
-
-        if (!$isAggregate) {
-            // Count all records matched with the condtions
-            $sql = "SELECT count(*) FROM {$viewOrTableName} {$queryClause}";
-            $this->logger->setDebugMessage($sql);
-            $result = $this->link->query($sql);
-            if ($result === false) {
-                $this->errorMessageStore('Select:' . $sql);
-                return array();
-            }
-            $this->mainTableCount = $result->fetchColumn(0);
-
-            // Count all records
-            $sql = "SELECT count(*) FROM {$viewOrTableName}";
-            $this->logger->setDebugMessage($sql);
-            $result = $this->link->query($sql);
-            if ($result === false) {
-                $this->errorMessageStore('Select:' . $sql);
-                return array();
-            }
-            $this->mainTableTotalCount = $result->fetchColumn(0);
+        // Count all records matched with the condtions
+        $sql = "SELECT count(*) FROM {$viewOrTableName} {$queryClause}";
+        $this->logger->setDebugMessage($sql);
+        $result = $this->link->query($sql);
+        if ($result === false) {
+            $this->errorMessageStore('Select:' . $sql);
+            return array();
         }
+        $this->mainTableCount = $result->fetchColumn(0);
+
+        // Count all records
+        $sql = "SELECT count(*) FROM {$viewOrTableName}";
+        $this->logger->setDebugMessage($sql);
+        $result = $this->link->query($sql);
+        if ($result === false) {
+            $this->errorMessageStore('Select:' . $sql);
+            return array();
+        }
+        $this->mainTableTotalCount = $result->fetchColumn(0);
+
         // Create SQL
         $limitParam = 100000000;
         if (isset($tableInfo['maxrecords'])) {
@@ -690,14 +678,12 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         if (isset($tableInfo['paging']) and $tableInfo['paging'] === true) {
             $skipParam = $this->dbSettings->getStart();
         }
-        $fields = $isAggregate ? $this->dbSettings->getAggregationSelect()
-            : (isset($tableInfo['specify-fields']) ?
-                implode(',', array_unique($this->dbSettings->getFieldsRequired())) : "*");
-        $groupBy = ($isAggregate && $this->dbSettings->getAggregationGroupBy())
-            ? ("GROUP BY " . $this->dbSettings->getAggregationGroupBy()) : "";
-        $offset = $isAggregate ? '' : "OFFSET {$skipParam}";
-        $sql = "SELECT {$fields} FROM {$viewOrTableName} {$queryClause} {$groupBy} {$sortClause} "
-            . " LIMIT {$limitParam} {$offset}";
+        $fields = '*';
+        if (isset($tableInfo['specify-fields'])) {
+            $fields = implode(',', array_unique($this->dbSettings->getFieldsRequired()));
+        }
+        $sql = "SELECT {$fields} FROM {$viewOrTableName} {$queryClause} {$sortClause} "
+            . " LIMIT {$limitParam} OFFSET {$skipParam}";
         $this->logger->setDebugMessage($sql);
         $this->queriedEntity = $viewOrTableName;
         $this->queriedCondition = "{$queryClause} {$sortClause} LIMIT {$limitParam} OFFSET {$skipParam}";
@@ -722,14 +708,8 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
                 $rowArray[$field] = $this->formatter->formatterFromDB($filedInForm, $val);
             }
             $sqlResult[] = $rowArray;
-            if ($keyField && isset($rowArray[$keyField])) {
-                $this->queriedPrimaryKeys[] = $rowArray[$keyField];
-            }
+            $this->queriedPrimaryKeys[] = $rowArray[$keyField];
             $isFirstRow = false;
-        }
-        if ($isAggregate) {
-            $this->mainTableCount = count($sqlResult);
-            $this->mainTableTotalCount = count($sqlResult);
         }
 
         if (isset($tableInfo['script'])) {
@@ -762,8 +742,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
      * @param $dataSourceName
      * @return int
      */
-    public
-    function countQueryResult($dataSourceName)
+    public function countQueryResult($dataSourceName)
     {
         return $this->mainTableCount;
     }
@@ -772,8 +751,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
      * @param $dataSourceName
      * @return int
      */
-    public
-    function getTotalCount($dataSourceName)
+    public function getTotalCount($dataSourceName)
     {
         return $this->mainTableTotalCount;
     }
@@ -891,13 +869,11 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
      * @param $bypassAuth
      * @return bool
      */
-    public
-    function newToDB($dataSourceName, $bypassAuth)
+    public function newToDB($dataSourceName, $bypassAuth)
     {
         $this->fieldInfo = null;
         $tableInfo = $this->dbSettings->getDataSourceTargetArray();
         $tableName = $this->dbSettings->getEntityForUpdate();
-        $viewName = $this->dbSettings->getEntityForRetrieve();
 
         if (!$bypassAuth && isset($tableInfo['authentication'])) {
             $signedUser = $this->authSupportUnifyUsernameAndEmail($this->dbSettings->getCurrentUser());
@@ -984,7 +960,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         $this->queriedEntity = $tableName;
 
         if ($this->isRequiredUpdated) {
-            $sql = "SELECT * FROM " . $viewName
+            $sql = "SELECT * FROM " . $tableName
                 . " WHERE " . $keyField . "=" . $this->link->quote($lastKeyValue);
             $result = $this->link->query($sql);
             $this->logger->setDebugMessage($sql);
@@ -1170,8 +1146,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         return $lastKeyValue;
     }
 
-    private
-    function copyRecords($tableInfo, $queryClause, $assocField, $assocValue)
+    private function copyRecords($tableInfo, $queryClause, $assocField, $assocValue)
     {
         $tableName = isset($tableInfo["table"]) ? $tableInfo["table"] : $tableInfo["name"];
         if (strpos($this->dbSettings->getDbSpecDSN(), 'mysql:') === 0) {
@@ -1199,17 +1174,17 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             $listList = implode(',', $listArray);
         } else if (strpos($this->dbSettings->getDbSpecDSN(), 'pgsql:') === 0) {
             /*
-    # select table_catalog,table_schema,table_name,column_name,column_default from information_schema.columns where table_name='person';
-    table_catalog | table_schema | table_name | column_name |                column_default
-    ---------------+--------------+------------+-------------+----------------------------------------------
-    test_db       | im_sample    | person     | id          | nextval('im_sample.person_id_seq'::regclass)
-    test_db       | im_sample    | person     | name        |
-    test_db       | im_sample    | person     | address     |
-    test_db       | im_sample    | person     | mail        |
-    test_db       | im_sample    | person     | category    |
-    test_db       | im_sample    | person     | checking    |
-    test_db       | im_sample    | person     | location    |
-    test_db       | im_sample    | person     | memo        |
+# select table_catalog,table_schema,table_name,column_name,column_default from information_schema.columns where table_name='person';
+ table_catalog | table_schema | table_name | column_name |                column_default
+---------------+--------------+------------+-------------+----------------------------------------------
+ test_db       | im_sample    | person     | id          | nextval('im_sample.person_id_seq'::regclass)
+ test_db       | im_sample    | person     | name        |
+ test_db       | im_sample    | person     | address     |
+ test_db       | im_sample    | person     | mail        |
+ test_db       | im_sample    | person     | category    |
+ test_db       | im_sample    | person     | checking    |
+ test_db       | im_sample    | person     | location    |
+ test_db       | im_sample    | person     | memo        |
              */
             if (strpos($tableName, ".") !== false) {
                 $tName = substr($tableName, strpos($tableName, ".") + 1);
@@ -1458,8 +1433,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         return true;
     }
 
-    private
-    function currentDTString($addSeconds = 0)
+    private function currentDTString($addSeconds = 0)
     {
 //        $currentDT = new DateTime();
 //        $timeValue = $currentDT->format("U");
@@ -1472,8 +1446,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         return $currentDTStr;
     }
 
-    private
-    function secondsFromNow($dtStr)
+    private function secondsFromNow($dtStr)
     {
 //        $currentDT = new DateTime();
 //        $anotherDT = new DateTime($dtStr);
@@ -1483,51 +1456,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         $timeValue = time() - strtotime($dtStr);
         // End of for 5.2
         return $timeValue;
-    }
-
-    /**
-     * @param $username
-     * @param $credential
-     * @return bool(true: create user, false: reuse user)|null in error
-     */
-    function authSupportOAuthUserHandling($keyValues)
-    {
-        $user_id = $this->authSupportGetUserIdFromUsername($keyValues["username"]);
-
-        $returnValue = null;
-        $userTable = $this->dbSettings->getUserTable();
-        if (!$this->setupConnection()) { //Establish the connection
-            $this->errorMessageStore("PDO class can't set up a connection.");
-            return $returnValue;
-        }
-
-        $currentDTFormat = $this->link->quote($this->currentDTString());
-        $keys = array("limitdt");
-        $values = array($currentDTFormat);
-        $updates = array("limitdt=" . $currentDTFormat);
-        if (is_array($keyValues)) {
-            foreach ($keyValues as $key => $value) {
-                $keys[] = $key;
-                $values[] = $this->link->quote($value);
-                $updates[] = "$key=" . $this->link->quote($value);
-            }
-        }
-        if ($user_id > 0) {
-            $returnValue = false;
-            $sql = "UPDATE {$userTable} SET " . implode(",", $updates)
-                . " WHERE id=" . $user_id;
-        } else {
-            $returnValue = true;
-            $sql = "INSERT INTO {$userTable} (" . implode(",", $keys) . ") "
-                . "VALUES (" . implode(",", $values) . ")";
-        }
-        $this->logger->setDebugMessage($sql);
-        $result = $this->link->query($sql);
-        if ($result === false) {
-            $this->errorMessageStore('authSupportOAuthUserHandling:' . $sql);
-            return $returnValue;
-        }
-        return $returnValue;
     }
 
     /**
@@ -1556,12 +1484,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             return false;
         }
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            $limitSeconds = $this->dbSettings->getLDAPExpiringSeconds();
-            if (isset($row['limitdt']) && !is_null($row['limitdt'])
-                && $this->secondsFromNow($row['limitdt']) < $limitSeconds
-            ) {
-                return false;
-            }
             return $row['hashedpasswd'];
         }
         return false;
@@ -1636,6 +1558,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
                     return false;
                 }
                 if ($timeUp) {
+                    //    $setClause .= ",hashedpasswd=" . $this->link->quote($hashedpassword);
                     $this->logger->setDebugMessage("LDAP cached account time over.");
                     return false;
                 }
@@ -1684,24 +1607,16 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         return true;
     }
 
-    function authTableGetUserIdFromUsername($username)
-    {
-        return $this->privateGetUserIdFromUsername($username, false);
-    }
-
+    /**
+     * @param $username
+     * @return bool|int
+     *
+     * Using 'authuser'
+     */
     function authSupportGetUserIdFromUsername($username)
-    {
-        return $this->privateGetUserIdFromUsername($username, true);
-    }
-
-    private $overLimitDTUser;
-
-    private
-    function privateGetUserIdFromUsername($username, $isCheckLimit)
     {
         $this->logger->setDebugMessage("[authSupportGetUserIdFromUsername]username={$username}", 2);
 
-        $this->overLimitDTUser = false;
         $userTable = $this->dbSettings->getUserTable();
         if ($userTable == null) {
             return false;
@@ -1721,16 +1636,15 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             return false;
         }
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            if ($isCheckLimit && isset($row['limitdt']) && !is_null($row['limitdt'])) {
+            if (isset($row['limitdt']) && !is_null($row['limitdt'])) {
                 if (time() - strtotime($row['limitdt']) > $this->dbSettings->getLDAPExpiringSeconds()) {
-                    $this->overLimitDTUser = false;
+                    return -1;
                 }
             }
             return $row['id'];
         }
         return false;
     }
-
 
     /**
      * @param $groupid
@@ -1769,35 +1683,15 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
      */
     function authSupportGetGroupsOfUser($user)
     {
-        $ldap = new LDAPAuth();
-        $oAuth = new OAuthAuth();
-        if ($ldap->isActive || $oAuth->isActive) {
-            return $this->privateGetGroupsOfUser($user, true);
-        } else {
-            return $this->privateGetGroupsOfUser($user, false);
-        }
-    }
-
-    function authTableGetGroupsOfUser($user)
-    {
-        return $this->privateGetGroupsOfUser($user, false);
-    }
-
-    private
-    function privateGetGroupsOfUser($user, $isCheckLimit)
-    {
         $corrTable = $this->dbSettings->getCorrTable();
         if ($corrTable == null) {
             return array();
         }
 
-        $userid = $this->privateGetUserIdFromUsername($user, $isCheckLimit);
+        $userid = $this->authSupportGetUserIdFromUsername($user);
         if ($userid === false && $this->dbSettings->getEmailAsAccount()) {
             $userid = $this->authSupportGetUserIdFromEmail($user);
         }
-
-        $this->logger->setDebugMessage("[authSupportGetGroupsOfUser]user={$user}, userid={$userid}");
-
         if (!$this->setupConnection()) { //Establish the connection
             return false;
         }
@@ -1988,11 +1882,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             if ($row['email'] == $username) {
                 $usernameCandidate = $row['username'];
             }
-//            $limitSeconds = $this->dbSettings->getLDAPExpiringSeconds();
-//            if (isset($row['limitdt']) && !is_null($row['limitdt'])
-//                && $this->secondsFromNow($row['limitdt']) < $limitSeconds) {
-//                return "_im_auth_failed_";
-//            }
         }
         return $usernameCandidate;
     }
@@ -2099,7 +1988,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
         if (!$this->setupConnection()) { //Establish the connection
             return false;
         }
-        $currentDTFormat = $this->currentDTString(3600);
+        $currentDTFormat = $this->currentDTString();
         $sql = "SELECT user_id FROM {$hashTable} WHERE hash = " . $this->link->quote($hash) .
             " AND clienthost IS NULL AND expired > " . $this->link->quote($currentDTFormat);
         $this->logger->setDebugMessage($sql);
@@ -2113,6 +2002,7 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             if ($userID < 1) {
                 return false;
             }
+            $resultArray = array('user_id' => $userID);
             $sql = "UPDATE {$userTable} SET hashedpasswd=" . $this->link->quote($password)
                 . " WHERE id=" . $this->link->quote($userID);
             $this->logger->setDebugMessage($sql);
@@ -2121,7 +2011,18 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
                 $this->errorMessageStore('Update:' . $sql);
                 return false;
             }
-            return $userID;
+            $sql = "SELECT email,realname FROM {$userTable} WHERE id=" . $this->link->quote($userID);
+            $this->logger->setDebugMessage($sql);
+            $result = $this->link->query($sql);
+            if ($result === false) {
+                $this->errorMessageStore('Select:' . $sql);
+                return false;
+            }
+            foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $userRow) {
+                $resultArray['email'] = $userRow['email'];
+                $resultArray['realname'] = $userRow['realname'];
+                return $resultArray;
+            }
         }
         return false;
     }
@@ -2411,12 +2312,6 @@ class DB_PDO extends DB_AuthCommon implements DB_Access_Interface, DB_Interface_
             var_dump($this->link->errorInfo());
             return false;
         }
-        return true;
-    }
-
-    public
-    function isSupportAggregation()
-    {
         return true;
     }
 }

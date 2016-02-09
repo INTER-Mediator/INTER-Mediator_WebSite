@@ -1,15 +1,13 @@
 <?php
 /**
- * INTER-Mediator
- * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * This project started at the end of 2009 by Masayuki Nii msyk@msyk.net.
+ * INTER-Mediator Ver.5.2 Released 2015-08-24
  *
- * INTER-Mediator is supplied under MIT License.
- * Please see the full license for details:
- * https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/License.txt
+ *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
+ *
+ *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
+ *   INTER-Mediator is supplied under MIT License.
  *
  * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
- * @link          https://inter-mediator.com/
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
@@ -21,7 +19,6 @@ require_once('DB_Interfaces.php');
 require_once('DB_Logger.php');
 require_once('DB_Settings.php');
 require_once('DB_UseSharedObjects.php');
-require_once('DB_AuthCommon.php');
 require_once('DB_Proxy.php');
 
 $currentDir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR;
@@ -36,7 +33,7 @@ if (!class_exists('Math_BigInteger')) {
     require_once($currentDir . 'phpseclib' . DIRECTORY_SEPARATOR . 'Math' . DIRECTORY_SEPARATOR . 'BigInteger.php');
 }
 
-$currentDirParam = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'params.php';
+$currentDirParam = $currentDir . 'params.php';
 $parentDirParam = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'params.php';
 if (file_exists($parentDirParam)) {
     include($parentDirParam);
@@ -52,11 +49,10 @@ if (isset($defaultTimezone)) {
 define("IM_TODAY", strftime('%Y-%m-%d'));
 $g_dbInstance = null;
 
-spl_autoload_register('loadClass');
-
 function IM_Entry($datasource, $options, $dbspecification, $debug = false)
 {
     global $g_dbInstance, $g_serverSideCall;
+    spl_autoload_register('loadClass');
 
     // check required PHP extensions
     $requiredFunctions = array(
@@ -111,7 +107,8 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
         }
         $mediaHandler->processing($dbProxyInstance, $options, $_GET['media']);
     } else if ((isset($_POST['access']) && $_POST['access'] == 'uploadfile')
-        || (isset($_GET['access']) && $_GET['access'] == 'uploadfile')) {
+        || (isset($_GET['access']) && $_GET['access'] == 'uploadfile')
+    ) {
         $fileUploader = new FileUploader();
         $fileUploader->processing($datasource, $options, $dbspecification, $debug);
     } else if (!isset($_POST['access']) && !isset($_GET['media'])) {
@@ -120,8 +117,7 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
     } else {
         $dbInstance = new DB_Proxy();
         $dbInstance->initialize($datasource, $options, $dbspecification, $debug);
-        $util = new IMUtil();
-        if ($util->protectCSRF() === TRUE) {
+        if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             $dbInstance->processingRequest($options);
             $dbInstance->finishCommunication(false);
         } else {
