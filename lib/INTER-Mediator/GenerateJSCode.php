@@ -1,14 +1,16 @@
 <?php
 
 /**
- * INTER-Mediator Ver.5.2 Released 2015-08-24
+ * INTER-Mediator
+ * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
+ * This project started at the end of 2009 by Masayuki Nii msyk@msyk.net.
  *
- *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
- *
- *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
- *   INTER-Mediator is supplied under MIT License.
+ * INTER-Mediator is supplied under MIT License.
+ * Please see the full license for details:
+ * https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/License.txt
  *
  * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
+ * @link          https://inter-mediator.com/
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 class GenerateJSCode
@@ -27,6 +29,13 @@ class GenerateJSCode
         echo "{$variable}={$value1}{$value2}{$value3}{$value4}{$value5};\n";
     }
 
+    public function generateDebugMessageJS($message)
+    {
+        $q = '"';
+        echo "INTERMediator.setDebugMessage({$q}"
+        . str_replace("\n", " ", addslashes($message)) . "{$q});";
+    }
+
     public function generateErrorMessageJS($message)
     {
         $q = '"';
@@ -41,22 +50,35 @@ class GenerateJSCode
         $q = '"';
         $generatedPrivateKey = null;
         $passPhrase = null;
-
-        /*
-         * Decide the params.php file and load it.
-         */
-        $currentDir = dirname(__FILE__) . DIRECTORY_SEPARATOR;
-        $currentDirParam = $currentDir . 'params.php';
-        $parentDirParam = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'params.php';
-        if (file_exists($parentDirParam)) {
-            include($parentDirParam);
-        } else if (file_exists($currentDirParam)) {
-            include($currentDirParam);
-        }
+        $browserCompatibility = null;
+        $scriptPathPrefix = null;
+        $scriptPathSuffix = null;
+        $oAuthProvider = null;
+        $oAuthClientID = null;
+        $oAuthRedirect = null;
+        $dbClass = null;
+        $params = IMUtil::getFromParamsPHPFile(array(
+            "generatedPrivateKey", "passPhrase", "browserCompatibility",
+            "scriptPathPrefix", "scriptPathSuffix",
+            "oAuthProvider", "oAuthClientID", "oAuthRedirect",
+            "passwordPolicy", "documentRootPrefix", "dbClass",
+        ), true);
+        $generatedPrivateKey = $params["generatedPrivateKey"];
+        $passPhrase = $params["passPhrase"];
+        $browserCompatibility = $params["browserCompatibility"];
+        $scriptPathPrefix = $params["scriptPathPrefix"];
+        $scriptPathSuffix = $params["scriptPathSuffix"];
+        $oAuthProvider = $params["oAuthProvider"];
+        $oAuthClientID = $params["oAuthClientID"];
+        $oAuthRedirect = $params["oAuthRedirect"];
+        $passwordPolicy = $params["passwordPolicy"];
+        $dbClass = $params["dbClass"];
+        $documentRootPrefix = is_null($params["documentRootPrefix"]) ? "" : $params["documentRootPrefix"];
 
         /*
          * Read the JS programs regarding by the developing or deployed.
          */
+        $currentDir = dirname(__FILE__) . DIRECTORY_SEPARATOR;
         if (file_exists($currentDir . 'INTER-Mediator-Lib.js')) {
             echo $this->combineScripts($currentDir);
         } else {
@@ -91,7 +113,7 @@ class GenerateJSCode
         $defaultKey = null;
         $dbClassName = 'DB_' .
             (isset($dbspecification['db-class']) ? $dbspecification['db-class'] :
-                (isset ($dbClass) ? $dbClass : ''));
+                (!is_null($dbClass) ? $dbClass : ''));
         if ($dbClassName !== 'DB_DefEditor' && $dbClassName !== 'DB_PageEditor') {
             require_once("{$dbClassName}.php");
         } else {
@@ -123,13 +145,14 @@ class GenerateJSCode
             $pathToMySelf = $callURL;
         } else if (isset($scriptPathPrefix) || isset($scriptPathSuffix)) {
             $pathToMySelf = (isset($scriptPathPrefix) ? $scriptPathPrefix : '')
-                . filter_input(INPUT_SERVER, 'SCRIPT_NAME')
+                . filter_var($_SERVER['SCRIPT_NAME'])
                 . (isset($scriptPathSufix) ? $scriptPathSuffix : '');
         } else {
-            $pathToMySelf = filter_input(INPUT_SERVER, 'SCRIPT_NAME');
+            $pathToMySelf = filter_var($_SERVER['SCRIPT_NAME']);
         }
 
-        $pathToIMRootDir = mb_ereg_replace("^" . filter_input(INPUT_SERVER, 'DOCUMENT_ROOT'), "", (dirname(__FILE__)));
+        $pathToIMRootDir = mb_ereg_replace(
+            "^{$documentRootPrefix}" . filter_var($_SERVER['DOCUMENT_ROOT']), "", (dirname(__FILE__)));
 
         $this->generateAssignJS(
             "INTERMediatorOnPage.getEntryPath", "function(){return {$q}{$pathToMySelf}{$q};}");
@@ -193,7 +216,7 @@ class GenerateJSCode
             "INTERMediatorOnPage.browserCompatibility",
             "function(){return ", arrayToJS($browserCompatibility, ''), ";}");
 
-        $remoteAddr = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
+        $remoteAddr = filter_var($_SERVER['REMOTE_ADDR']);
         if (is_null($remoteAddr) || $remoteAddr === FALSE) {
             $remoteAddr = '0.0.0.0';
         }
@@ -221,6 +244,10 @@ class GenerateJSCode
                 "INTERMediatorOnPage.clientNotificationChannel",
                 "function(){return ", arrayToJS($chName, ''), ";}");
         }
+        $metadata = json_decode(file_get_contents(
+            dirname(__FILE__) . DIRECTORY_SEPARATOR . "metadata.json"));
+        $this->generateAssignJS("INTERMediatorOnPage.metadata",
+            "{version:{$q}{$metadata->version}{$q},releasedate:{$q}{$metadata->releasedate}{$q}}");
 
         if (isset($prohibitDebugMode) && $prohibitDebugMode) {
             $this->generateAssignJS("INTERMediator.debugMode", "false");
@@ -250,10 +277,25 @@ class GenerateJSCode
         $this->generateAssignJS(
             "INTERMediatorOnPage.isLDAP", $ldap->isActive ? "true" : "false");
         $this->generateAssignJS(
+            "INTERMediatorOnPage.isOAuthAvailable", isset($oAuthProvider) ? "true" : "false");
+        $authObj = new OAuthAuth();
+        if ($authObj->isActive) {
+
+
+            $this->generateAssignJS("INTERMediatorOnPage.oAuthClientID",
+                $q, $oAuthClientID, $q);
+            $this->generateAssignJS("INTERMediatorOnPage.oAuthBaseURL",
+                $q, $authObj->oAuthBaseURL(), $q);
+            $this->generateAssignJS("INTERMediatorOnPage.oAuthRedirect",
+                $q, $oAuthRedirect, $q);
+            $this->generateAssignJS("INTERMediatorOnPage.oAuthScope",
+                $q, implode(' ', $authObj->infoScope()), $q);
+        }
+        $this->generateAssignJS(
             "INTERMediatorOnPage.isNativeAuth",
             (isset($options['authentication'])
-                    && isset($options['authentication']['user'])
-                    && ($options['authentication']['user'][0] === 'database_native')) ? "true" : "false");
+                && isset($options['authentication']['user'])
+                && ($options['authentication']['user'][0] === 'database_native')) ? "true" : "false");
         $this->generateAssignJS(
             "INTERMediatorOnPage.authStoring",
             $q, (isset($options['authentication']) && isset($options['authentication']['storing'])) ?
@@ -275,6 +317,25 @@ class GenerateJSCode
             $this->generateAssignJS(
                 "INTERMediatorOnPage.publickey",
                 "new biRSAKeyPair('", $publickey['e']->toHex(), "','0','", $publickey['n']->toHex(), "')");
+            if (in_array(sha1($generatedPrivateKey), array(
+                '413351603fa756ecd8270147d1a84e9a2de2a3f9',  // Ver. 5.2
+                '094f61a9db51e0159fb0bf7d02a321d37f29a715',  // Ver. 5.3
+            ))) {
+                $this->generateDebugMessageJS('Please change the value of $generatedPrivateKey in params.php.');
+            }
+        }
+        if (isset($passwordPolicy)) {
+            $this->generateAssignJS(
+                "INTERMediatorOnPage.passwordPolicy", $q, $passwordPolicy, $q);
+        } else if (isset($options["authentication"])
+            && isset($options["authentication"]["password-policy"])
+        ) {
+            $this->generateAssignJS(
+                "INTERMediatorOnPage.passwordPolicy", $q, $options["authentication"]["password-policy"], $q);
+        }
+        if (isset($options['credit-including'])) {
+            $this->generateAssignJS(
+                "INTERMediatorOnPage.creditIncluding", $q, $options['credit-including'], $q);
         }
     }
 
@@ -284,11 +345,11 @@ class GenerateJSCode
         $bi2phpDir = $currentDir . 'lib' . DIRECTORY_SEPARATOR . 'bi2php' . DIRECTORY_SEPARATOR;
         $content = '';
         $content .= file_get_contents($currentDir . 'INTER-Mediator.js');
+        $content .= file_get_contents($currentDir . 'INTER-Mediator-Page.js');
         $content .= file_get_contents($currentDir . 'INTER-Mediator-Element.js');
         $content .= file_get_contents($currentDir . 'INTER-Mediator-Context.js');
         $content .= file_get_contents($currentDir . 'INTER-Mediator-Lib.js');
         $content .= file_get_contents($currentDir . 'INTER-Mediator-Calc.js');
-        $content .= file_get_contents($currentDir . 'INTER-Mediator-Page.js');
         $content .= file_get_contents($currentDir . 'INTER-Mediator-Parts.js');
         $content .= file_get_contents($currentDir . 'INTER-Mediator-Navi.js');
         $content .= file_get_contents($currentDir . 'INTER-Mediator-UI.js');
