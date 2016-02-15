@@ -1,13 +1,15 @@
 <?php
 /**
- * INTER-Mediator Ver.5.2 Released 2015-08-24
+ * INTER-Mediator
+ * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
+ * This project started at the end of 2009 by Masayuki Nii msyk@msyk.net.
  *
- *   Copyright (c) 2010-2015 INTER-Mediator Directive Committee, All rights reserved.
- *
- *   This project started at the end of 2009 by Masayuki Nii  msyk@msyk.net.
- *   INTER-Mediator is supplied under MIT License.
+ * INTER-Mediator is supplied under MIT License.
+ * Please see the full license for details:
+ * https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/License.txt
  *
  * @copyright     Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
+ * @link          https://inter-mediator.com/
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
@@ -46,6 +48,7 @@ interface DB_Spec_Behavior
     public function isContainingFieldName($fname, $fieldnames);
     public function isNullAcceptable();
     public function softDeleteActivate($field, $value);
+    public function isSupportAggregation();
 }
 
 interface DB_Interface_Registering
@@ -80,6 +83,8 @@ interface Auth_Interface_DB					// with using table for authentication/authoriza
     public function authSupportUnifyUsernameAndEmail($username);					// authuser
     public function authSupportStoreIssuedHashForResetPassword($userid, $clienthost, $hash);	// issuedhash
     public function authSupportCheckIssuedHashForResetPassword($userid, $randdata, $hash);		// issuedhash
+    public function authSupportUserEnrollmentStart($userid, $hash);             // issuedhash
+    public function authSupportUserEnrollmentActivateUser($hash, $password);    // issuedhash, authuser
 }
 
 interface Auth_Interface_Communication
