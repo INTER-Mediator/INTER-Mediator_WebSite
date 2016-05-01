@@ -59,7 +59,7 @@
 			<h3>効率的な学習のための素材</h3>
 			<p>INTER-Mediatorはオープンソースなので情報は基本的に公開しています。したがって、ソースコードを解読すれば全てを習得可能ですが、困難な道のりです。そこで、INTER-Mediatorの学習を効率的に行いたい方向けに最適な、本コースを用意しました。本コースでは、データベース連動のWebページを構築する手法を解説するとともに、INTER-Mediator-ServerのVMを利用しながら実際のシステムを動作させながら演習を進められるよう整備しました。開発作業を実地検証できるため、より深く学習できます。演習を終えて自分なりの開発に発展させたいとき、このVMを使うことで、本番通りのテストが行えます。</p>
 			<h3>現在執筆中で近々完成予定</h3>
-			<p>本コースは皆さんにできるだけ早く学習を始めていただけるよう、既に販売開始していますが、2015年11月末の段階でChapter 7までをご提供しています。Chapter 9の最終章までを2016年の早いうちにお届けするよう準備を進めています。このページの最後に目次を掲載しています。完成後も、INTER-Mediatorの進化に応じて改定を進めます。</p>
+			<p>本コースは皆さんにできるだけ早く学習を始めていただけるよう、既に販売開始していますが、2016年4月末の段階でChapter 9までをご提供しています。Chapter 9の最終章までを2016年の中頃にお届けするよう準備を進めています。このページの最後に目次を掲載しています。完成後も、INTER-Mediatorの進化に応じて改定を進めます。</p>
 			<h3>電子出版物として提供</h3>
                 <p>本コースは、日本語で記述されたePub形式の電子出版物です。OS X/iPadの「iBooks」でのレイアウトを確認しながら制作を行いました。他のePubビューアでも読めるはずです。演習には、PCないしはMacがあれば、一連の素材はダウンロードして入手していただけます。なお、FileMakerをご利用の場合は、ソフトウェアのライセンスは読者自身でご用意ください。</p>
                 <p class="picture"><img src="/images/shot2141.png"/></p>
@@ -119,6 +119,7 @@
 <div class="link_to_h3">ページファイルの記述方法</div>
 <div class="link_to_h3"><span class="exsign">演習</span>データベースの内容をリスト表示する</div>
 <div class="link_to_h3">コンテキストの定義内容について</div>
+<div class="link_to_h3">データベース上での同一エンティティである事を示すsourceキー</div>
 <div class="link_to_h3">このセクションのまとめ</div>
 <div class="link_to_h2">2-3　JavaScriptプログラムの記述</div>
 <div class="link_to_h3">JavaScriptについての知識の確認</div>
@@ -136,6 +137,7 @@
 <div class="link_to_h3"><span class="exsign">演習</span>データベース検索に条件を追加する</div>
 <div class="link_to_h3">ユーザーインターフェースの定義だけで検索条件を付与する</div>
 <div class="link_to_h3"><span class="exsign">演習</span>検索のユーザーインターフェースを作成する</div>
+<div class="link_to_h3">SQLの集計処理</div>
 <div class="link_to_h3">このセクションのまとめ</div>
 <div class="link_to_h1">Chapter 3　データベースの更新を行うページ</div>
 <div class="link_to_h2">3-1　更新可能なテキストフィールド</div>
@@ -181,12 +183,14 @@
 <div class="link_to_h3">エンクロージャーとリピーターの識別</div>
 <div class="link_to_h3">実際のページ合成</div>
 <div class="link_to_h3">検索結果がない場合の表示</div>
+<div class="link_to_h3">間に割り込む特殊なリピーター</div>
 <div class="link_to_h3">このセクションのまとめ</div>
 <div class="link_to_h2">4-3　複数のコンテキストとリレーションシップ</div>
 <div class="link_to_h3">階層的に定義可能なエンクロージャー/リピーター</div>
 <div class="link_to_h3">リレーションを伴うページの合成</div>
 <div class="link_to_h3"><span class="exsign">演習</span>リレーションを伴うページの作成</div>
 <div class="link_to_h3">FileMakerでのポータルを利用した効率化</div>
+<div class="link_to_h3">エンクロージャーやリピーターであることを無視する</div>
 <div class="link_to_h3">このセクションのまとめ</div>
 <div class="link_to_h2">4-4　計算プロパティの設定</div>
 <div class="link_to_h3">計算プロパティの定義</div>
@@ -321,16 +325,61 @@
 <div class="link_to_h3">データベース外のファイルに対して認証アクセスする</div>
 <div class="link_to_h3"><span class="exsign">演習</span>レコード単位のアクセス権を設定する</div>
 <div class="link_to_h3">このセクションのまとめ</div>
-<hr/><p style="text-align: center">2015年11月30日現在、ここまで執筆済み</p><hr/>
 <div class="link_to_h1">Chapter 8　サーバーサイドでのプログラミング</div>
 <div class="link_to_h2">8-1　定義ファイルの設定内容と外部での設定</div>
 <div class="link_to_h3">設定ファイルparams.php</div>
 <div class="link_to_h3">データベース接続情報の管理</div>
 <div class="link_to_h3">設定ファイルparams.phpに記述できるその他の変数</div>
+<div class="link_to_h3">ブラウザーの限定についての設定</div>
+<div class="link_to_h3">Pusher利用に関する設定</div>
+<div class="link_to_h3">メールサーバーに関する設定</div>
+<div class="link_to_h3">INTER-Mediator自身や定義ファイルの呼び出しパスをカスタマイズする</div>
 <div class="link_to_h3">このセクションのまとめ</div>
-<div class="link_to_h2">8-2　サーバーサイドでの処理の追加</div>
-<div class="link_to_h2">8-3　サーバーサイドで利用できるAPI</div>
+<div class="link_to_h2">8-2　PHPでの記述が必要な認証処理</div>
+<div class="link_to_h3">電子メールアドレスをユーザー名としても利用可能にする設定</div>
+<div class="link_to_h3">params.phpファイルにも設定可能な認証の設定</div>
+<div class="link_to_h3">ログインパネルのカスタマイズ</div>
+<div class="link_to_h3">ログインパネルのカスタマイズ</div>
+<div class="link_to_h3">ネイティブ認証のための暗号鍵</div>
+<div class="link_to_h3">LDAPを認証に利用する</div>
+<div class="link_to_h3">OAuth2を認証に利用する</div>
+<div class="link_to_h3">メールを利用したユーザー登録</div>
+<div class="link_to_h3">このセクションのまとめ</div>
+<div class="link_to_h2">8-3　サーバーサイドでの処理の追加</div>
+<div class="link_to_h3">サーバーサイドのプログラム記述で実現できる機能</div>
+<div class="link_to_h3">PHPファイルの置き場所</div>
+<div class="link_to_h3">データコンバータークラスの作成</div>
+<div class="link_to_h3">アドバイス定義クラスの作成</div>
+<div class="link_to_h3">データベースクラスの作成</div>
+<div class="link_to_h3">単独のスクリプトの作成</div>
+<div class="link_to_h3">サーバーサイドで利用できるAPI</div>
+<div class="link_to_h3">サーバーサイドの処理の中心となるクラス</div>
+<div class="link_to_h3">アドバイス定義クラスとサーバーサイドのオブジェクト</div>
+<div class="link_to_h3">DB_Proxyクラスを利用したデータベース処理</div>
+<div class="link_to_h3">ログ作成の機能</div>
+<div class="link_to_h3">コンテキストの指定と基本情報取得のAPI</div>
+<div class="link_to_h3">IM_Entry関数の呼び出し引数の設定と取り出し</div>
+<div class="link_to_h3">検索条件や設定値などフィールドと値に関するAPI</div>
+<div class="link_to_h3">データベース設定に関連するAPI</div>
+<div class="link_to_h3">認証やアクセス権に関わるAPI</div>
+<div class="link_to_h3">その他の動作に関連するカスタマイズ</div>
+<div class="link_to_h3">このセクションのまとめ</div>
 <div class="link_to_h2">8-4　プログラムの実例</div>
+<div class="link_to_h3">アドバイス定義クラスで集計処理を行う</div>
+<div class="link_to_h3">メディアアクセスクラスを利用してPDFを生成する</div>
+<div class="link_to_h3">Web APIを作成する</div>
+<div class="link_to_h3">FileMaker Serverで動的にグローバルフィールドを指定する</div>
+<div class="link_to_h3">このセクションのまとめ</div>
+<div class="link_to_h2">8-5　メールを利用したユーザー登録とパスワードのリセット</div>
+<div class="link_to_h3">メールを利用したユーザー登録</div>
+<div class="link_to_h3">名前とメールアドレスを入力するページ</div>
+<div class="link_to_h3">ユーザーレコードの作成前後に行う処理</div>
+<div class="link_to_h3">レコード作成の確認とパスワードの設定</div>
+<div class="link_to_h3">メールを利用したパスワードリセット</div>
+<div class="link_to_h3">パスワードの変更要求処理</div>
+<div class="link_to_h3">パスワードのリセット処理</div>
+<div class="link_to_h3">このセクションのまとめ
+<hr/><p style="text-align: center">2016年4月30日現在、ここまで執筆済み</p><hr/>
 <div class="link_to_h1">Chapter 9　INTER-Mediatorの実環境での展開</div>
 <div class="link_to_h2">9-1　データベースのインストール</div>
 <div class="link_to_h2">9-2　Webサーバーのインストールと準備</div>
