@@ -7,17 +7,13 @@
  * Time: 12:27
  */
 class PageFragments extends DB_UseSharedObjects
-    implements Extending_Interface_AfterGet, Extending_Interface_AfterGet_WithNavigation
+    implements Extending_Interface_AfterRead, Extending_Interface_AfterRead_WithNavigation
 {
-    function doBeforeGetFromDB($dataSourceName)
-    {
-
-    }
-
     private $resultCount;
 
-    function doAfterGetFromDB($dataSourceName, $result)
+    public function doAfterReadFromDB($result)
     {
+        $dataSourceName = $this->dbSettings->getDataSourceName();
         $lang = $this->dbSettings->getCriteriaValue("language");
         if ($lang !== 'ja') {
             $lang = 'en';
@@ -65,8 +61,9 @@ class PageFragments extends DB_UseSharedObjects
         return array(array());
     }
 
-    function countQueryResult($dataSourceName)
+    function countQueryResult()
     {
+        $dataSourceName = $this->dbSettings->getDataSourceName();
         if ($dataSourceName == "pagebuilder") {
             return 1;
         } else if ($dataSourceName == "newslist") {
@@ -75,9 +72,9 @@ class PageFragments extends DB_UseSharedObjects
         return 0;
     }
 
-    function getTotalCount($dataSourceName)
+    function getTotalCount()
     {
-        $this->countQueryResult($dataSourceName);
+        $this->countQueryResult();
     }
 
     function fileContents($filename)
@@ -98,4 +95,5 @@ class PageFragments extends DB_UseSharedObjects
         }
         return $newDom->saveHTML();
     }
+
 }
