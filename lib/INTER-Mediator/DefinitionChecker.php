@@ -165,9 +165,16 @@ class DefinitionChecker
         $prohibitKeywordsForOption = array(
         'separator' => 'string',
         'formatter' => array(
-            '*' => array('field' => 'string',
+            '*' => array(
+                'field' => 'string',
                 'converter-class' => 'string',
                 'parameter' => 'string|boolean',
+            ),
+        ),
+        'local-context' => array(
+            '*' => array(
+                'key' => 'string',
+                'value' => 'string|boolean|integer',
             ),
         ),
         'aliases' => array(
@@ -258,11 +265,13 @@ class DefinitionChecker
             ),
             'post-repeater' => 'string',
             'post-enclosure' => 'string',
+            'post-query-stored' => 'string',
             'script' => array(
                 '*' => array(
                     'db-operation' => 'string(load|read|update|new|create|delete)',
                     'situation' => 'string(pre|presort|post)',
-                    'definition' => 'string'
+                    'definition' => 'string',
+                    'parameter' => 'string',
                 )
             ),
             'global' => array(

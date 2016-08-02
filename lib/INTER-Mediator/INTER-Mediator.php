@@ -67,7 +67,8 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
             if ($key == 'authentication'
                 && isset($option['user'])
                 && is_array($option['user'])
-                && array_search('database_native', $option['user']) !== false) {
+                && array_search('database_native', $option['user']) !== false
+            ) {
                 // Native Authentication requires BC Math functions
                 $requiredFunctions = array_merge($requiredFunctions, array('bcmath' => 'bcadd'));
                 break;
@@ -94,10 +95,15 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
         }
     }
 
+//    file_put_contents("/tmp/php2.log", "POST: " . var_export($_POST, true), FILE_APPEND);
+//    file_put_contents("/tmp/php2.log", "GET: " . var_export($_GET, true), FILE_APPEND);
+//    file_put_contents("/tmp/php2.log", "FILES: " . var_export($_FILES, true), FILE_APPEND);
+//    file_put_contents("/tmp/php2.log", "SERVER: " . var_export($_SERVER, true), FILE_APPEND);
+
     if (isset($g_serverSideCall) && $g_serverSideCall) {
         $dbInstance = new DB_Proxy();
         $dbInstance->initialize($datasource, $options, $dbspecification, $debug);
-        $dbInstance->processingRequest($options, "NON");
+        $dbInstance->processingRequest("NON");
         $g_dbInstance = $dbInstance;
     } else if (!isset($_POST['access']) && isset($_GET['uploadprocess'])) {
         $fileUploader = new FileUploader();
@@ -111,9 +117,14 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
         }
         $mediaHandler->processing($dbProxyInstance, $options, $_GET['media']);
     } else if ((isset($_POST['access']) && $_POST['access'] == 'uploadfile')
-        || (isset($_GET['access']) && $_GET['access'] == 'uploadfile')) {
+        || (isset($_GET['access']) && $_GET['access'] == 'uploadfile')
+    ) {
         $fileUploader = new FileUploader();
-        $fileUploader->processing($datasource, $options, $dbspecification, $debug);
+        if (IMUtil::guessFileUploadError()) {
+            $fileUploader->processingAsError($datasource, $options, $dbspecification, $debug);
+        } else {
+            $fileUploader->processing($datasource, $options, $dbspecification, $debug);
+        }
     } else if (!isset($_POST['access']) && !isset($_GET['media'])) {
         $generator = new GenerateJSCode();
         $generator->generateInitialJSCode($datasource, $options, $dbspecification, $debug);
@@ -122,7 +133,7 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
         $dbInstance->initialize($datasource, $options, $dbspecification, $debug);
         $util = new IMUtil();
         if ($util->protectCSRF() === TRUE) {
-            $dbInstance->processingRequest($options);
+            $dbInstance->processingRequest();
             $dbInstance->finishCommunication(false);
         } else {
             $dbInstance->addOutputData('debugMessages', 'Invalid Request Error.');
@@ -141,7 +152,8 @@ function loadClass($className)
 {
     if (strpos($className, 'PHPUnit_') === false && $className !== 'PHP_Invoker' &&
         strpos($className, 'PHPExcel_') === false &&
-        (include_once $className . '.php') === false) {
+        (include_once $className . '.php') === false
+    ) {
         $errorGenerator = new GenerateJSCode();
         if (strpos($className, "MessageStrings_") !== 0) {
             $errorGenerator->generateErrorMessageJS("The class '{$className}' is not defined.");
@@ -175,7 +187,7 @@ function valueForJSInsert($str)
  * @param string prefix strings for the prefix for key
  * @return string JavaScript source
  */
-function arrayToJS($ar, $prefix)
+function arrayToJS($ar, $prefix = "")
 {
     if (is_array($ar)) {
         $items = array();
