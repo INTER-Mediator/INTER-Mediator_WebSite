@@ -298,11 +298,17 @@ class GenerateJSCode
             (isset($options['authentication']) && isset($options['authentication']['realm'])) ?
                 $options['authentication']['realm'] : '', $q);
         if (isset($generatedPrivateKey)) {
-            $rsa = new Crypt_RSA();
+            $rsaClass = IMUtil::phpSecLibClass('phpseclib\Crypt\RSA');
+            $rsa = new $rsaClass;
             $rsa->setPassword($passPhrase);
             $rsa->loadKey($generatedPrivateKey);
             $rsa->setPassword();
-            $publickey = $rsa->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_RAW);
+            if (IMUtil::phpVersion() < 6) {
+                $publickey = $rsa->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_RAW);
+            } else {
+                $publickey = $rsa->getPublicKey(constant('phpseclib\Crypt\RSA::PUBLIC_FORMAT_RAW'));
+            }
+
             $this->generateAssignJS(
                 "INTERMediatorOnPage.publickey",
                 "new biRSAKeyPair('", $publickey['e']->toHex(), "','0','", $publickey['n']->toHex(), "')");

@@ -32,4 +32,6 @@ Thanks for nice works.
 
 * tiny-sha1 (https://code.google.com/p/tiny-sha1/)
 
+* Constant-Time Encoding (https://paragonie.com/blog/2016/06/constant-time-encoding-boring-cryptography-rfc-4648-and-you)
+
 ==========================================
