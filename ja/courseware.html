@@ -81,12 +81,13 @@
             </section>
             <section class="clearfix">
                 <h2>内容の紹介</h2>
-                <p>以下は本コースの目次です。一部、未実装の機能については、稼働後に内容を追加します。なお、書籍の更新は、読者の方々にメールでお知らせします。</p>
+                <p>以下は本コースの目次です。書籍の更新は、読者の方々にメールでお知らせします。</p>
 <div class="link_to_h2">0-1　まえがき</div>
 <div class="link_to_h3">本書の読み方</div>
 <div class="link_to_h3">監修者紹介</div>
 <div class="link_to_h3">著者紹介</div>
 <div class="link_to_h3">免責事項について</div>
+<div class="link_to_h3">Copyright</div>
 <div class="link_to_h1">Chapter 1　INTER-Mediatorの概要と演習の準備</div>
 <div class="link_to_h2">1-1　INTER-Mediatorの特徴</div>
 <div class="link_to_h3">MVCフレームワークが主流のWeb開発</div>
@@ -150,9 +151,7 @@
 <div class="link_to_h3">ポップアップメニューおよびリスト</div>
 <div class="link_to_h3"><span class="exsign">演習</span>テキスト以外のコントロールを設定する</div>
 <div class="link_to_h3">このセクションのまとめ</div>
-<div class="link_to_h2">3-3　バリデーション</div>
-<div class="link_to_h3">コンテキスト定義に設定するバリデーション</div>
-<div class="link_to_h2">3-4　レコードの追加・削除・複製</div>
+<div class="link_to_h2">3-3　レコードの追加・削除・複製</div>
 <div class="link_to_h3">挿入と削除が可能なコンテキスト</div>
 <div class="link_to_h3">挿入と削除のコントロール</div>
 <div class="link_to_h3"><span class="exsign">演習</span>挿入と削除のコントロールを追加する</div>
@@ -160,7 +159,7 @@
 <div class="link_to_h3">論理削除に対応する</div>
 <div class="link_to_h3">PostgreSQLでのシーケンスオブジェクト</div>
 <div class="link_to_h3">このセクションのまとめ</div>
-<div class="link_to_h2">3-5　入力専用モード</div>
+<div class="link_to_h2">3-4　入力専用モード</div>
 <div class="link_to_h3">ページファイルでの違い</div>
 <div class="link_to_h3">登録ボタンを押した後の動作の設定</div>
 <div class="link_to_h3"><span class="exsign">演習</span>入力専用モードのページを作成する</div>
@@ -168,6 +167,8 @@
 <div class="link_to_h3">確認付きの入力フォームの作成方法</div>
 <div class="link_to_h3">処理結果を伴う場合の対処</div>
 <div class="link_to_h3">このセクションのまとめ</div>
+<div class="link_to_h2">3-5　バリデーション</div>
+<div class="link_to_h3">コンテキスト定義に設定するバリデーション</div>
 <div class="link_to_h1">Chapter 4　コンテキストに対する理解を深める</div>
 <div class="link_to_h2">4-1　ターゲット指定</div>
 <div class="link_to_h3">リンクノードにおけるターゲット指定</div>
@@ -301,6 +302,7 @@
 <div class="link_to_h3">INTER-Mediatorを利用するネットワークの前提条件</div>
 <div class="link_to_h3">ブラウザーのセキュリティ</div>
 <div class="link_to_h3">クロスサイトスクリプティング攻撃（XSS）とinnerHTML</div>
+<div class="link_to_h3">クロスサイトリクエストフォージェリ（CSRF）を排除する</div>
 <div class="link_to_h3">データベースアカウントへのアクセス権設定</div>
 <div class="link_to_h3">セクションのまとめ</div>
 <div class="link_to_h2">7-2　ユーザー認証とアクセス権適用を行う仕組み</div>
@@ -336,13 +338,16 @@
 <div class="link_to_h3">設定ファイルparams.php</div>
 <div class="link_to_h3">データベース接続情報の管理</div>
 <div class="link_to_h3">設定ファイルparams.phpに記述できるその他の変数</div>
-<div class="link_to_h3">ブラウザーの限定についての設定</div>
+<div class="link_to_h3">ブラウザーの限定とJavaScript非対応時のエラーメッセージについての設定</div>
+<div class="link_to_h3">セキュリティ設定に関連するヘッダー</div>
+<div class="link_to_h3">アップロードしたファイルのパスの扱い</div>
 <div class="link_to_h3">Pusher利用に関する設定</div>
 <div class="link_to_h3">メールサーバーに関する設定</div>
 <div class="link_to_h3">ローカルコンテキストの初期値</div>
 <div class="link_to_h3">INTER-Mediator自身や定義ファイルの呼び出しパスをカスタマイズする</div>
 <div class="link_to_h3">このセクションのまとめ</div>
 <div class="link_to_h2">8-2　PHPでの記述が必要な認証処理</div>
+<div class="link_to_h3">params.phpに記述できる認証やアクセス権に関する変数</div>
 <div class="link_to_h3">電子メールアドレスをユーザー名としても利用可能にする設定</div>
 <div class="link_to_h3">params.phpファイルにも設定可能な認証の設定</div>
 <div class="link_to_h3">ログインパネルのカスタマイズ</div>
@@ -400,6 +405,7 @@
 <div class="link_to_h3">PHPのモジュールとphp.iniの設定</div>
 <div class="link_to_h3">FileMaker ServerでのWebサーバーとPHP</div>
 <div class="link_to_h3">プロバイダを利用した場合のデータベースとWebサーバー</div>
+<div class="link_to_h3">対応するPHPのバージョン</div>
 <div class="link_to_h3">PHPのサーバーモード</div>
 <div class="link_to_h3">このセクションのまとめ</div>
 <div class="link_to_h2">9-3　開発プロセスとアプリケーション構築</div>
