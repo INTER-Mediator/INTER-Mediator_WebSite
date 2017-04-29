@@ -2,7 +2,7 @@
 
 #### Part of FX.php #####################################################
 #                                                                       #
-#  License: Artistic License and addendum (included with release)       #
+#  License: Artistic License (included with release)                    #
 # Web Site: www.iviking.org                                             #
 #                                                                       #
 #########################################################################
@@ -13,7 +13,7 @@ class RetrieveFXData {
     /** @var FX $FX */
     var $FX;
 
-    function RetrieveFXData(&$FX) {
+    function __construct(&$FX) {
         $this->FX =& $FX;
     }
 

@@ -4,7 +4,7 @@
 #       By: Chris Hansen                                                #
 #  Version: 1.0                                                         #
 #     Date: 25 Feb 2008                                                 #
-#  License: Artistic License and addendum (included with release)       #
+#  License: Artistic License (included with release)                    #
 # Web Site: www.iviking.org                                             #
 #  Details: FX_Fuzzy_Debugger is part of the FX.php distribution.  It   #
 #          is designed to work with both FX.php and the FileMaker API   #
@@ -43,7 +43,7 @@ class FX_Fuzzy_Debugger
     var $fieldsArray = array();
     var $similarityThreshold = 5;
 
-    function FX_Fuzzy_Debugger (&$fmConnection, &$dataSet='') // When using with the FileMaker API for PHP, pass both the connection, and the returned data set
+    function __construct (&$fmConnection, &$dataSet='') // When using with the FileMaker API for PHP, pass both the connection, and the returned data set
     {
         if ((bool)(is_object($fmConnection) && (strtolower(get_class($fmConnection)) == 'filemaker' || is_subclass_of($fmConnection, 'filemaker')))) {
             require_once('FileMaker.php');
@@ -66,7 +66,7 @@ class FX_Fuzzy_Debugger
             $this->currentDatabase = $this->currentConnection->getProperty('database');
             $this->currentLayout = '';
         } elseif ((bool)(is_object($fmConnection) && (strtolower(get_class($fmConnection)) == 'fx' || is_subclass_of($fmConnection, 'fx')))) {
-            require_once('FX.php');
+            require_once('../FX.php');
             $this->connectionType = FX_CONNECTION;
             $this->currentConnection = clone($fmConnection);
             if (is_array($dataSet) && isset($dataSet['errorCode'])) {
@@ -265,4 +265,3 @@ class FX_Fuzzy_Debugger
     }
 
 }
-?>

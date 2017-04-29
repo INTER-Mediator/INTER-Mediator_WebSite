@@ -101,6 +101,7 @@ $browserCompatibility = array(
     'Safari' => '4+',
     //'Safari'=>array('Mac'=>'4+','Win'=>'4+'), // Sample for dividing with OS
     'Opera' => '1+',
+    'WebKit' => '1+',
 );
 
 /*
@@ -218,3 +219,11 @@ $uploadFilePathMode = "";
  * This header will be appended other server url than the origin.
  */
 //$accessControlAllowOrigin = "https://server.msyk.net";
+
+//$altThemePath = "/var/www/thmeme";    //Your original thmeme directory.
+//$themeName = "blackbird";      //Default theme name.
+
+// Server side locale for this application. This locale replaces the browser's accepting languages.
+//$appLocale = "ja_JP";   // Locale for application has to be specified the langunage_country code.
+//$appCurrency = "JP";    // Locale for currency has to be specified the country code.
+

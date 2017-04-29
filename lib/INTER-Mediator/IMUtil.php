@@ -39,7 +39,7 @@ class IMUtil
         // End of for 5.2
         return $timeValue;
     }
-    
+
     public static function phpVersion()
     {
         $vString = explode('.', phpversion());
@@ -61,9 +61,54 @@ class IMUtil
         return dirname(__FILE__);
     }
 
+    public static function getMIMEType($path)
+    {
+        $type = "application/octet-stream";
+        switch (strtolower(substr($path, strrpos($path, '.') + 1))) {
+            case 'jpg':
+                $type = 'image/jpeg';
+                break;
+            case 'css':
+                $type = 'text/css';
+                break;
+            case 'jpeg':
+                $type = 'image/jpeg';
+                break;
+            case 'png':
+                $type = 'image/png';
+                break;
+            case 'html':
+                $type = 'text/html';
+                break;
+            case 'txt':
+                $type = 'text/plain';
+                break;
+            case 'gif':
+                $type = 'image/gif';
+                break;
+            case 'bmp':
+                $type = 'image/bmp';
+                break;
+            case 'tif':
+                $type = 'image/tiff';
+                break;
+            case 'tiff':
+                $type = 'image/tiff';
+                break;
+            case 'pdf':
+                $type = 'application/pdf';
+                break;
+            case 'svg':
+                $type = 'image/svg+xml';
+                break;
+        }
+        return $type;
+    }
+
     public static function combinePathComponents($ar)
     {
         $path = "";
+        $isFirstItem = true;
         foreach ($ar as $item) {
             $isSepTerminate = (substr($path, -1) == DIRECTORY_SEPARATOR);
             $isSepStart = (substr($item, 0, 1) == DIRECTORY_SEPARATOR);
@@ -72,10 +117,20 @@ class IMUtil
             } elseif ($isSepTerminate && $isSepStart) {
                 $path .= substr($item, 1);
             } else {
-                $path .= DIRECTORY_SEPARATOR . $item;
+                if (!$isFirstItem || !self::isPHPExecutingWindows()) {
+                    $path .= DIRECTORY_SEPARATOR;
+                }
+                $path .= $item;
             }
+            $isFirstItem = false;
         }
         return $path;
+    }
+
+    public static function isPHPExecutingWindows()
+    {
+        $osName = php_uname("s");
+        return $osName == "Windows NT";
     }
 
     public static function includeLibClasses($classes)
@@ -90,6 +145,7 @@ class IMUtil
                     $classComp[] = $cComp;
                 }
             }
+
             $fpath = IMUtil::combinePathComponents(array_merge($pathComp, $classComp)) . ".php";
             if (file_exists($fpath)) {
                 require_once($fpath);
@@ -109,12 +165,16 @@ class IMUtil
         }
         return "Invalid_Class_Specification";
     }
-    
-    public static function phpSecLibRequiredClasses()   {
-        if (IMUtil::phpVersion() < 6)   {
+
+    public static function phpSecLibRequiredClasses()
+    {
+        if (IMUtil::phpVersion() < 6) {
             return array(
                 'phpseclib\Crypt\RSA',
                 'phpseclib\Crypt\Hash',
+                'phpseclib\Crypt\Base',
+                'phpseclib\Crypt\Rijndael',
+                'phpseclib\Crypt\AES',
                 'phpseclib\Math\BigInteger',
             );
         } else {
@@ -129,6 +189,9 @@ class IMUtil
                 'phpseclib\Crypt\RSA\Raw',
                 'phpseclib\Crypt\RSA\XML',
                 'phpseclib\Crypt\Hash',
+                'phpseclib\Crypt\Base',
+                'phpseclib\Crypt\Rijndael',
+                'phpseclib\Crypt\AES',
                 'phpseclib\Math\BigInteger',
                 'ParagonIE\ConstantTime\EncoderInterface',
                 'ParagonIE\ConstantTime\Base64',
@@ -175,9 +238,8 @@ class IMUtil
         $postMaxSize = self::return_bytes(ini_get('post_max_size'));
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST'
-            //    && count($_POST) == 0
-            && $_SERVER['HTTP_CONTENT_LENGTH'] > $postMaxSize
-            && strpos($_SERVER['HTTP_CONTENT_TYPE'], 'multipart/form-data') === 0
+            && $_SERVER['CONTENT_LENGTH'] > $postMaxSize
+            && strpos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') === 0
         ) {
             return true;
         }
@@ -212,7 +274,6 @@ class IMUtil
         }
         return $val;
     }
-
 
     public static function getFromParamsPHPFile($vars, $permitUndef = false)
     {
@@ -332,7 +393,7 @@ class IMUtil
     {
         if (is_null($params)) {
             $params = IMUtil::getFromParamsPHPFile(
-                array('xFrameOptions', 'contentSecurityPolicy','accessControlAllowOrigin'), true);
+                array('xFrameOptions', 'contentSecurityPolicy', 'accessControlAllowOrigin'), true);
         }
         $xFrameOptions = str_replace("\r", '', str_replace("\n", '', $params['xFrameOptions']));
         $contentSecurityPolicy = str_replace("\r", '', str_replace("\n", '', $params['contentSecurityPolicy']));

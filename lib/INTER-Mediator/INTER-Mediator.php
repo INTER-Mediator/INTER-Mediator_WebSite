@@ -86,12 +86,10 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
         }
     }
 
-//    file_put_contents("/tmp/php2.log", "POST: " . var_export($_POST, true), FILE_APPEND);
-//    file_put_contents("/tmp/php2.log", "GET: " . var_export($_GET, true), FILE_APPEND);
-//    file_put_contents("/tmp/php2.log", "FILES: " . var_export($_FILES, true), FILE_APPEND);
-//    file_put_contents("/tmp/php2.log", "SERVER: " . var_export($_SERVER, true), FILE_APPEND);
-
-    if (isset($g_serverSideCall) && $g_serverSideCall) {
+    if (isset($_GET['theme'])) {
+        $themeManager = new Theme();
+        $themeManager->processing();
+    } else if (isset($g_serverSideCall) && $g_serverSideCall) {
         $dbInstance = new DB_Proxy();
         $dbInstance->initialize($datasource, $options, $dbspecification, $debug);
         $dbInstance->processingRequest("NON");
@@ -121,14 +119,17 @@ function IM_Entry($datasource, $options, $dbspecification, $debug = false)
         $generator->generateInitialJSCode($datasource, $options, $dbspecification, $debug);
     } else {
         $dbInstance = new DB_Proxy();
-        $dbInstance->initialize($datasource, $options, $dbspecification, $debug);
-        $util = new IMUtil();
-        if ($util->protectCSRF() === TRUE) {
-            $dbInstance->processingRequest();
-            $dbInstance->finishCommunication(false);
+        if (!$dbInstance->initialize($datasource, $options, $dbspecification, $debug)) {
+            $dbInstance->finishCommunication(true);
         } else {
-            $dbInstance->addOutputData('debugMessages', 'Invalid Request Error.');
-            $dbInstance->addOutputData('errorMessages', array('Invalid Request Error.'));
+            $util = new IMUtil();
+            if ($util->protectCSRF() === TRUE) {
+                $dbInstance->processingRequest();
+                $dbInstance->finishCommunication(false);
+            } else {
+                $dbInstance->addOutputData('debugMessages', 'Invalid Request Error.');
+                $dbInstance->addOutputData('errorMessages', array('Invalid Request Error.'));
+            }
         }
         $dbInstance->exportOutputDataAsJSON();
     }
@@ -148,7 +149,7 @@ function loadClass($className)
     ) {
         $result = include_once $className . '.php';
         if (!$result) {
-        
+
         }
         if (!$result) {
             $errorGenerator = new GenerateJSCode();
@@ -288,83 +289,6 @@ function getRelativePath()
     $relPath = str_repeat('../', count($caller) - $i)
         . implode('/', array_slice($imDirectory, $i));
     return $relPath;
-}
-
-/**
- * Set the locale with parameter, for UNIX and Windows OS.
- * @param string locType locale identifier string.
- * @return boolean If true, strings with locale are possibly multi-byte string.
- */
-function setLocaleAsBrowser($locType)
-{
-    $lstr = getLocaleFromBrowser(
-        (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? 'ja_JP' : $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-
-    // Detect server platform, Windows or Unix
-    $isWindows = false;
-    $uname = php_uname();
-    if (strpos($uname, 'Windows')) {
-        $isWindows = true;
-    }
-
-    $useMbstring = false;
-    if ($lstr == 'ja_JP') {
-        $useMbstring = true;
-        if ($isWindows) {
-            setlocale($locType, 'jpn_jpn');
-        } else {
-            setlocale($locType, 'ja_JP');
-        }
-    } else if ($lstr == 'ja') {
-        $useMbstring = true;
-        if ($isWindows) {
-            setlocale($locType, 'jpn_jpn');
-        } else {
-            setlocale($locType, 'ja_JP');
-        }
-    } else if ($lstr == 'en_US') {
-        if ($isWindows) {
-            setlocale($locType, 'jpn_jpn');
-        } else {
-            setlocale($locType, 'en_US');
-        }
-    } else if ($lstr == 'en') {
-        if ($isWindows) {
-            setlocale($locType, 'jpn_jpn');
-        } else {
-            setlocale($locType, 'en_US');
-        }
-    } else {
-        setlocale($locType, '');
-    }
-    return $useMbstring;
-}
-
-/**
- * Get the locale string (ex. 'ja_JP') from HTTP header from a browser.
- * @param string $accept $_SERVER['HTTP_ACCEPT_LANGUAGE']
- * @return string Most prior locale identifier
- */
-function getLocaleFromBrowser($accept)
-{
-    $lstr = strtolower($accept);
-    // Extracting first item and cutting the priority infos.
-    if (strpos($lstr, ',') !== false) $lstr = substr($lstr, 0, strpos($lstr, ','));
-    if (strpos($lstr, ';') !== false) $lstr = substr($lstr, 0, strpos($lstr, ';'));
-
-    // Convert to the right locale identifier.
-    if (strpos($lstr, '-') !== false) {
-        $lstr = explode('-', $lstr);
-    } else if (strpos($lstr, '_') !== false) {
-        $lstr = explode('_', $lstr);
-    } else {
-        $lstr = array($lstr);
-    }
-    if (count($lstr) == 1)
-        $lstr = $lstr[0];
-    else
-        $lstr = strtolower($lstr[0]) . '_' . strtoupper($lstr[1]);
-    return $lstr;
 }
 
 function hex2bin_for53($str)
