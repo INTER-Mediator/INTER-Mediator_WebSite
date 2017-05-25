@@ -21,7 +21,7 @@ IM_Entry(
         ),
     ),
     array(
-        'thema' => 'least',
+        'theme' => 'least',
     ),
     array(
         'db-class' => 'Null',
