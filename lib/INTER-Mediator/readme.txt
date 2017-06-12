@@ -4,7 +4,7 @@ Driven by INTER-Mediator Directive Committee (http://inter-mediator.org/)
 
 Thanks for your interest of this software.
 
-Product information: http://inter-mediator.com
+Product information: https://inter-mediator.com
 Online manual: http://inter-mediator.info
 
 Sample pages with this archived file are published at below.
