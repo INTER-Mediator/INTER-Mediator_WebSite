@@ -147,10 +147,10 @@ function loadClass($className)
         strpos($className, 'PHPExcel_') === false &&
         $className !== 'Composer\Autoload\ClassLoader'
     ) {
-        $result = include_once $className . '.php';
-        if (!$result) {
-
+        if ($className === 'NumberFormatter' && !class_exists($className)) {
+            $className = 'IMNumberFormatter';
         }
+        $result = include_once $className . '.php';
         if (!$result) {
             $errorGenerator = new GenerateJSCode();
             if (strpos($className, "MessageStrings_") !== 0) {
@@ -158,7 +158,6 @@ function loadClass($className)
             }
         }
     }
-
 }
 
 /**

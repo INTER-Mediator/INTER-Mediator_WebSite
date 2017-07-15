@@ -350,7 +350,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         $fxPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'FX';
         $fxFiles = array(
             'FX.php',
-            'datasource_classes' . DIRECTORY_SEPARATOR . 'RetrieveFM7Data.class.php',
+            'lib/datasource_classes' . DIRECTORY_SEPARATOR . 'RetrieveFM7Data.class.php',
         );
         foreach ($fxFiles as $fxFile) {
             $path = $fxPath . DIRECTORY_SEPARATOR . $fxFile;
@@ -834,7 +834,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         }
         if (isset($context['global'])) {
             foreach ($context['global'] as $condition) {
-                if ($condition['db-operation'] == 'load' || $condition['db-operation'] == 'read') {
+                if (isset($condition['db-operation']) && in_array($condition['db-operation'], array('load', 'read'))) {
                     $this->fx->SetFMGlobal($condition['field'], $condition['value']);
                 }
             }
@@ -850,7 +850,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         $queryString .= '&-max=' . $this->fx->groupSize . $skipRequest;
         if (isset($context['script'])) {
             foreach ($context['script'] as $condition) {
-                if ($condition['db-operation'] == 'load' || $condition['db-operation'] == 'read') {
+                if (isset($condition['db-operation']) && in_array($condition['db-operation'], array('load', 'read'))) {
                     $queryString .= $this->executeScriptsforLoading($context['script']);
                 }
             }
@@ -894,7 +894,7 @@ class DB_FileMaker_FX extends DB_AuthCommon implements DB_Access_Interface
         } else {
             $currentSearch = '';
             if (isset($context['script'])) {
-                if ($condition['db-operation'] == 'load' || $condition['db-operation'] == 'read') {
+                if (isset($condition['db-operation']) && in_array($condition['db-operation'], array('load', 'read'))) {
                     $currentSearch = $this->executeScriptsforLoading($context['script']);
                 }
             }
