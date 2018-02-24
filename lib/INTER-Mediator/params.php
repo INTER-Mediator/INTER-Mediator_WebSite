@@ -28,7 +28,7 @@ $dbPassword = 'password';
  */
 $dbServer = '127.0.0.1';
 $dbPort = '80';
-$dbDataType = 'FMPro12';
+//$dbDataType = 'FMPro12';
 $dbDatabase = 'TestDB';
 $dbProtocol = 'HTTP';
 
@@ -224,6 +224,6 @@ $uploadFilePathMode = "";
 //$themeName = "blackbird";      //Default theme name.
 
 // Server side locale for this application. This locale replaces the browser's accepting languages.
-//$appLocale = "ja_JP";   // Locale for application has to be specified the langunage_country code.
-//$appCurrency = "JP";    // Locale for currency has to be specified the country code.
+$appLocale = "ja_JP";   // Locale for application has to be specified the langunage_country code.
+$appCurrency = "JP";    // Locale for currency has to be specified the country code.
 
