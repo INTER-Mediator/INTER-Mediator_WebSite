@@ -21,9 +21,9 @@ require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'DB_Support' . DIRECTORY_
 
 class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
 {
-    private $fmData = null;     // FMDataAPI class's instance
-    private $fmDataAuth = null; // FMDataAPI class's instance
-    private $fmDataAlt = null;  // FMDataAPI class's instance
+    public $fmData = null;     // FMDataAPI class's instance
+    public $fmDataAuth = null; // FMDataAPI class's instance
+    public $fmDataAlt = null;  // FMDataAPI class's instance
     private $targetLayout = null;
     private $recordCount = null;
     private $mainTableCount = 0;
@@ -69,21 +69,21 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
         $this->softDeleteValue = $value;
     }
 
-    private function setupFMDataAPIforAuth($layoutName, $recordCount)
+    public function setupFMDataAPIforAuth($layoutName, $recordCount)
     {
         $this->fmData = null;
         $this->fmDataAuth = $this->setupFMDataAPI_Impl($layoutName, $recordCount,
             $this->dbSettings->getDbSpecUser(), $this->dbSettings->getDbSpecPassword());
     }
 
-    private function setupFMDataAPIforDB($layoutName, $recordCount)
+    public function setupFMDataAPIforDB($layoutName, $recordCount)
     {
         $this->fmDataAuth = null;
         $this->fmData = $this->setupFMDataAPI_Impl($layoutName, $recordCount,
             $this->dbSettings->getAccessUser(), $this->dbSettings->getAccessPassword());
     }
 
-    private function setupFMDataAPIforDB_Alt($layoutName, $recordCount)
+    public function setupFMDataAPIforDB_Alt($layoutName, $recordCount)
     {
         $this->fmDataAlt = $this->setupFMDataAPI_Impl($layoutName, $recordCount,
             $this->dbSettings->getAccessUser(), $this->dbSettings->getAccessPassword());
@@ -112,7 +112,7 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
         $this->specHandler = new DB_Spec_Handler_FileMaker_DataAPI();
     }
 
-    private function stringWithoutCredential($str)
+    public function stringWithoutCredential($str)
     {
         if (is_null($this->fmData)) {
             $str = str_replace($this->dbSettings->getDbSpecUser(), "********", $str);
@@ -229,12 +229,22 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
         $this->fieldInfo = null;
 
         $this->setupFMDataAPIforDB($this->dbSettings->getEntityForRetrieve(), '');
-        $this->dbSettings->setDbSpecDataType(
-            str_replace('fmpro', 'fmalt',
-                strtolower($this->dbSettings->getDbSpecDataType())));
-        $result = $this->fmData->FMView();
+        $layout = $this->targetLayout;
+        $result = $this->fmData->{$layout}->query(NULL, NULL, 1, 1);
 
-        if (!is_array($result)) {
+        $portal = array();
+        if (!is_null($result)) {
+            $portalNames = $result->getPortalNames();
+            if (count($portalNames) >= 1) {
+                foreach ($portalNames as $key => $portalName) {
+                    $portal = array_merge($portal, array($key => $portalName));
+                }
+                $result = $this->fmData->{$layout}->query(NULL, NULL, 1, 1, $portal);
+            }
+        }
+
+        //if (!is_array($result)) {
+        if (get_class($result) !== 'INTERMediator\\FileMakerServer\\RESTAPI\\Supporting\\FileMakerRelation') {
             if ($this->dbSettings->isDBNative()) {
                 $this->dbSettings->setRequireAuthentication(true);
             } else {
@@ -245,8 +255,8 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
         }
 
         $returnArray = array();
-        foreach ($result['fields'] as $key => $fieldInfo) {
-            $returnArray[$fieldInfo['name']] = '';
+        foreach ($result->getFieldNames() as $key => $fieldName) {
+            $returnArray[$fieldName] = '';
         }
 
         return $returnArray;
@@ -297,7 +307,7 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
 
         $searchConditions = array();
         $neqConditions = array();
-        $queryValues = array();
+        //$queryValues = array();
         $qNum = 1;
 
         $hasFindParams = false;
@@ -311,18 +321,17 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                         if (!$this->specHandler->isPossibleOperator($condition['operator'])) {
                             throw new Exception("Invalid Operator.: {$condition['operator']}");
                         }
-                        $this->fmData->AddDBParam($condition['field'], $condition['value'], $condition['operator']);
+                        // [WIP] $this->fmData->AddDBParam($condition['field'], $condition['value'], $condition['operator']);
                         $searchConditions[] = $this->setSearchConditionsForCompoundFound(
                             $condition['field'], $condition['value'], $condition['operator']);
                     } else {
-                        $this->fmData->AddDBParam($condition['field'], $condition['value']);
+                        // [WIP] $this->fmData->AddDBParam($condition['field'], $condition['value']);
                         $searchConditions[] = $this->setSearchConditionsForCompoundFound(
                             $condition['field'], $condition['value']);
                     }
                     $hasFindParams = true;
 
-                    $queryValues[] = 'q' . $qNum;
-                    $qNum++;
+                    // [WIP]
                     if (isset($condition['operator']) && $condition['operator'] === 'neq') {
                         $neqConditions[] = TRUE;
                     } else {
@@ -355,8 +364,11 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                     // [WIP] $this->fmData->AddDBParam($condition['field'], $condition['value'], $condition['operator']);
                     $searchConditions[] = $this->setSearchConditionsForCompoundFound(
                         $condition['field'], $condition['value'], $condition['operator']);
-                    $queryValues[] = 'q' . $qNum;
-                    $qNum++;
+                    
+                    //$queryValues[] = 'q' . $qNum;
+                    //$qNum++;
+
+                    // [WIP]
                     if (isset($condition['operator']) && $condition['operator'] === 'neq') {
                         $neqConditions[] = TRUE;
                     } else {
@@ -365,7 +377,7 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
 
                     $hasFindParams = true;
                     if ($condition['field'] == $this->specHandler->getDefaultKey()) {
-                        $this->fmData->FMSkipRecords(0);
+                        // [WIP] $this->fmData->FMSkipRecords(0);
                     }
                 }
             }
@@ -392,8 +404,10 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                             $foreignField, $formattedValue, $foreignOperator);
                         $hasFindParams = true;
 
-                        $queryValues[] = 'q' . $qNum;
-                        $qNum++;
+                        //$queryValues[] = 'q' . $qNum;
+                        //$qNum++;
+
+                        // [WIP]
                         if (isset($foreignOperator) && $foreignOperator === 'neq') {
                             $neqConditions[] = TRUE;
                         } else {
@@ -426,8 +440,8 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                         $authInfoField, $signedUser, 'eq');
                     $hasFindParams = true;
 
-                    $queryValues[] = 'q' . $qNum;
-                    $qNum++;
+                    //$queryValues[] = 'q' . $qNum;
+                    //$qNum++;
                     $neqConditions[] = FALSE;
                 }
             } else
@@ -444,8 +458,8 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                             $authInfoField, $belongGroups[0], 'eq');
                         $hasFindParams = true;
 
-                        $queryValues[] = 'q' . $qNum;
-                        $qNum++;
+                        //$queryValues[] = 'q' . $qNum;
+                        //$qNum++;
                         $neqConditions[] = FALSE;
                     }
                 }
@@ -464,8 +478,8 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                 $this->softDeleteField, $this->softDeleteValue, 'eq');
             $hasFindParams = true;
 
-            $queryValues[] = 'q' . $qNum;
-            $qNum++;
+            //$queryValues[] = 'q' . $qNum;
+            //$qNum++;
             $neqConditions[] = FALSE;
         }
 
@@ -488,13 +502,17 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
 
         $condition = array();
         if ($searchConditions !== array()) {
-            $tmpCondition = array();
-            foreach ($searchConditions as $searchCondition) {
-                $tmpCondition[$searchCondition[0]] = $searchCondition[1];
-                // [WIP] or
-                // $condition[] = array($searchCondition[0] => $searchCondition[1]);
+            if ($useOrOperation === TRUE) {
+                foreach ($searchConditions as $searchCondition) {
+                    $condition[] = array($searchCondition[0] => $searchCondition[1]);
+                }
+            } else {
+                $tmpCondition = array();
+                foreach ($searchConditions as $searchCondition) {
+                    $tmpCondition[$searchCondition[0]] = $searchCondition[1];
+                }
+                $condition[] = $tmpCondition;
             }
-            $condition[] = $tmpCondition;
         }
         if ($condition === array()) {
             $condition = NULL;
@@ -502,6 +520,7 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
 
         $request = filter_input_array(INPUT_POST);
         foreach ($request as $key => $val) {
+            /*
             if (substr($key, 0, 6) !== 'field_') {
                 unset($request[$key]);
             }
@@ -521,6 +540,7 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                     }
                 }
             }
+            */
 
             if (substr($key, 0, 7) === 'sortkey' && substr($key, -5, 5) === 'field') {
                 $orderNum = substr($key, 7, 1);
@@ -534,15 +554,31 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
         }
 
         $portal = array();
+        $portalNames = array();
+        $recordId = NULL;
+        $result = NULL;
         try {
-            $result = $this->fmData->{$layout}->query($condition, $sort, $skip + 1, $limitParam);
-            $portalNames = $result->getPortalNames();
-            if (count($portalNames) > 1) {
-                foreach ($portalNames as $key => $portalName) {
-                    $portal = array_merge($portal, array($key => $portalName));
+            if (count($condition) === 1 && isset($condition[0]['recordId'])) {
+                $recordId = str_replace('=', '', $condition[0]['recordId']);
+                if (is_numeric($recordId)) {
+                    $result = $this->fmData->{$layout}->getRecord($recordId);
+                }
+            } else {
+                $result = $this->fmData->{$layout}->query($condition, $sort, $skip + 1, 1);
+            }
+            if (!is_null($result)) {
+                $portalNames = $result->getPortalNames();
+                if (count($portalNames) >= 1) {
+                    foreach ($portalNames as $key => $portalName) {
+                        $portal = array_merge($portal, array($key => $portalName));
+                    }
+                    if (!is_numeric($recordId)) {
+                        $result = $this->fmData->{$layout}->query($condition, $sort, $skip + 1, $limitParam, $portal);
+                    }
+                } else {
+                    $result = $this->fmData->{$layout}->query($condition, $sort, $skip + 1, $limitParam);
                 }
             }
-            $result = $this->fmData->{$layout}->query($condition, $sort, $skip + 1, $limitParam, $portal);
         } catch (Exception $e) {
             // Don't output error messages if no related records
             if (strpos($e->getMessage(), 'Error Code: 401, Error Message: No records match the request') === false) {
@@ -551,7 +587,7 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
         }
 
         $recordArray = array();
-        if (isset($result) && $result) {
+        if (!is_null($result)) {
             foreach ($result as $record) {
                 $dataArray = array();
                 if (!$usePortal) {
@@ -559,7 +595,8 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                         'recordId' => $record->getRecordId(),
                     );
                 }
-                foreach ($request as $key => $fieldName) {
+                foreach ($result->getFieldNames() as $key => $fieldName) {
+                //foreach ($request as $key => $fieldName) {
                     $dataArray = $dataArray + array(
                         $fieldName => $this->formatter->formatterFromDB(
                             $this->getFieldForFormatter($tableName, $fieldName), $record->{$fieldName}
@@ -568,7 +605,7 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                 }
                 
                 $relatedsetArray = array();
-                if (count($portalNames) > 1) {
+                if (count($portalNames) >= 1) {
                     $relatedArray = array();
                     foreach ($portalNames as $key => $portalName) {
                         foreach ($result->{$portalName} as $portalRecord) {
@@ -612,7 +649,9 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
             }
             
 
-            $result = $this->fmData->{$layout}->query($condition, NULL, 1, 100000000);
+            if ($recordId === NULL) {
+                $result = $this->fmData->{$layout}->query($condition, NULL, 1, 100000000);
+            }
             $this->mainTableCount = $result->count();
             $this->mainTableTotalCount = $result->count();
         }
@@ -729,31 +768,19 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                 if (isset($relDef['portal']) && $relDef['portal']) {
                     $usePortal = true;
                     $context['paging'] = true;
-                    $this->dbSettings->setDbSpecDataType(
-                        str_replace('fmpro', 'fmalt', strtolower($this->dbSettings->getDbSpecDataType())));
                 }
             }
         }
 
         if ($usePortal) {
-            $this->setupFMDataAPIforDB($this->dbSettings->getEntityForRetrieve(), 1);
+            $layout = $this->dbSettings->getEntityForRetrieve();
+            $this->setupFMDataAPIforDB($layout, 1);
         } else {
-            $this->setupFMDataAPIforDB($this->dbSettings->getEntityForUpdate(), 1);
+            $layout = $this->dbSettings->getEntityForUpdate();
+            $this->setupFMDataAPIforDB($layout, 1);
         }
         $tableInfo = $this->dbSettings->getDataSourceTargetArray();
         $primaryKey = isset($tableInfo['key']) ? $tableInfo['key'] : $this->specHandler->getDefaultKey();
-
-        /*
-        $fxUtility = new RetrieveFM7Data($this->fmData);
-        $config = array(
-            'urlScheme' => $this->fmData->urlScheme,
-            'dataServer' => $this->fmData->dataServer,
-            'dataPort' => $this->fmData->dataPort,
-            'DBUser' => $this->dbSettings->getAccessUser(),
-            'DBPassword' => $this->dbSettings->getAccessPassword(),
-        );
-        $cwpkit = new CWPKit($config);
-        */
 
         if (isset($tableInfo['query'])) {
             foreach ($tableInfo['query'] as $condition) {
@@ -828,12 +855,27 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                 return false;
             }
         }
-        //$result = $this->fmData->DoFxAction('perform_find', TRUE, TRUE, 'full');
+
         $condition = array(array($primaryKey => filter_input(INPUT_POST, 'condition0value')));
-        $layout = filter_input(INPUT_POST, 'name');;
-        $result = $this->fmData->{$layout}->query($condition);
-        /*
-        if (!is_array($result)) {
+        $result = NULL;
+        $portal = array();
+        if (count($condition) === 1 && isset($condition[0]['recordId'])) {
+            $recordId = str_replace('=', '', $condition[0]['recordId']);
+            if (is_numeric($recordId)) {
+                $result = $this->fmData->{$layout}->getRecord($recordId);
+            }
+        } else {
+            $result = $this->fmData->{$layout}->query($condition, NULL, 1, 1);
+            $portalNames = $result->getPortalNames();
+            if (count($portalNames) >= 1) {
+                foreach ($portalNames as $key => $portalName) {
+                    $portal = array_merge($portal, array($key => $portalName));
+                }
+                $result = $this->fmData->{$layout}->query($condition, NULL, 1, 1, $portal);
+            }
+        }
+
+        if (get_class($result) !== 'INTERMediator\\FileMakerServer\\RESTAPI\\Supporting\\FileMakerRelation') {
             if ($this->dbSettings->isDBNative()) {
                 $this->dbSettings->setRequireAuthentication(true);
             } else {
@@ -842,7 +884,7 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
             }
             return false;
         }
-        */
+
         // [WIP] $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
 //        $this->logger->setDebugMessage($this->stringWithoutCredential(var_export($this->dbSettings->getFieldsRequired(),true)));
 
@@ -904,6 +946,8 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                         }
                     }
                 }
+                /*
+                // [WIP] FileMaker Data API (Trial) doesn't support executing FileMaker scripts
                 if (isset($tableInfo['script'])) {
                     foreach ($tableInfo['script'] as $condition) {
                         if ($condition['db-operation'] == 'update') {
@@ -911,11 +955,15 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                         }
                     }
                 }
+                */
 
                 $this->notifyHandler->setQueriedEntity($this->fmData->layout);
 
-                //$result = $this->fmData->DoFxAction('update', TRUE, TRUE, 'full');
-                $this->fmData->{$layout}->update($recId, array(filter_input(INPUT_POST, 'field_0') => filter_input(INPUT_POST, 'value_0')));
+                $originalfield = filter_input(INPUT_POST, 'field_0');
+                $value = filter_input(INPUT_POST, 'value_0');
+                $convVal = $this->formatter->formatterToDB(
+                    $this->getFieldForFormatter($tableSourceName, $originalfield), $value);
+                $this->fmData->{$layout}->update($recId, array($originalfield => $convVal));
                 $result = $this->fmData->{$layout}->getRecord($recId);
                 /* [WIP]
                 if (!is_array($result)) {
@@ -955,14 +1003,13 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                 if (isset($relDef['portal']) && $relDef['portal']) {
                     $usePortal = true;
                     $context['paging'] = true;
-                    $this->dbSettings->setDbSpecDataType(
-                        str_replace('fmpro', 'fmalt',
-                            strtolower($this->dbSettings->getDbSpecDataType())));
                 }
             }
         }
 
         $keyFieldName = isset($context['key']) ? $context['key'] : $this->specHandler->getDefaultKey();
+
+        $recordData = array();
 
         $this->setupFMDataAPIforDB($this->dbSettings->getEntityForUpdate(), 1);
         $requiredFields = $this->dbSettings->getFieldsRequired();
@@ -972,12 +1019,11 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
             $field = $requiredFields[$i];
             $value = $fieldValues[$i];
             if ($field != $keyFieldName) {
-                $this->fmData->AddDBParam(
-                    $field,
+                $recordData += array(
+                    $field =>
                     $this->formatter->formatterToDB(
                         "{$this->dbSettings->getEntityForUpdate()}{$this->dbSettings->getSeparator()}{$field}",
-                        $this->unifyCRLF((is_array($value)) ? implode("\r", $value) : $value)
-                    )
+                        $this->unifyCRLF((is_array($value)) ? implode("\r", $value) : $value))
                 );
             }
         }
@@ -988,7 +1034,7 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                 if ($field != $keyFieldName) {
                     $filedInForm = "{$this->dbSettings->getEntityForUpdate()}{$this->dbSettings->getSeparator()}{$field}";
                     $convVal = $this->unifyCRLF((is_array($value)) ? implode("\r", $value) : $value);
-                    $this->fmData->AddDBParam($field, $this->formatter->formatterToDB($filedInForm, $convVal));
+                    $recordData += array($field => $this->formatter->formatterToDB($filedInForm, $convVal));
                 }
             }
         }
@@ -1001,12 +1047,16 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
             $authInfoTarget = $this->authHandler->getTargetForAuthorization("create");
             if ($authInfoTarget == 'field-user') {
                 $signedUser = $this->authHandler->authSupportUnifyUsernameAndEmail($this->dbSettings->getCurrentUser());
-                $this->fmData->AddDBParam($authInfoField,
-                    strlen($this->dbSettings->getCurrentUser()) == 0 ? randomString(10) : $signedUser);
+                $recordData += array(
+                    $authInfoField =>
+                    strlen($this->dbSettings->getCurrentUser()) == 0 ? randomString(10) : $signedUser
+                );
             } else if ($authInfoTarget == 'field-group') {
                 $belongGroups = $this->authHandler->authSupportGetGroupsOfUser($this->dbSettings->getCurrentUser());
-                $this->fmData->AddDBParam($authInfoField,
-                    strlen($belongGroups[0]) == 0 ? randomString(10) : $belongGroups[0]);
+                $recordData += array(
+                    $authInfoField =>
+                    strlen($belongGroups[0]) == 0 ? randomString(10) : $belongGroups[0]
+                );
             } else {
                 if ($this->dbSettings->isDBNative()) {
                 } else {
@@ -1028,6 +1078,8 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                 }
             }
         }
+        /*
+        // [WIP] FileMaker Data API (Trial) doesn't support executing FileMaker scripts
         if (isset($context['script'])) {
             foreach ($context['script'] as $condition) {
                 if ($condition['db-operation'] == 'new' || $condition['db-operation'] == 'create') {
@@ -1035,37 +1087,32 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                 }
             }
         }
+        */
 
-        $result = $this->fmData->DoFxAction('new', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
+        $layout = $this->dbSettings->getEntityForUpdate();
+        $recId = $this->fmData->{$layout}->create($recordData);
+        $result = $this->fmData->{$layout}->getRecord($recId);
+        if (get_class($result) !== 'INTERMediator\\FileMakerServer\\RESTAPI\\Supporting\\FileMakerRelation') {
             if ($this->dbSettings->isDBNative()) {
                 $this->dbSettings->setRequireAuthentication(true);
             } else {
-                $this->errorMessage[] = get_class($result) . ': ' . $result->getDebugInfo();
+                // [WIP] $this->errorMessage[] = get_class($result) . ': ' . $result->getDebugInfo();
             }
             return false;
         }
 
-        $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
-        if ($result['errorCode'] > 0 && $result['errorCode'] != 401) {
+        // [WIP] $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
+        if ($this->fmData->errorCode() > 0 && $this->fmData->errorCode() != 401) {
             $this->logger->setErrorMessage($this->stringWithoutCredential(
-                "FX reports error at edit action: code={$result['errorCode']}, url={$result['URL']}<hr>"));
+                "FileMaker Data API reports error at create action: code={$this->fmData->errorCode()}<hr>"));
             return false;
         }
-        foreach ($result['data'] as $key => $row) {
-            if ($keyFieldName == $this->specHandler->getDefaultKey()) {
-                $recId = substr($key, 0, strpos($key, '.'));
-                $keyValue = $recId;
-            } else {
-                $keyValue = $row[$keyFieldName][0];
-            }
-        }
 
-        $this->notifyHandler->setQueriedPrimaryKeys(array($keyValue));
+        $this->notifyHandler->setQueriedPrimaryKeys(array($recId));
         $this->notifyHandler->setQueriedEntity($this->fmData->layout);
 
-        $this->updatedRecord = $this->createRecordset($result['data'], $dataSourceName, null, null, null);
-        return $keyValue;
+        // [WIP] $this->updatedRecord = $this->createRecordset($result['data'], $dataSourceName, null, null, null);
+        return $recId;
     }
 
     public function deleteFromDB()
@@ -1073,6 +1120,7 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
         $this->fieldInfo = null;
 
         $context = $this->dbSettings->getDataSourceTargetArray();
+        $condition = array();
 
         $usePortal = false;
         if (isset($context['relation'])) {
@@ -1080,17 +1128,16 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                 if (isset($relDef['portal']) && $relDef['portal']) {
                     $usePortal = true;
                     $context['paging'] = true;
-                    $this->dbSettings->setDbSpecDataType(
-                        str_replace('fmpro', 'fmalt',
-                            strtolower($this->dbSettings->getDbSpecDataType())));
                 }
             }
         }
 
         if ($usePortal) {
-            $this->setupFMDataAPIforDB($this->dbSettings->getEntityForRetrieve(), 10000000);
+            $layout = $this->dbSettings->getEntityForRetrieve();
+            $this->setupFMDataAPIforDB($layout, 10000000);
         } else {
-            $this->setupFMDataAPIforDB($this->dbSettings->getEntityForUpdate(), 10000000);
+            $layout = $this->dbSettings->getEntityForUpdate();
+            $this->setupFMDataAPIforDB($layout, 10000000);
         }
 
         foreach ($this->dbSettings->getExtraCriteria() as $value) {
@@ -1098,7 +1145,8 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
             if (!$this->specHandler->isPossibleOperator($value['operator'])) {
                 throw new Exception("Invalid Operator.");
             }
-            $this->fmData->AddDBParam($value['field'], $value['value'], $value['operator']);
+            $condition += array($value['field'] => $value['value']);
+            // $this->fmData->AddDBParam($value['field'], $value['value'], $value['operator']);  [WIP]
         }
         if (isset($context['authentication'])
             && (isset($context['authentication']['all'])
@@ -1141,8 +1189,13 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                 return false;
             }
         }
-        $result = $this->fmData->DoFxAction('perform_find', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
+
+        if (isset($condition['recordId']) && is_numeric($condition['recordId'])) {
+            $result = $this->fmData->{$layout}->getRecord($condition['recordId']);
+        } else {
+            $result = $this->fmData->{$layout}->query(array($condition), NULL, 1, 1);
+        }
+        if (get_class($result) !== 'INTERMediator\\FileMakerServer\\RESTAPI\\Supporting\\FileMakerRelation') {
             if ($this->dbSettings->isDBNative()) {
                 $this->dbSettings->setRequireAuthentication(true);
             } else {
@@ -1150,23 +1203,22 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
             }
             return false;
         }
-        $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
         //$this->logger->setDebugMessage($this->stringWithoutCredential(var_export($result['data'],true)));
-        if ($result['errorCode'] > 0) {
+        if ($this->fmData->errorCode() > 0) {
             $this->errorMessage[] = "FX reports error at find action: code={$result['errorCode']}, url={$result['URL']}<hr>";
             return false;
         }
-        if ($result['foundCount'] != 0) {
+        if ($result->count() > 0) {
             $keyField = isset($context['key']) ? $context['key'] : $this->specHandler->getDefaultKey();
-            foreach ($result['data'] as $key => $row) {
-                $recId = substr($key, 0, strpos($key, '.'));
+            foreach ($result as $record) {
+                $recId = $record->getRecordId();
                 if ($keyField == $this->specHandler->getDefaultKey()) {
                     $this->notifyHandler->addQueriedPrimaryKeys($recId);
                 } else {
-                    $this->notifyHandler->addQueriedPrimaryKeys($row[$keyField][0]);
+                    $this->notifyHandler->addQueriedPrimaryKeys($record->{$keyField});
                 }
                 $this->setupFMDataAPIforDB($this->dbSettings->getEntityForUpdate(), 1);
-                $this->fmData->SetRecordID($recId);
                 if (isset($context['global'])) {
                     foreach ($context['global'] as $condition) {
                         if ($condition['db-operation'] == 'delete') {
@@ -1174,6 +1226,8 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                         }
                     }
                 }
+                /* 
+                // [WIP] FileMaker Data API (Trial) doesn't support executing FileMaker scripts
                 if (isset($context['script'])) {
                     foreach ($context['script'] as $condition) {
                         if ($condition['db-operation'] == 'delete') {
@@ -1181,23 +1235,28 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
                         }
                     }
                 }
+                */
 
                 $this->notifyHandler->setQueriedEntity($this->fmData->layout);
 
-                $result = $this->fmData->DoFxAction('delete', TRUE, TRUE, 'full');
-                if (!is_array($result)) {
+                $result = $this->fmData->{$layout}->delete($recId);
+                //if (!is_array($result)) {
+                if (get_class($result) !== 'INTERMediator\\FileMakerServer\\RESTAPI\\Supporting\\FileMakerRelation') {
                     if ($this->dbSettings->isDBNative()) {
                         $this->dbSettings->setRequireAuthentication(true);
                     } else {
-
+                        /* [WIP]
                         $this->logger->setErrorMessage($this->stringWithoutCredential(
                             get_class($result) . ': ' . $result->getDebugInfo()));
+                        */
                     }
                     return false;
                 }
-                if ($result['errorCode'] > 0) {
+                if ($this->fmData->errorCode() > 0) {
+                    /* [WIP]
                     $this->logger->setErrorMessage($this->stringWithoutCredential(
-                        "FX reports error at delete action: code={$result['errorCode']}, url={$result['URL']}<hr>"));
+                        "FileMaker Data API reports error at delete action: code={$result['errorCode']}, url={$result['URL']}<hr>"));
+                    */
                     return false;
                 }
                 $this->logger->setDebugMessage($this->stringWithoutCredential($result['URL']));
@@ -1222,9 +1281,9 @@ class DB_FileMaker_DataAPI extends DB_UseSharedObjects implements DB_Interface
             if ($contextDef["name"] == $fieldComp[0] ||
                 (isset($contextDef["table"]) && $contextDef["table"] == $fieldComp[0])
             ) {
-                if ($contextDef["relation"] &&
-                    $contextDef["relation"][0] &&
-                    $contextDef["relation"][0]["portal"] &&
+                if (isset($contextDef["relation"]) &&
+                    isset($contextDef["relation"][0]) &&
+                    isset($contextDef["relation"][0]["portal"]) &&
                     $contextDef["relation"][0]["portal"] = true
                 ) {
                     return "{$fieldComp[0]}{$this->dbSettings->getSeparator()}{$field}";
