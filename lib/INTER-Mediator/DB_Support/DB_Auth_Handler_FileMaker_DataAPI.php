@@ -1,5 +1,4 @@
 <?php
-
 /**
  * INTER-Mediator
  * Copyright (c) INTER-Mediator Directive Committee (http://inter-mediator.org)
@@ -13,6 +12,7 @@
  * @link          https://inter-mediator.com/
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_Interface_DB
 {
     public function authSupportStoreChallenge($uid, $challenge, $clientId)
@@ -24,44 +24,62 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
         if ($uid < 1) {
             $uid = 0;
         }
-        $this->dbClass->setupFXforAuth($hashTable, 1);
-        $this->dbClass->fxAuth->AddDBParam('user_id', $uid, 'eq');
-        $this->dbClass->fxAuth->AddDBParam('clienthost', $clientId, 'eq');
-        $result = $this->dbClass->fxAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+        $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+
+        // [WIP]
+        //$this->dbClass->fmDataAuth->AddDBParam('user_id', $uid, 'eq');
+        //$this->dbClass->fmDataAuth->AddDBParam('clienthost', $clientId, 'eq');
+        //$result = $this->dbClass->fmDataAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('user_id' => $uid), array('clienthost' => $clientId));
+        try {
+            $result = $this->dbClass->fmDataAuth->{$hashTable}->query($conditions);
+        } catch (Exception $e) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+
+        //if (!is_array($result)) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            //return false;
+        //}
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         $currentDT = new DateTime();
         $currentDTFormat = $currentDT->format('m/d/Y H:i:s');
         foreach ($result['data'] as $key => $row) {
             $recId = substr($key, 0, strpos($key, '.'));
-            $this->dbClass->setupFXforAuth($hashTable, 1);
-            $this->dbClass->fxAuth->SetRecordID($recId);
-            $this->dbClass->fxAuth->AddDBParam('hash', $challenge);
-            $this->dbClass->fxAuth->AddDBParam('expired', $currentDTFormat);
-            $this->dbClass->fxAuth->AddDBParam('clienthost', $clientId);
-            $this->dbClass->fxAuth->AddDBParam('user_id', $uid);
-            $result = $this->dbClass->fxAuth->DoFxAction("update", TRUE, TRUE, 'full');
+            $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+            $this->dbClass->fmDataAuth->SetRecordID($recId);
+            $this->dbClass->fmDataAuth->AddDBParam('hash', $challenge);
+            $this->dbClass->fmDataAuth->AddDBParam('expired', $currentDTFormat);
+            $this->dbClass->fmDataAuth->AddDBParam('clienthost', $clientId);
+            $this->dbClass->fmDataAuth->AddDBParam('user_id', $uid);
+            $result = $this->dbClass->fmDataAuth->DoFxAction("update", TRUE, TRUE, 'full');
             if (!is_array($result)) {
-                $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+                // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
                 return false;
             }
-            $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+            // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
             return true;
         }
-        $this->dbClass->setupFXforAuth($hashTable, 1);
-        $this->dbClass->fxAuth->AddDBParam('hash', $challenge);
-        $this->dbClass->fxAuth->AddDBParam('expired', $currentDTFormat);
-        $this->dbClass->fxAuth->AddDBParam('clienthost', $clientId);
-        $this->dbClass->fxAuth->AddDBParam('user_id', $uid);
-        $result = $this->dbClass->fxAuth->DoFxAction("new", TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAuth->AddDBParam('hash', $challenge);
+        //$this->dbClass->fmDataAuth->AddDBParam('expired', $currentDTFormat);
+        //$this->dbClass->fmDataAuth->AddDBParam('clienthost', $clientId);
+        //$this->dbClass->fmDataAuth->AddDBParam('user_id', $uid);
+        //$result = $this->dbClass->fmDataAuth->DoFxAction("new", TRUE, TRUE, 'full');
+        $this->dbClass->fmDataAuth->{$hashTable}->create(array(
+            'hash' => $challenge,
+            'expired' => $currentDTFormat,
+            'clienthost' => $clientId,
+            'user_id' => $uid,
+        ));
+
         if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         return true;
     }
 
@@ -74,15 +92,24 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
         if ($uid < 1) {
             $uid = 0;
         }
-        $this->dbClass->setupFXforAuth($hashTable, 1);
-        $this->dbClass->fxAuth->AddDBParam('user_id', $uid, 'eq');
-        $this->dbClass->fxAuth->AddDBParam('clienthost', '_im_media', 'eq');
-        $result = $this->dbClass->fxAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->dbClass->getDebugInfo());
+        $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAuth->AddDBParam('user_id', $uid, 'eq');
+        //$this->dbClass->fmDataAuth->AddDBParam('clienthost', '_im_media', 'eq');
+        //$result = $this->dbClass->fmDataAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('user_id' => $uid), array('clienthost' => '_im_media'));
+        try {
+            $result = $this->dbClass->fmDataAuth->{$hashTable}->query($conditions);
+        } catch (Exception $e) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->dbClass->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+
+        //if (!is_array($result)) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->dbClass->getDebugInfo());
+            //return false;
+        //}
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         foreach ($result['data'] as $key => $row) {
             $expiredDT = new DateTime($row['expired'][0]);
             $hashValue = $row['hash'][0];
@@ -105,24 +132,33 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
         if ($uid < 1) {
             $uid = 0;
         }
-        $this->dbClass->setupFXforAuth($hashTable, 1);
-        $this->dbClass->fxAuth->AddDBParam('user_id', $uid, 'eq');
-        $this->dbClass->fxAuth->AddDBParam('clienthost', $clientId, 'eq');
-        $result = $this->dbClass->fxAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+        $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAuth->AddDBParam('user_id', $uid, 'eq');
+        //$this->dbClass->fmDataAuth->AddDBParam('clienthost', $clientId, 'eq');
+        //$result = $this->dbClass->fmDataAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('user_id' => $uid), array('clienthost' => $clientId));
+        try {
+            $result = $this->dbClass->fmDataAuth->{$hashTable}->query($conditions);
+        } catch (Exception $e) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+
+        //if (!is_array($result)) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            //return false;
+        //}
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         foreach ($result['data'] as $key => $row) {
             $recId = substr($key, 0, strpos($key, '.'));
             $hashValue = $row['hash'][0];
             if ($isDelete) {
-                $this->dbClass->setupFXforAuth($hashTable, 1);
-                $this->dbClass->fxAuth->SetRecordID($recId);
-                $result = $this->dbClass->fxAuth->DoFxAction("delete", TRUE, TRUE, 'full');
+                $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+                $this->dbClass->fmDataAuth->SetRecordID($recId);
+                $result = $this->dbClass->fmDataAuth->DoFxAction("delete", TRUE, TRUE, 'full');
                 if (!is_array($result)) {
-                    $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+                    // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
                     return false;
                 }
             }
@@ -141,22 +177,31 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
         $currentDT = new DateTime();
         $timeValue = $currentDT->format("U");
 
-        $this->dbClass->setupFXforAuth($hashTable, 100000000);
-        $this->dbClass->fxAuth->AddDBParam('expired', date('m/d/Y H:i:s', $timeValue - $this->dbSettings->getExpiringSeconds()), 'lt');
-        $result = $this->dbClass->fxAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+        $this->dbClass->setupFMDataAPIforAuth($hashTable, 100000000);
+        // [WIP]
+        //$this->dbClass->fmDataAuth->AddDBParam('expired', date('m/d/Y H:i:s', $timeValue - $this->dbSettings->getExpiringSeconds()), 'lt');
+        //$result = $this->dbClass->fmDataAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('expired' => '...' . date('m/d/Y H:i:s', $timeValue - $this->dbSettings->getExpiringSeconds())));
+        try {
+            $result = $this->dbClass->fmDataAuth->{$hashTable}->query($conditions);
+        } catch (Exception $e) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+
+        //if (!is_array($result)) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            //return false;
+        //}
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         foreach ($result['data'] as $key => $row) {
             $recId = substr($key, 0, strpos($key, '.'));
 
-            $this->dbClass->setupFXforAuth($hashTable, 1);
-            $this->dbClass->fxAuth->SetRecordID($recId);
-            $result = $this->dbClass->fxAuth->DoFxAction("delete", TRUE, TRUE, 'full');
+            $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+            $this->dbClass->fmDataAuth->SetRecordID($recId);
+            $result = $this->dbClass->fmDataAuth->DoFxAction("delete", TRUE, TRUE, 'full');
             if (!is_array($result)) {
-                $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+                // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
                 return false;
             }
         }
@@ -170,23 +215,41 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
             return false;
         }
 
-        $this->dbClass->setupFXforDB($userTable, 1);
-        $this->dbClass->fx->AddDBParam('username', str_replace("@", "\\@", $username), 'eq');
-        $result = $this->dbClass->fx->DoFxAction('perform_find', TRUE, TRUE, 'full');
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
-        if ((!is_array($result) || $result['foundCount'] < 1) && $this->dbSettings->getEmailAsAccount()) {
-            $this->dbClass->setupFXforDB($userTable, 1);
-            $this->dbClass->fx->AddDBParam('email', str_replace("@", "\\@", $username), 'eq');
-            $result = $this->dbClass->fx->DoFxAction('perform_find', TRUE, TRUE, 'full');
-            $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
-        }
-        if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+        // [WIP]
+        $this->dbClass->setupFMDataAPIforDB($userTable, 1);
+        //$this->dbClass->fmData->AddDBParam('username', str_replace("@", "\\@", $username), 'eq');
+        //$result = $this->dbClass->fmData->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('username' => str_replace('@', '\\@', $username)));
+        try {
+            $result = $this->dbClass->fmData->{$userTable}->query($conditions);
+        } catch (Exception $e) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        foreach ($result['data'] as $key => $row) {
-            return $row['hashedpasswd'][0];
+
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        if ((!is_array($result) || $result['foundCount'] < 1) && $this->dbSettings->getEmailAsAccount()) {
+            $this->dbClass->setupFMDataAPIforDB($userTable, 1);
+            // [WIP]
+            //$this->dbClass->fmData->AddDBParam('email', str_replace("@", "\\@", $username), 'eq');
+            //$result = $this->dbClass->fmData->DoFxAction('perform_find', TRUE, TRUE, 'full');
+            $conditions = array(array('email' => str_replace('@', '\\@', $username)));
+            $result = $this->dbClass->fmData->{$userTable}->query($conditions);
+            // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         }
+        //if (!is_array($result)) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            //return false;
+        //}
+
+        // [WIP]
+        //foreach ($result['data'] as $key => $row) {
+        //    return $row['hashedpasswd'][0];
+        //}
+        foreach ($result as $record) {
+            return $record->hashedpasswd;
+        }
+
         return false;
     }
 
@@ -197,15 +260,21 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
             return false;
         }
         $userTable = $this->dbSettings->getUserTable();
-        $this->dbClass->setupFXforDB($userTable, 1);
-        $this->dbClass->fx->AddDBParam('username', $username);
-        $this->dbClass->fx->AddDBParam('hashedpasswd', $hashedpassword);
-        $result = $this->dbClass->fx->DoFxAction('new', TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforDB($userTable, 1);
+        // [WIP]
+        //$this->dbClass->fmData->AddDBParam('username', $username);
+        //$this->dbClass->fmData->AddDBParam('hashedpasswd', $hashedpassword);
+        //$result = $this->dbClass->fmData->DoFxAction('new', TRUE, TRUE, 'full');
+        $this->dbClass->fmData->{$userTable}->create(array(
+            'username' => $username,
+            'hashedpasswd' => $hashedpassword,
+        ));
+
         if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         return true;
     }
 
@@ -216,29 +285,35 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
             return false;
         }
 
-        $this->dbClass->setupFXforDB($userTable, 1);
-        $username = $this->dbClass->authSupportUnifyUsernameAndEmail($username);
-        $this->dbClass->fx->AddDBParam('username', str_replace("@", "\\@", $username), 'eq');
-        $result = $this->dbClass->fx->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforDB($userTable, 1);
+        $username = $this->authSupportUnifyUsernameAndEmail($username);
+        // [WIP]
+        //$this->dbClass->fmData->AddDBParam('username', str_replace("@", "\\@", $username), 'eq');
+        //$result = $this->dbClass->fmData->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('username' => str_replace('@', '\\@', $username)));
+        $result = $this->dbClass->fmData->{$userTable}->query($conditions);
         if ((!is_array($result) || count($result['data']) < 1) && $this->dbSettings->getEmailAsAccount()) {
-            $this->dbClass->setupFXforDB($userTable, 1);
-            $this->dbClass->fx->AddDBParam('email', str_replace("@", "\\@", $username), 'eq');
-            $result = $this->dbClass->fx->DoFxAction('perform_find', TRUE, TRUE, 'full');
+            $this->dbClass->setupFMDataAPIforDB($userTable, 1);
+            // [WIP]
+            //$this->dbClass->fmData->AddDBParam('email', str_replace("@", "\\@", $username), 'eq');
+            //$result = $this->dbClass->fmData->DoFxAction('perform_find', TRUE, TRUE, 'full');
+            $conditions = array(array('email' => str_replace('@', '\\@', $username)));
+            $result = $this->dbClass->fmData->{$userTable}->query($conditions);    
             if (!is_array($result)) {
-                $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+                // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
                 return false;
             }
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         foreach ($result['data'] as $key => $row) {
             $recId = substr($key, 0, strpos($key, '.'));
 
-            $this->dbClass->setupFXforDB($userTable, 1);
-            $this->dbClass->fx->SetRecordID($recId);
-            $this->dbClass->fx->AddDBParam("hashedpasswd", $hashednewpassword);
-            $result = $this->dbClass->fx->DoFxAction("update", TRUE, TRUE, 'full');
+            $this->dbClass->setupFMDataAPIforDB($userTable, 1);
+            $this->dbClass->fmData->SetRecordID($recId);
+            $this->dbClass->fmData->AddDBParam("hashedpasswd", $hashednewpassword);
+            $result = $this->dbClass->fmData->DoFxAction("update", TRUE, TRUE, 'full');
             if (!is_array($result)) {
-                $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+                // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
                 return false;
             }
             break;
@@ -258,17 +333,32 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
 
         $username = $this->authSupportUnifyUsernameAndEmail($username);
 
-        $this->dbClass->setupFXforDB_Alt($userTable, 1);
-        $this->dbClass->fxAlt->AddDBParam('username', str_replace("@", "\\@", $username), "eq");
-        $result = $this->dbClass->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+        $this->dbClass->setupFMDataAPIforDB_Alt($userTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAlt->AddDBParam('username', str_replace("@", "\\@", $username), "eq");
+        //$result = $this->dbClass->fmDataAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('username' => str_replace('@', '\\@', $username)));
+        try {
+            $result = $this->dbClass->fmDataAlt->{$userTable}->query($conditions);
+        } catch (Exception $e) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
-        foreach ($result['data'] as $row) {
-            return $row['id'][0];
+
+        //if (!is_array($result)) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            //return false;
+        //}
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+
+        // [WIP]
+        //foreach ($result['data'] as $row) {
+        //    return $row['id'][0];
+        //}
+        foreach ($result as $record) {
+            return $record->id;
         }
+
         return false;
     }
 
@@ -282,14 +372,23 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
             return 0;
         }
 
-        $this->dbClass->setupFXforDB($userTable, 1);
-        $this->dbClass->fx->AddDBParam('id', $userid, "eq");
-        $result = $this->dbClass->fx->DoFxAction('perform_find', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+        $this->dbClass->setupFMDataAPIforDB($userTable, 1);
+        // [WIP]
+        //$this->dbClass->fmData->AddDBParam('id', $userid, "eq");
+        //$result = $this->dbClass->fmData->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('id' => $userid));
+        try {
+            $result = $this->dbClass->fmData->{$userTable}->query($conditions);
+        } catch (Exception $e) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+
+        //if (!is_array($result)) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            //return false;
+        //}
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         foreach ($result['data'] as $row) {
             return $row['username'][0];
         }
@@ -306,14 +405,23 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
             return 0;
         }
 
-        $this->dbClass->setupFXforDB_Alt($userTable, 1);
-        $this->dbClass->fxAlt->AddDBParam('email', str_replace("@", "\\@", $email), "eq");
-        $result = $this->dbClass->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
-        if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->toString());
+        $this->dbClass->setupFMDataAPIforDB_Alt($userTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAlt->AddDBParam('email', str_replace("@", "\\@", $email), "eq");
+        //$result = $this->dbClass->fmDataAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('email' => str_replace('@', '\\@', $email)));
+        try {
+            $result = $this->dbClass->fmDataAlt->{$userTable}->query($conditions);
+        } catch (Exception $e) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->toString());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+
+        //if (!is_array($result)) {
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->toString());
+            //return false;
+        //}
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         foreach ($result['data'] as $row) {
             return $row['id'][0];
         }
@@ -331,16 +439,16 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
             return false;
         }
 
-        $this->dbClass->setupFXforDB_Alt($userTable, 55555);
-        $this->dbClass->fxAlt->AddDBParam('username', str_replace("@", "\\@", $username), "eq");
-        $this->dbClass->fxAlt->AddDBParam('email', str_replace("@", "\\@", $username), "eq");
-        $this->dbClass->fxAlt->SetLogicalOR();
-        $result = $this->dbClass->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforDB_Alt($userTable, 55555);
+        $this->dbClass->fmDataAlt->AddDBParam('username', str_replace("@", "\\@", $username), "eq");
+        $this->dbClass->fmDataAlt->AddDBParam('email', str_replace("@", "\\@", $username), "eq");
+        $this->dbClass->fmDataAlt->SetLogicalOR();
+        $result = $this->dbClass->fmDataAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
         if (!is_array($result)) {
             $this->logger->setDebugMessage(get_class($result) . ': ' . $result->toString());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         $usernameCandidate = '';
         foreach ($result['data'] as $row) {
             if ($row['username'][0] == $username) {
@@ -360,14 +468,17 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
             return null;
         }
 
-        $this->dbClass->setupFXforDB_Alt($groupTable, 1);
-        $this->dbClass->fxAlt->AddDBParam('id', $groupid);
-        $result = $this->dbClass->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforDB_Alt($groupTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAlt->AddDBParam('id', $groupid);
+        //$result = $this->dbClass->fmDataAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('id' => $groupid));
+        $result = $this->dbClass->fmDataAlt->{$groupTable}->query($conditions);    
         if (!is_array($result)) {
             $this->logger->setDebugMessage(get_class($result) . ': ' . $result->toString());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         foreach ($result['data'] as $key => $row) {
             return $row['groupname'][0];
         }
@@ -401,20 +512,25 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
 
     private function resolveGroup($groupid)
     {
-        $this->dbClass->setupFXforDB_Alt($this->dbSettings->getCorrTable(), 1);
+        $this->dbClass->setupFMDataAPIforDB_Alt($this->dbSettings->getCorrTable(), 1);
+        // [WIP]
         if ($this->firstLevel) {
-            $this->dbClass->fxAlt->AddDBParam('user_id', $groupid);
+            //$this->dbClass->fmDataAlt->AddDBParam('user_id', $groupid);
+            $conditions = array(array('user_id' => $groupid));
             $this->firstLevel = false;
         } else {
-            $this->dbClass->fxAlt->AddDBParam('group_id', $groupid);
+            //$this->dbClass->fmDataAlt->AddDBParam('group_id', $groupid);
+            $conditions = array(array('group_id' => $groupid));
             $this->belongGroups[] = $groupid;
         }
-        $result = $this->dbClass->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        //$result = $this->dbClass->fmDataAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $result = $this->dbClass->fmDataAlt->{$this->dbSettings->getCorrTable()}->query($conditions);    
+
         if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         foreach ($result['data'] as $key => $row) {
             if (!in_array($row['dest_group_id'][0], $this->belongGroups)) {
                 if (!$this->resolveGroup($row['dest_group_id'][0])) {
@@ -432,17 +548,25 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
         }
         $currentDT = new DateTime();
         $currentDTFormat = $currentDT->format('m/d/Y H:i:s');
-        $this->dbClass->setupFXforAuth($hashTable, 1);
-        $this->dbClass->fxAuth->AddDBParam('hash', $hash);
-        $this->dbClass->fxAuth->AddDBParam('expired', $currentDTFormat);
-        $this->dbClass->fxAuth->AddDBParam('clienthost', $clienthost);
-        $this->dbClass->fxAuth->AddDBParam('user_id', $userid);
-        $result = $this->dbClass->fxAuth->DoFxAction("new", TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAuth->AddDBParam('hash', $hash);
+        //$this->dbClass->fmDataAuth->AddDBParam('expired', $currentDTFormat);
+        //$this->dbClass->fmDataAuth->AddDBParam('clienthost', $clienthost);
+        //$this->dbClass->fmDataAuth->AddDBParam('user_id', $userid);
+        //$result = $this->dbClass->fmDataAuth->DoFxAction("new", TRUE, TRUE, 'full');
+        $this->dbClass->fmDataAuth->{$hashTable}->create(array(
+            'hash' => $hash,
+            'expired' => $currentDTFormat,
+            'clienthost' => $clienthost,
+            'user_id' => $userid,
+        ));
+
         if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         return true;
     }
 
@@ -452,15 +576,19 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
         if ($hashTable == null) {
             return false;
         }
-        $this->dbClass->setupFXforAuth($hashTable, 1);
-        $this->dbClass->fxAuth->AddDBParam('user_id', $userid, 'eq');
-        $this->dbClass->fxAuth->AddDBParam('clienthost', $randdata, 'eq');
-        $result = $this->dbClass->fxAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAuth->AddDBParam('user_id', $userid, 'eq');
+        //$this->dbClass->fmDataAuth->AddDBParam('clienthost', $randdata, 'eq');
+        //$result = $this->dbClass->fmDataAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('user_id' => $userid), array('clienthost' => $randdata));
+        $result = $this->dbClass->fmDataAuth->{$hashTable}->query($conditions);
+
         if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         foreach ($result['data'] as $key => $row) {
             $hashValue = $row['hash'][0];
             $expiredDT = $row['expired'][0];
@@ -485,16 +613,20 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
     {
         $user = $this->authSupportUnifyUsernameAndEmail($user);
 
-        $this->dbClass->setupFXforAuth($tableName, 1);
-        $this->dbClass->fxAuth->AddDBParam($userField, $user, 'eq');
-        $this->dbClass->fxAuth->AddDBParam($keyField, $keyValue, 'eq');
-        $result = $this->dbClass->fxAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforAuth($tableName, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAuth->AddDBParam($userField, $user, 'eq');
+        //$this->dbClass->fmDataAuth->AddDBParam($keyField, $keyValue, 'eq');
+        //$result = $this->dbClass->fmDataAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array($userField => $user), array($keyField => $keyValue));
+        $result = $this->dbClass->fmDataAuth->{$tableName}->query($conditions);
+
         if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
         if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
         $array = array();
@@ -515,16 +647,23 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
         if ($hashTable == null) {
             return false;
         }
-        $this->dbClass->setupFXforAuth($hashTable, 1);
-        $this->dbClass->fxAuth->AddDBParam("hash", $hash);
-        $this->dbClass->fxAuth->AddDBParam("expired", IMUtil::currentDTStringFMS());
-        $this->dbClass->fxAuth->AddDBParam("user_id", $userid);
-        $result = $this->dbClass->fxAuth->DoFxAction('new', TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAuth->AddDBParam("hash", $hash);
+        //$this->dbClass->fmDataAuth->AddDBParam("expired", IMUtil::currentDTStringFMS());
+        //$this->dbClass->fmDataAuth->AddDBParam("user_id", $userid);
+        //$result = $this->dbClass->fmDataAuth->DoFxAction('new', TRUE, TRUE, 'full');
+        $this->dbClass->fmDataAuth->{$hashTable}->create(array(
+            'hash' => $hash,
+            'expired' => IMUtil::currentDTStringFMS(),
+            'user_id' => $userid,
+        ));
+
         if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         return true;
     }
 
@@ -535,16 +674,20 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
         if ($hashTable == null || $userTable == null) {
             return false;
         }
-        $this->dbClass->setupFXforAuth($hashTable, 1);
-        $this->dbClass->fxAuth->AddDBParam("hash", $hash, "eq");
-        $this->dbClass->fxAuth->AddDBParam("clienthost", "", "eq");
-        $this->dbClass->fxAuth->AddDBParam("expired", IMUtil::currentDTStringFMS(3600), "gt");
-        $result = $this->dbClass->fxAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforAuth($hashTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAuth->AddDBParam("hash", $hash, "eq");
+        //$this->dbClass->fmDataAuth->AddDBParam("clienthost", "", "eq");
+        //$this->dbClass->fmDataAuth->AddDBParam("expired", IMUtil::currentDTStringFMS(3600), "gt");
+        //$result = $this->dbClass->fmDataAuth->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('hasu' => $hash), array('clienthost' => '='), array('expired' => IMUtil::currentDTStringFMS(3600) . '...'));
+        $result = $this->dbClass->fmDataAuth->{$hashTable}->query($conditions);
+
         if (!is_array($result)) {
-            $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
+            // [WIP] $this->logger->setDebugMessage(get_class($result) . ': ' . $result->getDebugInfo());
             return false;
         }
-        $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+        // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
         foreach ($result['data'] as $key => $row) {
             $userID = $row['user_id'][0];
             return $userID;
@@ -560,9 +703,13 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
         if ($hashTable == null || $userTable == null) {
             return false;
         }
-        $this->dbClass->setupFXforDB_Alt($userTable, 1);
-        $this->dbClass->fxAlt->AddDBParam('id', $userID);
-        $resultUser = $this->dbClass->fxAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $this->dbClass->setupFMDataAPIforDB_Alt($userTable, 1);
+        // [WIP]
+        //$this->dbClass->fmDataAlt->AddDBParam('id', $userID);
+        //$resultUser = $this->dbClass->fmDataAlt->DoFxAction('perform_find', TRUE, TRUE, 'full');
+        $conditions = array(array('id' => $userID));
+        $result = $this->dbClass->fmDataAlt->{$userTable}->query($conditions);    
+
         if (!is_array($resultUser)) {
             $this->logger->setDebugMessage(get_class($resultUser) . ': ' . $resultUser->toString());
             return false;
@@ -570,18 +717,18 @@ class DB_Auth_Handler_FileMaker_DataAPI extends DB_Auth_Common implements Auth_I
         $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($resultUser['URL']));
         foreach ($resultUser['data'] as $ukey => $urow) {
             $recId = substr($ukey, 0, strpos($ukey, '.'));
-            $this->dbClass->setupFXforDB_Alt($userTable, 1);
-            $this->dbClass->fxAlt->SetRecordID($recId);
-            $this->dbClass->fxAlt->AddDBParam('hashedpasswd', $password);
+            $this->dbClass->setupFMDataAPIforDB_Alt($userTable, 1);
+            $this->dbClass->fmDataAlt->SetRecordID($recId);
+            $this->dbClass->fmDataAlt->AddDBParam('hashedpasswd', $password);
             if ($rawPWField !== false) {
-                $this->dbClass->fxAlt->AddDBParam($rawPWField, $rawPW);
+                $this->dbClass->fmDataAlt->AddDBParam($rawPWField, $rawPW);
             }
-            $result = $this->dbClass->fxAlt->DoFxAction('update', TRUE, TRUE, 'full');
+            $result = $this->dbClass->fmDataAlt->DoFxAction('update', TRUE, TRUE, 'full');
             if (!is_array($result)) {
                 $this->logger->setDebugMessage(get_class($result) . ': ' . $result->toString());
                 return false;
             }
-            $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
+            // [WIP] $this->logger->setDebugMessage($this->dbClass->stringWithoutCredential($result['URL']));
             return $userID;
         }
     }
