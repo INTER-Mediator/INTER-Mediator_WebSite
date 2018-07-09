@@ -59,15 +59,26 @@
             font-size: 80%;
         }
 
-        .guest {
+        .mark {
             padding: 3px 4px;
             margin-right: 4px;
-            background-color: #BBBBBB;
+            background-color: #767676;
             color: white;
             border-radius: 2px;
             font-size: 80%;
         }
 
+        .desc   {
+            font-size: 80%;
+            padding-left: 30px;
+        }
+        .entry   {
+            padding-left: 30px;
+        }
+        .title  {
+            font-size: 120%;
+            font-weight: bold;
+        }
         td {
             text-align: left
         }
@@ -128,9 +139,17 @@
             <table>
             <tr><th style="white-space: nowrap">開始時間</th><th>内容</th></tr>
             <tr><td>12:00</td><td>オープニング／INTER-Mediatorの概要</td></tr>
-            <tr><td>12:20</td><td>[ゲスト] TBD（Web開発関連知識の基礎）天野 英明（講師略歴：TBD）</td></tr>
-            <tr><td>13:20</td><td>[ハンズオン1] シナリオを基にした開発をスタート</td></tr>
-            <tr><td>14:30</td><td rowspan="3">[ハンズオン2, 3, ...] ハンズオン1の結果に様々な機能を追加する<br>原則として、毎時30分から約1時間程度をめどにグループワークをしますが、早く終わった場合には次の課題に進み、時間がかかるようなら1時間を超えて作業してもOKです。ハンズオンはテーマごとにメンターが付き、内容の解説やアドバイスなどを行いますが、基本的には各自で実装を進めることを基本とします。ペアプログラミングやモブプログラミングで進めても構いません。</td></tr>
+            <tr><td>12:20</td><td>
+            <div><span class="mark">ゲスト講演</span><span class="title">Web 開発技術を知っておこう</span></div>
+            <div class="entry">天野 英明（放送大学 非常勤講師）</div>
+            <div class="desc">講師略歴: 大学での講義を中心に各種講座を開催する講師。専門は電気工学だが担当の多くは情報工学や色彩学など。</div>
+            <div class="desc">講演概要: 最近では Web ブラウザで動作するアプリケーションが広く利用されています。
+そこに使われているのは HTML､ CSS､ JavaScript などなど聞いたことのある人が多いであろう技術です。ですが基礎的なところを理解しているかと振り返ってみると疑問を感じる人が多いのも特徴のひとつでしょう。<br>
+これらの技術の、特に INTER-Mediator に強く関連する技術を一気に解説します。
+基本をしっかりおさえてより深い一歩を踏み出しましょう。</div>
+            </td></tr>
+            <tr><td>13:20</td><td><span class="mark">ハンズオン1</span>シナリオを基にした開発をスタート</td></tr>
+            <tr><td>14:30</td><td rowspan="3"><span class="mark">ハンズオン2</span> <span class="mark">ハンズオン3</span> ... ハンズオン1の結果に様々な機能を追加する<br>原則として、毎時30分から約1時間程度をめどにグループワークをしますが、早く終わった場合には次の課題に進み、時間がかかるようなら1時間を超えて作業してもOKです。ハンズオンはテーマごとにメンターが付き、内容の解説やアドバイスなどを行いますが、基本的には各自で実装を進めることを基本とします。ペアプログラミングやモブプログラミングで進めても構いません。</td></tr>
             <tr><td>15:30</td></tr>
             <tr><td>16:30</td></tr>
             <tr><td>17:50</td><td>クロージング</td></tr>
