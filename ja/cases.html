@@ -49,7 +49,14 @@
                 <h1>電源もネットワークもない田んぼから画像、環境データを収集、管理、表示する</h1>
                 <p class="article-date">掲載日：2018-08-14</p>
                 <div class="left-box frame">
-                    <img src="../images/かわごえ田んぼカメラシステム図.png" alt="イメージ" width="550"/>
+                    <img style="margin: 0px 0px 0px 0px;" src="../images/かわごえ田んぼカメラシステム図.png" alt="イメージ" width="550"/>
+                    <figcaption><small>田んぼカメラ、環境センサーを含めたシステム構成図</small></figcaption>
+                    <div class="vertical vertical_middle"></div>
+                    <img  style="margin: 15px 0px 0px 0px;" src="../images/２号機中枢部.JPG" alt="イメージ" width="300"/>
+                    <figcaption><small>Raspberry Piに電源制御基盤と各種センサーを装着</small></figcaption>
+                    <div class="vertical vertical_bottom">
+                    <img src="../images/現地の気象データ.png" alt="イメージ" width="550"/>
+                    <figcaption><small>INTER-Mediatorを使って取得データを一覧⇔詳細閲覧</small></figcaption></div>
                 </div>
                 <p><a href="https://ciao-kawagoesatoyama.ssl-lolipop.jp/seasonShots/index.php" target="_blank">「かわごえ里山イニシアチブ・東洋大学総合情報学部小瀬研究室」 太陽電池駆動IoTによる田んぼウオッチ協働プロジェクト　田んぼカメラ</a></p>
 
@@ -57,13 +64,7 @@
 
                 <p>生物多様性をはぐくみ、残留農薬による健康被害を極限までゼロにするために無農薬米作りを実践しているかわごえ里山イニシアチブが、環境を生かした地域活性化を目指す東洋大学総合情報学部小瀬博之研究室とかわごえ里山イニシアチブが協働して進めるプロジェクト「IoT田んぼカメラ」にINTER-Mediatorが活躍しています。</p>
                 <p>2016年8月に設置された「田んぼカメラ」は１時間に１回稲の様子を休みなくサーバーに送り続けてきました。中心を担うコンピューターは手のひらにすっぽりと収まるほどの小さなRaspberry Piです。</p>
-                <div class="left-box frame">
-                        <img src="../images/２号機中枢部.JPG" alt="イメージ" width="300"/>
-                        <figcaption><small>Raspberry Piに電源制御基盤と各種センサーを装着</small></figcaption>
-                        <div class="vertical vertical_bottom">
-                        <img src="../images/現地の気象データ.png" alt="イメージ" width="450"/>
-                        <figcaption><small>INTER-Mediatorを使って取得データを一覧⇔詳細閲覧</small></figcaption></div>
-                    </div>    
+                
                 <p>2018年からは２号機を開発、従来の撮影装置に加え、温度・湿度・気圧（撮影装置の内側と外側）、照度、水田の水位、土壌温度を計測するセンサー類を増設しました。</p>
                 <p>田んぼにはネットワーク設備がないため、携帯電話網を使ったIoT通信サービスSORACOM経由でレンタルサーバー（ロリポップ、さくらインターネットなどを使用）に送り込み、全データを記録するようにしました。これにより、田んぼの環境と稲の生長過程を監視するとともに育成条件を算出できるようになりました。</p>
                 <p>このデータを収集し、データベースに納め、遠隔地からデータを閲覧できるようにするサーバー側のシステムにINTER-Mediator（以下IM）が使われています。IMは外界からのデータを取り込むWebAPI、データをWebブラウザから閲覧するためのアプリケーション構築のための基盤システムとして動作しています。</p>
