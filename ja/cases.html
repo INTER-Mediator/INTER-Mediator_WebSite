@@ -51,12 +51,17 @@
                 <div class="left-box frame">
                     <img style="margin: 0px 0px 0px 0px;" src="../images/かわごえ田んぼカメラシステム図.png" alt="イメージ" width="550"/>
                     <figcaption><small>田んぼカメラ、環境センサーを含めたシステム構成図</small></figcaption>
-                    <div class="vertical vertical_middle"></div>
+                    <div class="vertical vertical_bottom"></div>
                     <img  style="margin: 15px 0px 0px 0px;" src="../images/２号機中枢部.JPG" alt="イメージ" width="300"/>
                     <figcaption><small>Raspberry Piに電源制御基盤と各種センサーを装着</small></figcaption>
                     <div class="vertical vertical_bottom">
                     <img src="../images/現地の気象データ.png" alt="イメージ" width="550"/>
                     <figcaption><small>INTER-Mediatorを使って取得データを一覧⇔詳細閲覧</small></figcaption></div>
+                    <div class="vertical vertical_bottom">
+                        <img src="../images/田んぼの今が見えます.png" alt="イメージ" width="450"/>
+                        <figcaption><small>田んぼの様子が時間軸で辿れる</small></figcaption>
+                    </div>    
+
                 </div>
                 <p><a href="https://ciao-kawagoesatoyama.ssl-lolipop.jp/seasonShots/index.php" target="_blank">「かわごえ里山イニシアチブ・東洋大学総合情報学部小瀬研究室」 太陽電池駆動IoTによる田んぼウオッチ協働プロジェクト　田んぼカメラ</a></p>
 
@@ -71,10 +76,6 @@
 
                 <h4>休止中はCPUの電源を完全にオフに</h4>
                 <p>電源もネットワークもない場所でも24時間環境データを取り続け、サーバーに送りこむために、特別な工夫を加えました。毎時、システムは気象データを測定し、明るい日中は写真を撮影してサーバーにデータを送ります。そのために2〜3分、動作しますが、その後は次回計測時刻の5分前にタイマーをセットし、自身の電源を完全に落としてしまいます。この間、消費電力はタイマーの維持のみ約1mWです。Raspberry Piはカメラも含めると動作中には2W程度の消費電力を必要としますが、この仕組みにより、休止中はその2000分の1弱しか電力消費していない計算になります。従って、日照が2週間以上全くなかった2017年夏の異常気候時にも蓄電池からの電力供給のみで機器は安定して動作を続けることができました。</p>
-                <div class="left-box frame">
-                        <img src="../images/田んぼの今が見えます.png" alt="イメージ" width="300"/>
-                        <figcaption><small>田んぼの様子が時間軸で辿れる</small></figcaption>
-                    </div>    
                 <p>Raspberry Piの電源をコントロールする回路基板とソフトウェアの原案を作ったのは倉橋浩一氏。２号機はその電源コントローラにインスパイアされ、各種センサーモジュールなどを追加した二台目に当たる電源モジュールを、INTER-Mediatorのコミッティメンバーの一人である林　伸夫氏（MacEvent Network：インフォメーションコンシェルジェ、Facebook: <a href="http://facebook.com/nobuoh" target="_blank"> http://facebook.com/nobuoh</a> ）が新規に開発して搭載しました。</p>
                 <p>初代機も２号機も、雨の日も曇りの日も絶えず太陽光のみで動き続け、田んぼの状態を耕作者に伝え続けています。</p>
 
