@@ -1,3 +1,4 @@
+@font-face{font-family:"FMPress-Publisher-icons";src:url("../fonts/FMPress-Publisher-icons.eot")}@font-face{font-family:"FMPress-Publisher-icons";src:url("../fonts/FMPress-Publisher-icons.woff") format('woff')}
 .brand{font-weight:bold}.brand .icon img{float:left;width:30px;height:30px;padding:8px 0 8px 8px}.global-nav{position:fixed;top:0;left:0;width:100%;height:44px;color:#ccc;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background-color:#f8f8f8;border-bottom:1px solid #e7e7e7;overflow:visible;z-index:1000001;opacity:.95;opacity:1;min-width:768px}
 .fp-navbar{display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-justify-content:center;justify-content:center}.global-nav ul,.global-nav ul li,.global-nav ul li a{height:inherit;line-height:44px;font-size:14px;background-color:#f8f8f8}
 nav ul{height:auto}nav ul li a,nav ul li span{display:block;padding:0 15px;width:inherit}nav ul li.dropdown a,nav ul li.dropdown span{padding-right:25px}
