@@ -15,7 +15,7 @@
  */
 class IMUtil
 {
-    public static function currentDTString($addSeconds = 0)
+    public static function currentDTString($subtractSeconds = 0)
     {
 //        $currentDT = new DateTime();
 //        $timeValue = $currentDT->format("U");
@@ -23,12 +23,12 @@ class IMUtil
 
         // For 5.2
         $timeValue = time();
-        $currentDTStr = date('Y-m-d H:i:s', $timeValue - $addSeconds);
+        $currentDTStr = date('Y-m-d H:i:s', $timeValue - $subtractSeconds);
         // End of for 5.2
         return $currentDTStr;
     }
 
-    public static function currentDTStringFMS($addSeconds = 0)
+    public static function currentDTStringFMS($subtractSeconds = 0)
     {
 //        $currentDT = new DateTime();
 //        $timeValue = $currentDT->format("U");
@@ -36,7 +36,7 @@ class IMUtil
 
         // For 5.2
         $timeValue = time();
-        $currentDTStr = date('m/d/Y H:i:s', $timeValue - $addSeconds);
+        $currentDTStr = date('m/d/Y H:i:s', $timeValue - $subtractSeconds);
         // End of for 5.2
         return $currentDTStr;
     }
@@ -53,9 +53,9 @@ class IMUtil
         return $timeValue;
     }
 
-    public static function phpVersion()
+    public static function phpVersion($verStr='')
     {
-        $vString = explode('.', phpversion());
+        $vString = explode('.', $verStr == '' ? phpversion() : $verStr);
         $vNum = 0;
         if (isset($vString[0])) {
             $vNum += intval($vString[0]);
@@ -64,7 +64,7 @@ class IMUtil
             $vNum += intval($vString[1]) / 10;
         }
         if (isset($vString[2])) {
-            $vNum += intval($vString[2]) / 100;
+            $vNum += intval(substr($vString[2], 0, 1)) / 100;
         }
         return $vNum;
     }
