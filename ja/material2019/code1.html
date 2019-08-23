@@ -51,10 +51,9 @@
     &lt;script type="text/javascript"&gt;
         INTERMediatorOnPage.processingBeforePostOnlyContext = function (node) {
             var dtString;
-            dtString = INTERMediatorLib.dateTimeStringISO();　// ←[MySQL]の場合ここだけ書換え
-            dtString = INTERMediatorLib.dateTimeStringISO();　// ←[FileMaker]の場合
-            INTERMediator.additionalFieldValueOnNewRecord 
-			= {'message': [{field: "postdt", value: dtString}]};
+            dtString = INTERMediatorLib.dateTimeStringISO();　// ←[MySQL]の場合こちらを残す
+            dtString = INTERMediatorLib.dateTimeStringFileMaker();　// ←[FileMaker]の場合こちらを残す
+            INTERMediator.additionalFieldValueOnNewRecord = {'message': [{field: "postdt", value: dtString}]};
             return true;
        };
     &lt;/script&gt;
