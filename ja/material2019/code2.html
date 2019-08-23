@@ -50,10 +50,9 @@
     &lt;script type="text/javascript" src="def01.php"&gt;&lt;/script&gt; &lt;!-- 変更しない --&gt;
     &lt;script type="text/javascript"&gt;
         INTERMediatorOnPage.processingBeforePostOnlyContext = function (node) {
-            var dtString = INTERMediatorLib.dateTimeStringISO();　// ←[MySQL]の場合
-            var dtString = INTERMediatorLib.dateTimeStringISO();　// ←[FileMaker]の場合
-            INTERMediator.additionalFieldValueOnNewRecord 
-                  = {'messageauth': [{field: "postdt", value: dtString}]};
+            var dtString = INTERMediatorLib.dateTimeStringISO();　// ←[MySQL]の場合こちらを残す
+            var dtString = INTERMediatorLib.dateTimeStringFileMaker();　// ←[FileMaker]の場合こちらを残す
+            INTERMediator.additionalFieldValueOnNewRecord = {'messageauth': [{field: "postdt", value: dtString}]};
             return true;
         };
     &lt;/script&gt;
