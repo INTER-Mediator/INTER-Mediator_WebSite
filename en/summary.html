@@ -45,50 +45,50 @@
         </div>
         <article>
             <section class="clearfix">
-                <h1>First of all, you should prepare the database.</h1>
+                <h1>First of all, you have to prepare the database.</h1>
                 <div class="left-box">
                     <img title="First of all, you should prepare the database." alt="image" src="../images/step1.png">
                 </div>
-                <p>Tables and views must be defined with following the requirements and specifications.</p>
+                <p>Tables and views must be defined as the requirements and specifications.</p>
             </section>
             <section class="clearfix">
-                <h1>The "Definition file" should be prepared as a PHP file. You should concern about below:</h1>
+                <h1>The "Definition file" is a PHP file. This contains the connection information to database, and also a lot of descriptions.</h1>
                 <div class="left-box">
-                    <img title="The &quot;Definition file&quot; should be prepared as a PHP file. You should concern about below:" alt="image" src="../images/step2.png">
+                    <img title="The &quot;Definition file&quot; should be prepared as a PHP file. You should concern about below:" alt="image" src="../images/step2.png" style="width: 526px">
                 </div>
                 <ul class="_im_ignore_enc_rep">
-                    <li>[2-A]It should contain the name of the table, the name of key field and other database information.</li>
-                    <li>[2-B]It should contain the database connection info.</li>
-                    <li>[2-C]Call the IM_Entry function with parameters.</li>
+                    <li>[2-A] The main part of this file contains the name of table, key field name, and more informations about database operations.</li>
+                    <li>[2-B] The connection information to the database.</li>
+                    <li>[2-C] You can just call to import the framework with require_once. The IM_Entry function is the single entry point.</li>
                 </ul>
             </section>
             <section class="clearfix">
                 <h1>Create the user interface as a HTML file, called "Page File."</h1>
                 <div class="left-box">
-                    <img title="Create the user interface as a HTML file, called &quot;Page File.&quot;" alt="image" src="../images/step3.png">
+                    <img title="Create the user interface as a HTML file, called &quot;Page File.&quot;" alt="image" src="../images/step3.png" style="width: 526px">
                 </div>
-                <p>You should create HTML file as user-interface. If you get multiple records, The enclosed elements of the TBODY tagged element is going to repeat with each record.</p>
+                <p>You need to create HTML file as user-interface. If you get multiple records, The enclosed elements of the TBODY tagged element is going to repeat with each record.</p>
                 <ul class="_im_ignore_enc_rep">
-                    <li>[3-A]It should include the Definition File by the script tag's element in the header section.</li>
-                    <li>[3-B]Describe as like "IM[table-name@field-name]" within the class attribute. They are specifying which the data of table and field should be inserted.
+                    <li>[3-A] The script tag's element in the header section includes the Definition File, and it means combine the framework with this page.</li>
+                    <li>[3-B] The table tagged elements expand for one record in queried data. If it contains multiple records, the inside elements of table tag is going to repeat for each record.
                     </li>
-                    <li>[3-C]With calling the "INTERMediator.construct" function, the data of database are inserted into the value of elements and their attributes. If you use on the onload attribute of body tag, the data of database is going to insert when the page is shown.
-                    </li>
+                    <li>[3-C] The attribute data-im="table-name@field-name" happens to bind the element and the field of one record. Consequently the data in the filed is going to show on the page, and can edit if it's an editable node.</li>
+                    <li>[3-D] The pagination control can automatically show with the predefined string to set the id attribute.</li>
                 </ul>
             </section>
             <section class="clearfix">
                 <h1>The contents of database are shown on the page.</h1>
                 <div class="left-box">
-                    <img title="The contents of database are shown on the page." alt="image" src="../images/step4.png">
+                    <img title="The contents of database are shown on the page." alt="image" src="../images/step4.png" style="width: 526px">
                 </div>
                 <p>Open the HTML file with web browser. You can see some components with the data from the database.</p>
                 <ul class="_im_ignore_enc_rep">
-                    <li>[4-A]The value of input tag's element is coming from database. You can edit the value and it will restore on database.
+                    <li>[4-A] The value of input tag's element is coming from database. You can edit the value and it will restore on database.
                     </li>
-                    <li>[4-B]Multiple lines show to expand with the one-to-many relationship.</li>
-                    <li>[4-C]This popup menus are depending with the value of another field.</li>
-                    <li>[4-D]Insert and delete for the repeating records.</li>
-                    <li>[4-E]Navigation bar is inserted. You can move previous/next records and delete and insert record.</li>
+                    <li>[4-B] Multiple lines show to lay out the one-to-many relationship.</li>
+                    <li>[4-C] This popup menus are depending with the value of another field.</li>
+                    <li>[4-D] Insert and delete buttons for the repeating records.</li>
+                    <li>[4-E] The pagination bar automatically shows. You can move previous/next records and delete and insert record.</li>
                 </ul>
             </section>
         </article>
